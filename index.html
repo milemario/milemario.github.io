@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Course activities and interactive cybersecurity exercises by Márió Mile.">
+  <meta name="theme-color" content="#071b2d">
+  <title>Márió Mile · Course Activities</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --navy: #071b2d;
+      --navy-soft: #0c2940;
+      --panel: rgba(11, 38, 59, .78);
+      --panel-strong: #102f48;
+      --line: rgba(164, 204, 225, .18);
+      --text: #f5f8fa;
+      --muted: #a9bfcc;
+      --cyan: #6dd5d0;
+      --gold: #f0c677;
+      --shadow: 0 24px 70px rgba(0, 0, 0, .3);
+    }
+
+    * { box-sizing: border-box; }
+    html { min-height: 100%; background: var(--navy); }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 78% 10%, rgba(109, 213, 208, .13), transparent 30rem),
+        radial-gradient(circle at 12% 78%, rgba(240, 198, 119, .08), transparent 28rem),
+        linear-gradient(145deg, #061724 0%, #092238 55%, #061926 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .11;
+      background-image: linear-gradient(rgba(255,255,255,.14) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.14) 1px, transparent 1px);
+      background-size: 72px 72px;
+      mask-image: linear-gradient(to bottom, black, transparent 75%);
+    }
+
+    button, a { font: inherit; }
+    button { color: inherit; }
+    a { color: inherit; }
+
+    .shell { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+    header {
+      min-height: 88px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .identity { display: flex; align-items: center; gap: 13px; text-decoration: none; }
+    .mark {
+      width: 42px; height: 42px; display: grid; place-items: center;
+      border: 1px solid rgba(109, 213, 208, .55); border-radius: 13px;
+      background: rgba(109, 213, 208, .1); color: var(--cyan); font-weight: 800;
+      box-shadow: inset 0 0 22px rgba(109, 213, 208, .08);
+    }
+    .identity strong { display: block; letter-spacing: -.01em; }
+    .identity small { display: block; color: var(--muted); margin-top: 2px; }
+    .semester { color: var(--muted); font-size: .9rem; }
+
+    main { position: relative; padding: 78px 0 88px; }
+    .eyebrow { margin: 0 0 16px; color: var(--cyan); font-size: .77rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+    h1 { max-width: 800px; margin: 0; font-size: clamp(2.65rem, 6vw, 5.3rem); line-height: .98; letter-spacing: -.055em; }
+    .intro { max-width: 650px; margin: 24px 0 48px; color: var(--muted); font-size: clamp(1rem, 2vw, 1.18rem); line-height: 1.65; }
+
+    .step-label { display: flex; align-items: center; gap: 12px; margin: 0 0 18px; font-size: .78rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+    .step-label span { display: grid; place-items: center; width: 27px; height: 27px; border: 1px solid var(--line); border-radius: 50%; color: var(--cyan); letter-spacing: 0; }
+
+    .course-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+    .course-button {
+      min-height: 142px; padding: 24px; text-align: left; cursor: pointer;
+      border: 1px solid var(--line); border-radius: 20px; background: var(--panel);
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+      box-shadow: 0 12px 35px rgba(0,0,0,.12);
+    }
+    .course-button:hover { transform: translateY(-3px); border-color: rgba(109,213,208,.46); }
+    .course-button[aria-selected="true"] { background: linear-gradient(135deg, rgba(109,213,208,.15), rgba(16,47,72,.93)); border-color: var(--cyan); }
+    .course-code { color: var(--cyan); font-size: .74rem; font-weight: 800; letter-spacing: .11em; text-transform: uppercase; }
+    .course-button h2 { margin: 13px 0 7px; font-size: 1.2rem; }
+    .course-button p { margin: 0; color: var(--muted); line-height: 1.45; font-size: .91rem; }
+
+    .activity-section { margin-top: 44px; }
+    .activity-panel { border: 1px solid var(--line); border-radius: 24px; background: rgba(7, 27, 45, .58); box-shadow: var(--shadow); overflow: hidden; }
+    .activity-head { display: flex; justify-content: space-between; gap: 24px; padding: 24px 26px; border-bottom: 1px solid var(--line); }
+    .activity-head strong { display: block; }
+    .activity-head small { color: var(--muted); }
+    .count { flex: 0 0 auto; color: var(--gold); font-size: .85rem; }
+    .activity-list { display: grid; gap: 1px; background: var(--line); }
+    .activity {
+      display: grid; grid-template-columns: 54px 1fr auto; align-items: center; gap: 18px;
+      padding: 24px 26px; background: var(--panel-strong); text-decoration: none;
+      transition: background .18s ease;
+    }
+    .activity:hover { background: #153c59; }
+    .activity-icon { width: 50px; height: 50px; display: grid; place-items: center; border-radius: 15px; background: rgba(240,198,119,.1); color: var(--gold); font-size: 1.35rem; }
+    .activity h3 { margin: 0 0 6px; font-size: 1.08rem; }
+    .activity p { margin: 0; color: var(--muted); font-size: .9rem; line-height: 1.4; }
+    .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+    .tag { padding: 5px 8px; border-radius: 7px; background: rgba(255,255,255,.06); color: #c6d6df; font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+    .launch { display: flex; align-items: center; gap: 8px; white-space: nowrap; color: var(--cyan); font-weight: 800; font-size: .88rem; }
+
+    .empty { padding: 34px 26px; background: var(--panel-strong); color: var(--muted); }
+    footer { padding: 0 0 32px; color: #7894a4; font-size: .8rem; text-align: center; }
+
+    @media (max-width: 650px) {
+      .shell { width: min(100% - 26px, 1120px); }
+      header { min-height: 74px; }
+      .semester { display: none; }
+      main { padding: 52px 0 64px; }
+      .intro { margin-bottom: 36px; }
+      .activity { grid-template-columns: 46px 1fr; padding: 20px 18px; gap: 14px; }
+      .activity-icon { width: 44px; height: 44px; }
+      .launch { grid-column: 2; }
+      .activity-head { padding: 20px 18px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <a class="identity" href="/" aria-label="Course activities home">
+        <span class="mark">MM</span>
+        <span><strong>Márió Mile</strong><small>Course activities</small></span>
+      </a>
+      <span class="semester">Interactive learning hub</span>
+    </header>
+
+    <main>
+      <p class="eyebrow">Learn by investigating</p>
+      <h1>Choose your course.<br>Start your task.</h1>
+      <p class="intro">Select a course to see its interactive exercises, simulations and supporting activities.</p>
+
+      <section aria-labelledby="course-heading">
+        <h2 class="step-label" id="course-heading"><span>1</span> Select your course</h2>
+        <div class="course-list" id="courses" role="tablist" aria-label="Courses"></div>
+      </section>
+
+      <section class="activity-section" aria-labelledby="activity-heading">
+        <h2 class="step-label" id="activity-heading"><span>2</span> Select an activity</h2>
+        <div class="activity-panel">
+          <div class="activity-head">
+            <div><strong id="selected-course">Activities</strong><small id="selected-description"></small></div>
+            <span class="count" id="activity-count"></span>
+          </div>
+          <div class="activity-list" id="activities" role="tabpanel"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer>Educational activities by Márió Mile</footer>
+  </div>
+
+  <script>
+    // Add future courses and activities in this data block.
+    const courses = [
+      {
+        id: "general-security-concepts",
+        code: "Cybersecurity",
+        name: "General Security Concepts",
+        description: "Foundations of security thinking, risk and human behaviour.",
+        activities: [
+          {
+            name: "OSINTeusz 2",
+            description: "Investigate a fictional digital footprint and turn scattered public clues into actionable information.",
+            href: "/osinteusz/",
+            icon: "⌕",
+            tags: ["OSINT", "Investigation", "Interactive"]
+          }
+        ]
+      }
+    ];
+
+    const coursesEl = document.querySelector("#courses");
+    const activitiesEl = document.querySelector("#activities");
+    const selectedCourseEl = document.querySelector("#selected-course");
+    const selectedDescriptionEl = document.querySelector("#selected-description");
+    const activityCountEl = document.querySelector("#activity-count");
+
+    function renderCourse(courseId) {
+      const course = courses.find(item => item.id === courseId) || courses[0];
+      document.querySelectorAll(".course-button").forEach(button => {
+        button.setAttribute("aria-selected", String(button.dataset.course === course.id));
+      });
+      selectedCourseEl.textContent = course.name;
+      selectedDescriptionEl.textContent = course.description;
+      activityCountEl.textContent = `${course.activities.length} ${course.activities.length === 1 ? "activity" : "activities"}`;
+
+      activitiesEl.innerHTML = course.activities.length
+        ? course.activities.map(activity => `
+          <a class="activity" href="${activity.href}">
+            <span class="activity-icon" aria-hidden="true">${activity.icon}</span>
+            <span>
+              <h3>${activity.name}</h3>
+              <p>${activity.description}</p>
+              <span class="tags">${activity.tags.map(tag => `<span class="tag">${tag}</span>`).join("")}</span>
+            </span>
+            <span class="launch">Launch <span aria-hidden="true">↗</span></span>
+          </a>`).join("")
+        : `<div class="empty">No activities have been published for this course yet.</div>`;
+    }
+
+    coursesEl.innerHTML = courses.map((course, index) => `
+      <button class="course-button" type="button" role="tab" data-course="${course.id}" aria-selected="${index === 0}">
+        <span class="course-code">${course.code}</span>
+        <h2>${course.name}</h2>
+        <p>${course.description}</p>
+      </button>`).join("");
+
+    coursesEl.addEventListener("click", event => {
+      const button = event.target.closest(".course-button");
+      if (button) renderCourse(button.dataset.course);
+    });
+
+    renderCourse(courses[0].id);
+  </script>
+</body>
+</html>
