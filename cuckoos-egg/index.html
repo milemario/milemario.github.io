@@ -1325,7 +1325,7 @@
           if (!clueNote.hidden) parts.push(clueNote.textContent);
         }
         if (!feedback.hidden) parts.push(feedbackCopy.textContent);
-        return parts.join("\n\n").replace(/[ \\t]+/g, " ").replace(/\\n{3,}/g, "\\n\\n").trim();
+        return parts.join("\n\n").replace(/[ \t]+/g, " ").replace(/\n{3,}/g, "\n\n").trim();
       }
 
       function stopNarration() {
