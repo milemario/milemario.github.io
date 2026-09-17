@@ -122,6 +122,59 @@
       padding: 42px 0 32px;
     }
 
+    .voice-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: -18px 0 27px;
+      min-height: 43px;
+    }
+
+    .voice-button {
+      min-height: 43px;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 9px 14px;
+      border: 1px solid rgba(161, 216, 178, .4);
+      border-radius: 9px;
+      color: var(--green);
+      background: rgba(161, 216, 178, .07);
+      cursor: pointer;
+      font-size: .88rem;
+      font-weight: 800;
+      transition: border-color .18s ease, background .18s ease, transform .18s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .voice-button:hover, .voice-button:focus-visible {
+      border-color: var(--green);
+      background: rgba(161, 216, 178, .14);
+      transform: translateY(-1px);
+    }
+
+    .voice-button:disabled {
+      color: var(--dim);
+      border-color: var(--line);
+      background: transparent;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .voice-icon {
+      width: 19px;
+      display: inline-grid;
+      place-items: center;
+      color: var(--amber-bright);
+      font-size: .9rem;
+    }
+
+    .voice-status {
+      color: var(--dim);
+      font-size: .78rem;
+      line-height: 1.35;
+    }
+
     .story-card {
       position: relative;
       min-width: 0;
@@ -585,6 +638,14 @@
           <div class="progress-fill" id="progress-fill"></div>
         </div>
 
+        <div class="voice-bar" role="group" aria-label="Voice narration controls">
+          <button class="voice-button" id="voice-button" type="button" aria-pressed="false">
+            <span class="voice-icon" id="voice-icon" aria-hidden="true">▶</span>
+            <span id="voice-label">Read this scene</span>
+          </button>
+          <span class="voice-status" id="voice-status" aria-live="polite">Uses your device’s built-in voice.</span>
+        </div>
+
         <h1 class="story-title" id="story-title"></h1>
         <div class="story-body" id="story-body" aria-live="polite"></div>
 
@@ -1001,6 +1062,13 @@
       var sceneCount = document.getElementById("scene-count");
       var progressFill = document.getElementById("progress-fill");
       var progressTrack = document.querySelector(".progress-track");
+      var voiceButton = document.getElementById("voice-button");
+      var voiceIcon = document.getElementById("voice-icon");
+      var voiceLabel = document.getElementById("voice-label");
+      var voiceStatus = document.getElementById("voice-status");
+      var speechSupported = "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
+      var activeUtterance = null;
+      var narrationState = "idle";
       var storyTitle = document.getElementById("story-title");
       var storyBody = document.getElementById("story-body");
       var clueCard = document.getElementById("clue-card");
@@ -1021,6 +1089,113 @@
       var caseStatus = document.getElementById("case-status");
       var topStatus = document.getElementById("top-status");
       var resetButton = document.getElementById("reset-button");
+
+      function setVoiceUI(mode, message) {
+        if (!speechSupported) {
+          voiceButton.disabled = true;
+          voiceButton.setAttribute("aria-pressed", "false");
+          voiceIcon.textContent = "–";
+          voiceLabel.textContent = "Voice unavailable";
+          voiceStatus.textContent = "Speech is not available in this browser.";
+          return;
+        }
+
+        voiceButton.disabled = false;
+        voiceButton.setAttribute("aria-pressed", mode === "speaking" || mode === "paused" ? "true" : "false");
+        if (mode === "speaking") {
+          voiceIcon.textContent = "Ⅱ";
+          voiceLabel.textContent = "Pause narration";
+          voiceStatus.textContent = "Reading with your device voice…";
+        } else if (mode === "paused") {
+          voiceIcon.textContent = "▶";
+          voiceLabel.textContent = "Resume narration";
+          voiceStatus.textContent = "Narration paused.";
+        } else if (mode === "error") {
+          voiceIcon.textContent = "▶";
+          voiceLabel.textContent = "Try narration again";
+          voiceStatus.textContent = message || "The device voice could not start.";
+        } else {
+          voiceIcon.textContent = "▶";
+          voiceLabel.textContent = "Read this scene";
+          voiceStatus.textContent = message || "Tap to listen.";
+        }
+      }
+
+      function getNarrationText() {
+        var parts = [storyTitle.textContent, storyBody.textContent];
+        if (!clueCard.hidden) {
+          parts.push("Evidence recovered. " + clueTitle.textContent + ". " + clueText.textContent);
+          if (!clueNote.hidden) parts.push(clueNote.textContent);
+        }
+        if (!feedback.hidden) parts.push(feedbackCopy.textContent);
+        return parts.join(". ").replace(/\s+/g, " ").trim();
+      }
+
+      function stopNarration() {
+        var utterance = activeUtterance;
+        activeUtterance = null;
+        narrationState = "idle";
+        if (speechSupported) window.speechSynthesis.cancel();
+        setVoiceUI("idle");
+        return utterance;
+      }
+
+      function speakCurrentScene() {
+        if (!speechSupported) return;
+        stopNarration();
+        var utterance = new SpeechSynthesisUtterance(getNarrationText());
+        utterance.lang = document.documentElement.lang || "en-US";
+        utterance.rate = 0.94;
+        utterance.pitch = 1;
+        utterance.volume = 1;
+        activeUtterance = utterance;
+        narrationState = "speaking";
+        utterance.onstart = function () {
+          if (activeUtterance === utterance) {
+            narrationState = "speaking";
+            setVoiceUI("speaking");
+          }
+        };
+        utterance.onend = function () {
+          if (activeUtterance === utterance) {
+            activeUtterance = null;
+            narrationState = "idle";
+            setVoiceUI("idle", "Scene finished.");
+          }
+        };
+        utterance.onerror = function (event) {
+          if (activeUtterance !== utterance) return;
+          activeUtterance = null;
+          narrationState = "idle";
+          if (event.error === "canceled" || event.error === "interrupted") {
+            setVoiceUI("idle");
+          } else {
+            setVoiceUI("error", "The device voice could not finish.");
+          }
+        };
+        window.speechSynthesis.speak(utterance);
+        setVoiceUI("speaking");
+      }
+
+      function toggleNarration() {
+        if (!speechSupported) return;
+        if (!activeUtterance || !window.speechSynthesis.speaking) {
+          speakCurrentScene();
+          return;
+        }
+        if (window.speechSynthesis.paused) {
+          window.speechSynthesis.resume();
+          narrationState = "speaking";
+          setVoiceUI("speaking");
+        } else {
+          window.speechSynthesis.pause();
+          narrationState = "paused";
+          setVoiceUI("paused");
+        }
+      }
+
+      voiceButton.addEventListener("click", toggleNarration);
+      setVoiceUI("idle");
 
       function addEvidence(item) {
         if (!item) return;
@@ -1140,6 +1315,7 @@
 
       function selectChoice(choice) {
         if (state.choiceMade) return;
+        stopNarration();
         state.choiceMade = true;
 
         if (choice.set) {
@@ -1176,6 +1352,7 @@
       }
 
       function renderScene(index) {
+        stopNarration();
         var scene = scenes[index];
         if (!scene) return;
         state.scene = index;
@@ -1217,6 +1394,7 @@
       }
 
       function renderEnding(kind) {
+        stopNarration();
         state.ending = kind;
         state.choiceMade = true;
         var ending = {
