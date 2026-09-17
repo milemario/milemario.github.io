@@ -125,12 +125,13 @@
     .voice-bar {
       display: flex;
       align-items: center;
-      gap: 12px;
+      flex-wrap: wrap;
+      gap: 10px 12px;
       margin: -18px 0 27px;
       min-height: 43px;
     }
 
-    .voice-button {
+    .voice-button, .sound-button {
       min-height: 43px;
       display: inline-flex;
       align-items: center;
@@ -147,13 +148,14 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    .voice-button:hover, .voice-button:focus-visible {
+    .voice-button:hover, .voice-button:focus-visible,
+    .sound-button:hover, .sound-button:focus-visible {
       border-color: var(--green);
       background: rgba(161, 216, 178, .14);
       transform: translateY(-1px);
     }
 
-    .voice-button:disabled {
+    .voice-button:disabled, .sound-button:disabled {
       color: var(--dim);
       border-color: var(--line);
       background: transparent;
@@ -161,7 +163,20 @@
       transform: none;
     }
 
-    .voice-icon {
+    .sound-button {
+      border-color: rgba(232, 179, 107, .42);
+      color: var(--amber);
+      background: rgba(232, 179, 107, .06);
+    }
+
+    .sound-button:hover, .sound-button:focus-visible,
+    .sound-button.is-on {
+      border-color: var(--amber);
+      color: var(--amber-bright);
+      background: rgba(232, 179, 107, .13);
+    }
+
+    .voice-icon, .sound-icon {
       width: 19px;
       display: inline-grid;
       place-items: center;
@@ -169,7 +184,11 @@
       font-size: .9rem;
     }
 
+    .sound-icon { color: var(--amber); }
+
     .voice-status {
+      flex: 1 1 220px;
+      min-width: 190px;
       color: var(--dim);
       font-size: .78rem;
       line-height: 1.35;
@@ -604,6 +623,15 @@
       .scene-meta { font-size: .64rem; letter-spacing: .12em; }
       .story-card { border-radius: 14px; padding: 22px 16px 20px; }
       .clue-card { padding: 15px 14px 16px; }
+      .voice-bar { align-items: stretch; }
+      .voice-button, .sound-button {
+        flex: 1 1 calc(50% - 6px);
+        justify-content: center;
+      }
+      .voice-status {
+        flex-basis: 100%;
+        min-width: 0;
+      }
       .choice-button { gap: 10px; }
       .choice-letter { width: 28px; height: 28px; flex-basis: 28px; }
       .choice-arrow { font-size: 1.1rem; }
@@ -638,12 +666,16 @@
           <div class="progress-fill" id="progress-fill"></div>
         </div>
 
-        <div class="voice-bar" role="group" aria-label="Voice narration controls">
+        <div class="voice-bar" role="group" aria-label="Voice narration and ambience controls">
           <button class="voice-button" id="voice-button" type="button" aria-pressed="false">
             <span class="voice-icon" id="voice-icon" aria-hidden="true">▶</span>
             <span id="voice-label">Read this scene</span>
           </button>
-          <span class="voice-status" id="voice-status" aria-live="polite">Uses your device’s built-in voice.</span>
+          <button class="sound-button" id="sound-button" type="button" aria-pressed="false" title="Start quiet ambient music">
+            <span class="sound-icon" id="sound-icon" aria-hidden="true">♪</span>
+            <span id="sound-label">Low music off</span>
+          </button>
+          <span class="voice-status" id="voice-status" aria-live="polite">Best installed voice · tap low music for a quiet noir underscore.</span>
         </div>
 
         <h1 class="story-title" id="story-title"></h1>
@@ -1065,10 +1097,19 @@
       var voiceButton = document.getElementById("voice-button");
       var voiceIcon = document.getElementById("voice-icon");
       var voiceLabel = document.getElementById("voice-label");
+      var soundButton = document.getElementById("sound-button");
+      var soundIcon = document.getElementById("sound-icon");
+      var soundLabel = document.getElementById("sound-label");
       var voiceStatus = document.getElementById("voice-status");
       var speechSupported = "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
+      var ambientSupported = !!(window.AudioContext || window.webkitAudioContext);
       var activeUtterance = null;
       var narrationState = "idle";
+      var narratorVoice = null;
+      var ambientContext = null;
+      var ambientMaster = null;
+      var ambientNodes = [];
+      var ambientPlaying = false;
       var storyTitle = document.getElementById("story-title");
       var storyBody = document.getElementById("story-body");
       var clueCard = document.getElementById("clue-card");
@@ -1090,6 +1131,31 @@
       var topStatus = document.getElementById("top-status");
       var resetButton = document.getElementById("reset-button");
 
+      function voiceRank(voice) {
+        var name = (voice.name || "").toLowerCase();
+        var lang = (voice.lang || "").toLowerCase();
+        var score = 0;
+        if (/^en(-|_)(us|gb|au|ca|ie|nz)/i.test(lang)) score += 8;
+        if (/^en(-|_)us/i.test(lang)) score += 3;
+        if (voice.localService) score += 2;
+        if (/(natural|premium|enhanced|neural|jenny|aria|samantha|alex|karen|moira|serena|daniel|google us english|microsoft)/i.test(name)) score += 10;
+        if (/(compact|espeak|festival|robot|default)/i.test(name)) score -= 3;
+        return score;
+      }
+
+      function refreshNarratorVoice() {
+        if (!speechSupported || !window.speechSynthesis.getVoices) return;
+        var voices = window.speechSynthesis.getVoices();
+        if (!voices.length) return;
+        voices.sort(function (a, b) {
+          return voiceRank(b) - voiceRank(a);
+        });
+        narratorVoice = voices[0];
+        if (narrationState === "idle") {
+          voiceStatus.textContent = "Narrator: " + narratorVoice.name + " · tap to listen.";
+        }
+      }
+
       function setVoiceUI(mode, message) {
         if (!speechSupported) {
           voiceButton.disabled = true;
@@ -1105,7 +1171,7 @@
         if (mode === "speaking") {
           voiceIcon.textContent = "Ⅱ";
           voiceLabel.textContent = "Pause narration";
-          voiceStatus.textContent = "Reading with your device voice…";
+          voiceStatus.textContent = "Reading with " + (narratorVoice ? narratorVoice.name : "the best installed voice") + "…";
         } else if (mode === "paused") {
           voiceIcon.textContent = "▶";
           voiceLabel.textContent = "Resume narration";
@@ -1117,7 +1183,128 @@
         } else {
           voiceIcon.textContent = "▶";
           voiceLabel.textContent = "Read this scene";
-          voiceStatus.textContent = message || "Tap to listen.";
+          voiceStatus.textContent = message || (narratorVoice ? "Narrator: " + narratorVoice.name + " · tap to listen." : "Best installed voice · tap to listen.");
+        }
+      }
+
+      function updateAmbientUI() {
+        if (!ambientSupported) {
+          soundButton.disabled = true;
+          soundButton.setAttribute("aria-pressed", "false");
+          soundIcon.textContent = "–";
+          soundLabel.textContent = "Music unavailable";
+          soundButton.title = "Web Audio is not available in this browser";
+          return;
+        }
+        soundButton.disabled = false;
+        soundButton.setAttribute("aria-pressed", ambientPlaying ? "true" : "false");
+        soundButton.classList.toggle("is-on", ambientPlaying);
+        soundIcon.textContent = ambientPlaying ? "♫" : "♪";
+        soundLabel.textContent = ambientPlaying ? "Low music on" : "Low music off";
+        soundButton.title = ambientPlaying ? "Turn quiet ambient music off" : "Start quiet ambient music";
+      }
+
+      function startAmbient() {
+        if (!ambientSupported || ambientPlaying) return;
+        var AudioContextCtor = window.AudioContext || window.webkitAudioContext;
+        var context;
+        try {
+          context = new AudioContextCtor();
+        } catch (error) {
+          updateAmbientUI();
+          voiceStatus.textContent = "Ambient music is not available on this device.";
+          return;
+        }
+
+        ambientContext = context;
+        var now = context.currentTime;
+        var master = context.createGain();
+        master.gain.setValueAtTime(0.0001, now);
+        master.gain.exponentialRampToValueAtTime(0.038, now + 1.8);
+        master.connect(context.destination);
+
+        var filter = context.createBiquadFilter();
+        filter.type = "lowpass";
+        filter.frequency.value = 720;
+        filter.Q.value = 0.35;
+        filter.connect(master);
+
+        var padSpecs = [
+          [110, 0.16],
+          [146.83, 0.11],
+          [220, 0.055]
+        ];
+        var nodes = [master, filter];
+        padSpecs.forEach(function (spec) {
+          var oscillator = context.createOscillator();
+          var gain = context.createGain();
+          oscillator.type = "sine";
+          oscillator.frequency.value = spec[0];
+          gain.gain.value = spec[1];
+          oscillator.connect(gain);
+          gain.connect(filter);
+          oscillator.start();
+          nodes.push(oscillator, gain);
+        });
+
+        var lfo = context.createOscillator();
+        var lfoDepth = context.createGain();
+        lfo.type = "sine";
+        lfo.frequency.value = 0.065;
+        lfoDepth.gain.value = 0.006;
+        lfo.connect(lfoDepth);
+        lfoDepth.connect(master.gain);
+        lfo.start();
+        nodes.push(lfo, lfoDepth);
+
+        ambientMaster = master;
+        ambientNodes = nodes;
+        ambientPlaying = true;
+        updateAmbientUI();
+        if (narrationState === "idle") {
+          voiceStatus.textContent = "Quiet noir ambience on · narration uses the best installed voice.";
+        }
+        context.resume().catch(function () {
+          stopAmbient(true);
+        });
+      }
+
+      function stopAmbient(immediate) {
+        var context = ambientContext;
+        var master = ambientMaster;
+        var nodes = ambientNodes.slice();
+        ambientContext = null;
+        ambientMaster = null;
+        ambientNodes = [];
+        ambientPlaying = false;
+        updateAmbientUI();
+        if (!context || !master) return;
+
+        var now = context.currentTime;
+        try {
+          master.gain.cancelScheduledValues(now);
+          master.gain.setValueAtTime(Math.max(master.gain.value, 0.0001), now);
+          if (immediate) {
+            master.gain.setValueAtTime(0.0001, now);
+          } else {
+            master.gain.exponentialRampToValueAtTime(0.0001, now + 0.6);
+          }
+        } catch (error) {}
+        window.setTimeout(function () {
+          nodes.forEach(function (node) {
+            if (node && node.stop) {
+              try { node.stop(); } catch (error) {}
+            }
+          });
+          try { context.close(); } catch (error) {}
+        }, immediate ? 0 : 700);
+      }
+
+      function toggleAmbient() {
+        if (ambientPlaying) {
+          stopAmbient(false);
+        } else {
+          startAmbient();
         }
       }
 
@@ -1128,7 +1315,7 @@
           if (!clueNote.hidden) parts.push(clueNote.textContent);
         }
         if (!feedback.hidden) parts.push(feedbackCopy.textContent);
-        return parts.join(". ").replace(/\s+/g, " ").trim();
+        return parts.join(".\\n\\n").replace(/[ \\t]+/g, " ").replace(/\\n{3,}/g, "\\n\\n").trim();
       }
 
       function stopNarration() {
@@ -1143,11 +1330,18 @@
       function speakCurrentScene() {
         if (!speechSupported) return;
         stopNarration();
+        refreshNarratorVoice();
         var utterance = new SpeechSynthesisUtterance(getNarrationText());
-        utterance.lang = document.documentElement.lang || "en-US";
-        utterance.rate = 0.94;
-        utterance.pitch = 1;
-        utterance.volume = 1;
+        var voice = narratorVoice;
+        if (voice) {
+          utterance.voice = voice;
+          utterance.lang = voice.lang || "en-US";
+        } else {
+          utterance.lang = document.documentElement.lang || "en-US";
+        }
+        utterance.rate = 0.89;
+        utterance.pitch = 0.96;
+        utterance.volume = 0.94;
         activeUtterance = utterance;
         narrationState = "speaking";
         utterance.onstart = function () {
@@ -1195,6 +1389,20 @@
       }
 
       voiceButton.addEventListener("click", toggleNarration);
+      soundButton.addEventListener("click", toggleAmbient);
+      if (speechSupported && window.speechSynthesis.addEventListener) {
+        window.speechSynthesis.addEventListener("voiceschanged", refreshNarratorVoice);
+      }
+      document.addEventListener("visibilitychange", function () {
+        if (!ambientContext) return;
+        if (document.hidden) {
+          ambientContext.suspend();
+        } else if (ambientPlaying) {
+          ambientContext.resume();
+        }
+      });
+      refreshNarratorVoice();
+      updateAmbientUI();
       setVoiceUI("idle");
 
       function addEvidence(item) {
