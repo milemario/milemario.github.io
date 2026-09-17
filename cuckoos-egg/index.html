@@ -252,6 +252,48 @@
       transition: width .35s ease;
     }
 
+    .scene-art {
+      margin: 0 0 30px;
+      padding: 8px;
+      border: 1px solid rgba(232, 179, 107, .22);
+      border-radius: 13px;
+      background: rgba(4, 7, 10, .7);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, .22);
+    }
+
+    .scene-art-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .scene-art-grid.dual {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .scene-art img {
+      display: block;
+      width: 100%;
+      max-height: 510px;
+      border-radius: 8px;
+      background: #080b0f;
+      object-fit: contain;
+    }
+
+    .scene-art-grid.dual img {
+      max-height: 330px;
+    }
+
+    .scene-art figcaption {
+      padding: 9px 4px 1px;
+      color: var(--dim);
+      font-size: .67rem;
+      font-weight: 800;
+      letter-spacing: .14em;
+      line-height: 1.35;
+      text-transform: uppercase;
+    }
+
     h1, h2, h3, p { overflow-wrap: anywhere; }
     .story-title {
       margin: 0 0 22px;
@@ -632,6 +674,9 @@
         flex-basis: 100%;
         min-width: 0;
       }
+      .scene-art { margin-bottom: 24px; }
+      .scene-art-grid.dual { grid-template-columns: 1fr; }
+      .scene-art img, .scene-art-grid.dual img { max-height: 340px; }
       .choice-button { gap: 10px; }
       .choice-letter { width: 28px; height: 28px; flex-basis: 28px; }
       .choice-arrow { font-size: 1.1rem; }
@@ -677,6 +722,11 @@
           </button>
           <span class="voice-status" id="voice-status" aria-live="polite">Best installed voice · tap low music for a quiet noir underscore.</span>
         </div>
+
+        <figure class="scene-art" id="scene-art" hidden aria-labelledby="scene-art-caption">
+          <div class="scene-art-grid" id="scene-art-grid"></div>
+          <figcaption id="scene-art-caption"></figcaption>
+        </figure>
 
         <h1 class="story-title" id="story-title"></h1>
         <div class="story-body" id="story-body" aria-live="polite"></div>
@@ -1080,6 +1130,70 @@
         }
       ];
 
+      var sceneArtwork = [
+        {
+          caption: "The laboratory after hours.",
+          images: [{ src: "assets/scene-00-after-hours.jpg", alt: "A quiet computer-room desk after hours, with a telephone, records, and a curl of cigarette smoke." }]
+        },
+        {
+          caption: "The 75-cent discrepancy.",
+          images: [{ src: "assets/scene-01-three-quarters.jpg", alt: "A researcher points to a circled 75-cent entry on a green-bar accounting report." }]
+        },
+        {
+          caption: "The account nobody remembers.",
+          images: [{ src: "assets/scene-02-account.jpg", alt: "A researcher studies an old terminal while a hooded figure lingers behind him." }]
+        },
+        {
+          caption: "Following the first thread.",
+          images: [{ src: "assets/scene-03-paper-trail.jpg", alt: "Two researchers follow a red route across a wall map beside a glowing terminal." }]
+        },
+        {
+          caption: "Someone at the other keyboard.",
+          images: [{ src: "assets/scene-04-visitor-returns.jpg", alt: "A researcher watches a terminal while a shadowed visitor stands behind him." }]
+        },
+        {
+          caption: "Start with what you can demonstrate.",
+          images: [{ src: "assets/scene-05-please-hold.png", alt: "A tired operator takes a telephone call among humming mainframe racks." }]
+        },
+        {
+          caption: "The route crosses an ocean.",
+          images: [{ src: "assets/scene-06-germany-route.jpg", alt: "A map connects Oakland to Hanover, West Germany, across a dark computer room." }]
+        },
+        {
+          caption: "The plate on the table.",
+          images: [{ src: "assets/scene-07-the-plate.jpg", alt: "A researcher plans the next move over a map, a clock, and scattered computer disks." }]
+        },
+        {
+          caption: "An attractive pile of paperwork.",
+          images: [{ src: "assets/scene-08-the-bait.jpg", alt: "A printer produces a root prompt while a researcher watches from the shadows." }]
+        },
+        {
+          caption: "Stay on the line.",
+          images: [
+            { src: "assets/scene-09-stay-on-line.png", alt: "A researcher follows a live trace across a map filled with glowing connections." },
+            { src: "assets/telecom-notebook.png", alt: "Telephone equipment, punched paper, and a notebook wait beside the machine." }
+          ]
+        }
+      ];
+
+      var endingArtwork = {
+        traced: {
+          caption: "Originating connection traced.",
+          images: [
+            { src: "assets/ending-traced.png", alt: "A researcher watches a route from New York toward Bremen, West Germany." },
+            { src: "assets/scene-06-germany-route.jpg", alt: "A map marks the connection from Oakland to Hanover, West Germany." }
+          ]
+        },
+        partial: {
+          caption: "The last confirmed connection.",
+          images: [{ src: "assets/ending-partial.jpg", alt: "A researcher makes a call from a rain-soaked European street." }]
+        },
+        contained: {
+          caption: "Evidence handed over.",
+          images: [{ src: "assets/ending-contained.jpg", alt: "A noir collage of the laboratory, its records, and the distant investigation." }]
+        }
+      };
+
       var state = {
         scene: 0,
         choiceMade: false,
@@ -1134,6 +1248,9 @@
       var caseStatus = document.getElementById("case-status");
       var topStatus = document.getElementById("top-status");
       var resetButton = document.getElementById("reset-button");
+      var sceneArt = document.getElementById("scene-art");
+      var sceneArtGrid = document.getElementById("scene-art-grid");
+      var sceneArtCaption = document.getElementById("scene-art-caption");
 
       function voiceRank(voice) {
         var name = (voice.name || "").toLowerCase();
@@ -1544,6 +1661,32 @@
         }
       }
 
+      function renderArtwork(artwork) {
+        sceneArtGrid.innerHTML = "";
+        if (!artwork || !artwork.images || !artwork.images.length) {
+          sceneArt.hidden = true;
+          sceneArtCaption.textContent = "";
+          return;
+        }
+
+        sceneArt.hidden = false;
+        sceneArtCaption.textContent = artwork.caption || "";
+        sceneArtGrid.className = artwork.images.length > 1 ? "scene-art-grid dual" : "scene-art-grid";
+
+        artwork.images.forEach(function (item) {
+          var image = document.createElement("img");
+          image.src = item.src;
+          image.alt = item.alt || "";
+          image.loading = "lazy";
+          image.decoding = "async";
+          image.addEventListener("error", function () {
+            image.remove();
+            if (!sceneArtGrid.children.length) sceneArt.hidden = true;
+          });
+          sceneArtGrid.appendChild(image);
+        });
+      }
+
       function makeButton(label, className) {
         var button = document.createElement("button");
         button.type = "button";
@@ -1625,6 +1768,7 @@
         storyBody.innerHTML = scene.body.map(function (paragraph) {
           return "<p>" + paragraph + "</p>";
         }).join("");
+        renderArtwork(sceneArtwork[index]);
 
         renderClue(scene.clue);
         feedback.hidden = true;
@@ -1713,6 +1857,7 @@
         storyBody.innerHTML = '<div class="ending-stamp">' + ending.stamp + '</div>' + ending.body.map(function (paragraph) {
           return "<p>" + paragraph + "</p>";
         }).join("") + '<div class="historical-note"><strong>The real case.</strong> This fictional game dramatizes the investigation recounted in Clifford Stoll’s nonfiction book, <em>The Cuckoo’s Egg</em>. In 1986, a 75-cent accounting discrepancy at Lawrence Berkeley Laboratory led Stoll to an intruder. The investigation ultimately exposed espionage connected to the Soviet KGB. <a href="https://www.simonandschuster.com/books/The-Cuckoos-Egg/Cliff-Stoll/9781668048160" target="_blank" rel="noopener noreferrer">About the book ↗</a><br><br>The dialogue, composite characters, sample records, decoy arrangements, and alternative endings in this game are invented or simplified.</div>';
+        renderArtwork(endingArtwork[kind]);
 
         clueCard.hidden = true;
         decisionHeading.hidden = true;
