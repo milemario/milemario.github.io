@@ -1,0 +1,1313 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1016">
+  <meta name="description" content="Seventy-Five Cents: a short, responsive crime-noir cybersecurity investigation gamebook.">
+  <title>Seventy-Five Cents · A Digital Noir</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f4eee4;
+      --muted: #a7a9a6;
+      --dim: #707775;
+      --bg: #090c10;
+      --bg-soft: #0e1319;
+      --panel: #111820;
+      --panel-light: #17212b;
+      --line: rgba(220, 222, 209, .15);
+      --line-strong: rgba(220, 222, 209, .28);
+      --amber: #e8b36b;
+      --amber-bright: #ffd08b;
+      --rust: #df715e;
+      --green: #a1d8b2;
+      --green-dark: #173528;
+      --paper: #d6c8aa;
+      --shadow: 0 28px 80px rgba(0, 0, 0, .35);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html { min-height: 100%; background: var(--bg); }
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 86% 0%, rgba(223, 113, 94, .12), transparent 28rem),
+        radial-gradient(circle at 9% 84%, rgba(232, 179, 107, .08), transparent 30rem),
+        linear-gradient(145deg, #080b0f 0%, #0b1117 53%, #0a0d11 100%);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .055;
+      background-image:
+        repeating-linear-gradient(0deg, rgba(255,255,255,.22) 0, rgba(255,255,255,.22) 1px, transparent 1px, transparent 4px),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.18) 0, rgba(255,255,255,.18) 1px, transparent 1px, transparent 7px);
+      mix-blend-mode: screen;
+      z-index: 3;
+    }
+
+    button, a { font: inherit; }
+    button { color: inherit; }
+    a { color: inherit; }
+
+    .app-shell {
+      width: min(1180px, calc(100% - 48px));
+      margin: 0 auto;
+      padding: 0 0 max(38px, env(safe-area-inset-bottom));
+    }
+
+    .topbar {
+      min-height: 86px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 13px;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      position: relative;
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(232, 179, 107, .6);
+      border-radius: 50%;
+      color: var(--amber-bright);
+      font-family: Georgia, serif;
+      font-size: 1.18rem;
+      font-weight: 700;
+      box-shadow: inset 0 0 18px rgba(232, 179, 107, .08);
+    }
+
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      width: 7px;
+      height: 7px;
+      top: 5px;
+      right: 4px;
+      border-radius: 50%;
+      background: var(--rust);
+      box-shadow: 0 0 14px rgba(223, 113, 94, .7);
+    }
+
+    .brand-name { display: block; font-family: Georgia, "Times New Roman", serif; font-size: 1.03rem; letter-spacing: .02em; }
+    .brand-sub { display: block; color: var(--dim); font-size: .73rem; letter-spacing: .13em; text-transform: uppercase; }
+    .top-status { color: var(--dim); font-size: .72rem; letter-spacing: .16em; text-transform: uppercase; }
+
+    .game-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 315px;
+      align-items: start;
+      gap: 26px;
+      padding: 42px 0 32px;
+    }
+
+    .story-card {
+      position: relative;
+      min-width: 0;
+      padding: clamp(24px, 4vw, 48px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.025), transparent 34%),
+        var(--panel);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      outline: none;
+    }
+
+    .story-card::before {
+      content: "";
+      position: absolute;
+      width: 170px;
+      height: 170px;
+      top: -95px;
+      right: -75px;
+      border: 1px solid rgba(232, 179, 107, .18);
+      border-radius: 50%;
+      box-shadow: 0 0 0 16px rgba(232, 179, 107, .025), 0 0 0 32px rgba(232, 179, 107, .02);
+      pointer-events: none;
+    }
+
+    .scene-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      color: var(--dim);
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .17em;
+      text-transform: uppercase;
+    }
+
+    .scene-meta .kicker { color: var(--amber); }
+    .scene-count { white-space: nowrap; }
+
+    .progress-track {
+      height: 4px;
+      margin: 17px 0 38px;
+      overflow: hidden;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, .08);
+    }
+
+    .progress-fill {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--rust), var(--amber));
+      transition: width .35s ease;
+    }
+
+    h1, h2, h3, p { overflow-wrap: anywhere; }
+    .story-title {
+      margin: 0 0 22px;
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.1rem, 5vw, 4.4rem);
+      font-weight: 400;
+      letter-spacing: -.045em;
+      line-height: .98;
+    }
+
+    .story-body {
+      max-width: 70ch;
+      color: #e2ddd4;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.06rem, 1.3vw, 1.2rem);
+      line-height: 1.78;
+    }
+
+    .story-body p { margin: 0 0 1.05em; }
+    .story-body p:last-child { margin-bottom: 0; }
+    code {
+      padding: .12em .3em;
+      border: 1px solid rgba(161, 216, 178, .23);
+      border-radius: 5px;
+      color: var(--green);
+      background: rgba(161, 216, 178, .08);
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: .84em;
+      overflow-wrap: anywhere;
+    }
+
+    .clue-card {
+      position: relative;
+      margin: 34px 0 0;
+      padding: 18px 19px 19px;
+      border: 1px solid rgba(161, 216, 178, .3);
+      border-left: 3px solid var(--green);
+      border-radius: 7px 13px 13px 7px;
+      background: linear-gradient(120deg, rgba(17, 50, 38, .7), rgba(12, 26, 24, .8));
+    }
+
+    .clue-label {
+      margin-bottom: 10px;
+      color: var(--green);
+      font-size: .69rem;
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .clue-title {
+      margin: 0 0 10px;
+      color: #d5f0dc;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .clue-text {
+      margin: 0;
+      color: #c7d8cc;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: .86rem;
+      line-height: 1.65;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .clue-note {
+      margin: 12px 0 0;
+      color: #9bb5a3;
+      font-size: .82rem;
+      line-height: 1.5;
+    }
+
+    .decision-heading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 38px 0 13px;
+      color: var(--dim);
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
+    .decision-heading::before {
+      content: "";
+      width: 28px;
+      height: 1px;
+      background: var(--line-strong);
+    }
+
+    .choice-list { display: grid; gap: 11px; }
+    .choice-button, .continue-button, .restart-button {
+      width: 100%;
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 13px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 11px;
+      color: var(--ink);
+      background: rgba(255, 255, 255, .025);
+      cursor: pointer;
+      text-align: left;
+      transition: border-color .18s ease, background .18s ease, transform .18s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .choice-button:hover, .choice-button:focus-visible {
+      border-color: rgba(232, 179, 107, .78);
+      background: rgba(232, 179, 107, .08);
+      transform: translateY(-1px);
+    }
+
+    .choice-button:focus-visible, .continue-button:focus-visible, .restart-button:focus-visible, .notebook-card summary:focus-visible, .reset-link:focus-visible {
+      outline: 3px solid rgba(232, 179, 107, .35);
+      outline-offset: 3px;
+    }
+
+    .choice-letter {
+      width: 31px;
+      height: 31px;
+      flex: 0 0 31px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(232, 179, 107, .4);
+      border-radius: 50%;
+      color: var(--amber-bright);
+      font-size: .82rem;
+      font-weight: 800;
+    }
+
+    .choice-label { font-size: .98rem; line-height: 1.35; }
+    .choice-arrow { margin-left: auto; color: var(--dim); font-size: 1.35rem; }
+
+    .advance-button, .continue-button, .restart-button {
+      justify-content: center;
+      border-color: rgba(232, 179, 107, .58);
+      color: #17120b;
+      background: linear-gradient(110deg, var(--amber), var(--amber-bright));
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .advance-button:hover, .advance-button:focus-visible, .continue-button:hover, .continue-button:focus-visible, .restart-button:hover, .restart-button:focus-visible {
+      border-color: var(--amber-bright);
+      background: linear-gradient(110deg, var(--amber-bright), #ffe1aa);
+      transform: translateY(-1px);
+    }
+
+    .feedback {
+      margin-top: 18px;
+      padding: 18px 19px;
+      border: 1px solid rgba(223, 113, 94, .35);
+      border-radius: 11px;
+      background: rgba(72, 31, 29, .35);
+    }
+
+    .feedback-label {
+      margin-bottom: 7px;
+      color: var(--rust);
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
+    .feedback-title { margin: 0 0 7px; font-size: 1rem; }
+    .feedback-copy { margin: 0; color: #e0c9c2; font-family: Georgia, "Times New Roman", serif; font-size: 1rem; line-height: 1.65; }
+    .feedback-actions { margin-top: 15px; }
+    .feedback-actions .continue-button { min-height: 50px; }
+
+    .notebook-card {
+      position: sticky;
+      top: 20px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(14, 19, 25, .88);
+      box-shadow: 0 20px 55px rgba(0, 0, 0, .25);
+      overflow: hidden;
+    }
+
+    .notebook-card summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 20px 20px 16px;
+      border-bottom: 1px solid var(--line);
+      color: var(--paper);
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .notebook-card summary::-webkit-details-marker { display: none; }
+    .notebook-heading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.16rem;
+    }
+
+    .notebook-heading::before {
+      content: "✶";
+      color: var(--rust);
+      font-family: Georgia, serif;
+      font-size: 1.35rem;
+    }
+
+    .summary-chevron { color: var(--dim); transition: transform .2s ease; }
+    .notebook-card[open] .summary-chevron { transform: rotate(180deg); }
+
+    .notebook-content { padding: 18px 20px 21px; }
+    .case-status {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 19px;
+      color: var(--green);
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
+    .case-status::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 12px rgba(161, 216, 178, .65);
+    }
+
+    .case-status.closed { color: var(--amber); }
+    .case-status.closed::before { background: var(--amber); box-shadow: 0 0 12px rgba(232, 179, 107, .65); }
+
+    .notebook-section + .notebook-section { margin-top: 22px; }
+    .notebook-label {
+      margin-bottom: 9px;
+      color: var(--dim);
+      font-size: .67rem;
+      font-weight: 800;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
+    .evidence-list { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+    .evidence-item {
+      padding: 10px 11px;
+      border: 1px solid rgba(161, 216, 178, .16);
+      border-radius: 8px;
+      background: rgba(161, 216, 178, .045);
+    }
+
+    .evidence-item strong { display: block; color: #d5f0dc; font-size: .82rem; line-height: 1.35; }
+    .evidence-item span { display: block; margin-top: 4px; color: #99ad9f; font-size: .77rem; line-height: 1.4; }
+    .empty-note { margin: 0; color: var(--dim); font-size: .84rem; font-style: italic; }
+
+    .field-list { display: grid; gap: 8px; margin: 0; }
+    .field {
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      gap: 8px;
+      align-items: baseline;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+
+    .field dt { color: var(--dim); font-size: .72rem; }
+    .field dd { margin: 0; color: #d7d8d2; font-size: .79rem; text-align: right; overflow-wrap: anywhere; }
+    .field dd.pending { color: var(--dim); }
+    .decision-log { margin: 0; padding: 0 0 0 18px; color: #aeb6b1; font-size: .8rem; }
+    .decision-log li + li { margin-top: 8px; }
+
+    .reset-link {
+      display: inline-block;
+      margin-top: 22px;
+      padding: 5px 0;
+      border: 0;
+      color: var(--dim);
+      background: transparent;
+      cursor: pointer;
+      font-size: .76rem;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .reset-link:hover { color: var(--amber); }
+
+    .ending-stamp {
+      display: inline-block;
+      margin: 0 0 22px;
+      padding: 6px 9px;
+      border: 1px solid rgba(223, 113, 94, .55);
+      border-radius: 5px;
+      color: var(--rust);
+      font-size: .68rem;
+      font-weight: 800;
+      letter-spacing: .17em;
+      text-transform: uppercase;
+      transform: rotate(-2deg);
+    }
+
+    .historical-note {
+      margin-top: 31px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line);
+      color: #aeb0ac;
+      font-size: .86rem;
+      line-height: 1.65;
+    }
+
+    .historical-note strong { color: var(--paper); }
+    .historical-note a { color: var(--amber); text-underline-offset: 3px; }
+
+    .footer {
+      color: var(--dim);
+      font-size: .72rem;
+      letter-spacing: .06em;
+      text-align: center;
+    }
+
+    .visually-hidden {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
+    [hidden] { display: none !important; }
+
+    @media (max-width: 900px) {
+      .app-shell { width: min(100% - 32px, 760px); }
+      .game-grid { grid-template-columns: minmax(0, 1fr) 275px; gap: 17px; }
+      .story-card { padding: 30px; }
+      .notebook-content, .notebook-card summary { padding-left: 16px; padding-right: 16px; }
+      .field { grid-template-columns: 77px 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      .app-shell { width: min(100% - 26px, 680px); }
+      .topbar { min-height: 73px; }
+      .top-status { display: none; }
+      .game-grid { grid-template-columns: 1fr; padding-top: 24px; }
+      .notebook-card { position: static; order: 2; }
+      .story-card { padding: 26px 21px 25px; }
+      .progress-track { margin-bottom: 29px; }
+      .story-title { font-size: clamp(2.1rem, 11vw, 3.25rem); }
+      .story-body { font-size: 1.06rem; line-height: 1.73; }
+      .choice-button { min-height: 62px; padding: 14px 13px; }
+      .choice-label { font-size: .97rem; }
+    }
+
+    @media (max-width: 430px) {
+      .brand-mark { width: 35px; height: 35px; }
+      .brand-name { font-size: .92rem; }
+      .brand-sub { font-size: .64rem; }
+      .scene-meta { font-size: .64rem; letter-spacing: .12em; }
+      .story-card { border-radius: 14px; padding: 22px 16px 20px; }
+      .clue-card { padding: 15px 14px 16px; }
+      .choice-button { gap: 10px; }
+      .choice-letter { width: 28px; height: 28px; flex-basis: 28px; }
+      .choice-arrow { font-size: 1.1rem; }
+      .notebook-card { border-radius: 14px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="Back to the course activities hub">
+        <span class="brand-mark" aria-hidden="true">75</span>
+        <span>
+          <span class="brand-name">Seventy-Five Cents</span>
+          <span class="brand-sub">A digital noir</span>
+        </span>
+      </a>
+      <span class="top-status" id="top-status">Inquiry active</span>
+    </header>
+
+    <main class="game-grid">
+      <section class="story-card" id="story-card" tabindex="-1" aria-labelledby="story-title">
+        <div class="scene-meta">
+          <span class="kicker" id="scene-kicker">BERKELEY · 1986</span>
+          <span class="scene-count" id="scene-count">CASE FILE · 00</span>
+        </div>
+        <div class="progress-track" aria-label="Investigation progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+
+        <h1 class="story-title" id="story-title"></h1>
+        <div class="story-body" id="story-body" aria-live="polite"></div>
+
+        <section class="clue-card" id="clue-card" hidden aria-labelledby="clue-title">
+          <div class="clue-label">Evidence recovered</div>
+          <h2 class="clue-title" id="clue-title"></h2>
+          <p class="clue-text" id="clue-text"></p>
+          <p class="clue-note" id="clue-note" hidden></p>
+        </section>
+
+        <div class="decision-heading" id="decision-heading" hidden>What do you do?</div>
+        <div class="choice-list" id="choice-list"></div>
+        <div class="feedback" id="feedback" hidden aria-live="polite">
+          <div class="feedback-label">Your move</div>
+          <h2 class="feedback-title" id="feedback-title"></h2>
+          <p class="feedback-copy" id="feedback-copy"></p>
+          <div class="feedback-actions" id="feedback-actions"></div>
+        </div>
+      </section>
+
+      <aside aria-label="Investigation notebook">
+        <details class="notebook-card" open>
+          <summary>
+            <span class="notebook-heading">Field notebook</span>
+            <span class="summary-chevron" aria-hidden="true">⌄</span>
+          </summary>
+          <div class="notebook-content">
+            <div class="case-status" id="case-status">Inquiry active</div>
+
+            <section class="notebook-section" aria-labelledby="evidence-label">
+              <div class="notebook-label" id="evidence-label">Confirmed leads</div>
+              <ul class="evidence-list" id="evidence-list">
+                <li><p class="empty-note">No confirmed leads yet. Keep looking.</p></li>
+              </ul>
+            </section>
+
+            <section class="notebook-section" aria-labelledby="case-facts-label">
+              <div class="notebook-label" id="case-facts-label">Case file</div>
+              <dl class="field-list">
+                <div class="field"><dt>Record</dt><dd id="recording-value" class="pending">Not chosen</dd></div>
+                <div class="field"><dt>Operators</dt><dd id="operators-value" class="pending">Not contacted</dd></div>
+                <div class="field"><dt>Decoy</dt><dd id="bait-value" class="pending">Not prepared</dd></div>
+              </dl>
+            </section>
+
+            <section class="notebook-section" aria-labelledby="decision-log-label">
+              <div class="notebook-label" id="decision-log-label">Recent decisions</div>
+              <ol class="decision-log" id="decision-log">
+                <li>Case opened after hours.</li>
+              </ol>
+            </section>
+
+            <button class="reset-link" id="reset-button" type="button">Restart the investigation</button>
+          </div>
+        </details>
+      </aside>
+    </main>
+
+    <footer class="footer">A fictional interactive teaching story inspired by a real 1986 investigation.</footer>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      var scenes = [
+        {
+          kicker: "BERKELEY · 1986",
+          count: "CASE FILE · 00",
+          title: "After hours",
+          body: [
+            "The last bus drops you below the laboratory. By the time you reach the computer room, the back of your shirt is damp and somebody has left three messages on your chair.",
+            "A printer has jammed. A researcher cannot log in. An overnight calculation has stopped somewhere between an answer and a small fortune in computer time.",
+            "You trained as an astronomer. This week, apparently, the universe consists of other people’s broken machinery.",
+            "You clear the paper jam. You rescue the calculation. Through the windows, the bay disappears into evening haze.",
+            "Then your supervisor leaves a folded accounting report beside your coffee.",
+            "<q>Before you go. These don’t agree.</q>",
+            "You look at the clock.",
+            "At home, there is dinner. Here, there is a red pen attached to the desk with string.",
+            "You pick up the pen."
+          ],
+          choices: [
+            { label: "Open the report", next: 1, immediate: true }
+          ]
+        },
+        {
+          kicker: "THE FIRST THREAD",
+          count: "SCENE 01 / 10",
+          title: "Three quarters",
+          body: [
+            "The paper is warm from the printer. Green bars cross the page, each carrying a little piece of somebody’s working day.",
+            "Computer time costs money. One program measures how much people use. Another assigns the charges to their accounts.",
+            "The totals should agree.",
+            "You straighten the sheets. Check the date. Run a finger down the columns.",
+            "Seventy-five cents.",
+            "Your supervisor could have dropped three coins on the desk and gone home. Instead, you’re here, looking for a mistake smaller than the coffee stain beside it."
+          ],
+          clue: {
+            title: "Usage report · 14 August",
+            text: "SYSTEM USAGE:      $4,382.25\\nCHARGES ASSIGNED:   $4,381.50\\nDIFFERENCE:             $0.75"
+          },
+          choices: [
+            {
+              label: "Recalculate the charges",
+              outcome: "The rates are right. The arithmetic is right. One short session has no matching bill. You circle its account name.",
+              next: 2,
+              evidence: { id: "billing", title: "The 75-cent mismatch", text: "One short session has no matching charge." }
+            },
+            {
+              label: "Match the sessions to the bills",
+              outcome: "Every session finds a matching charge except one. Its account exists in the computer, but not in the billing list.",
+              next: 2,
+              evidence: { id: "billing", title: "The 75-cent mismatch", text: "One session appears in usage but not in billing." }
+            }
+          ]
+        },
+        {
+          kicker: "THE ACCOUNT",
+          count: "SCENE 02 / 10",
+          title: "A name without a bill",
+          body: [
+            "The account is called <code>visitor3</code>.",
+            "An ordinary name. That bothers you more than a dramatic one would have. This place is full of visiting researchers; a name like this could sit unnoticed for months.",
+            "The account card lists a sponsor. The billing office has no current record of it.",
+            "You turn your chair toward the dark aisle between the machines.",
+            "For a moment, you imagine someone standing there.",
+            "Then a cooling fan changes pitch, and the room is only a room again."
+          ],
+          clue: {
+            title: "Account card · visitor3",
+            text: "ACCOUNT:              visitor3\\nSPONSOR:              R. HALE\\nCURRENT AUTHORIZATION: NONE"
+          },
+          choices: [
+            {
+              label: "Telephone the sponsor",
+              outcome: "Hale says the visitor left months ago. The account should be closed. You write down his answer and the time of the call.",
+              next: 3,
+              evidence: { id: "sponsor", title: "The sponsor has no current visitor", text: "R. Hale says the account should have been closed." }
+            },
+            {
+              label: "Compare the account with a backup",
+              outcome: "Last month’s copy shows the account disabled. Now it works. Restoring it required privileges an ordinary visitor shouldn’t have.",
+              next: 3,
+              evidence: { id: "privilege", title: "A closed account was restored", text: "The account changed state with elevated privileges." }
+            }
+          ]
+        },
+        {
+          kicker: "PRESERVE THE TRAIL",
+          count: "SCENE 03 / 10",
+          title: "A witness made of paper",
+          body: [
+            "By morning, you’ve checked both the sponsor and the old account record. Neither explains who restored the account.",
+            "Mara, another administrator, leans over your terminal.",
+            "<q>If someone has enough control to change accounts, they can change the records too.</q>",
+            "A spare printer stands beside the wall, waiting to produce a research group’s results. You could borrow it to record the suspect session as it happens.",
+            "Or you could save everything on the computer and leave the researchers their printer.",
+            "The machine hums beneath your desk. Until yesterday, you would have trusted it to remember."
+          ],
+          clue: {
+            title: "Working note",
+            text: "Someone restored a closed account.\\nRecords on the same computer may be altered by that person."
+          },
+          choices: [
+            {
+              label: "Borrow the printer; record on paper",
+              outcome: "You explain the delay to the researchers and connect the printer. The next session will leave a copy outside the computer.",
+              next: 4,
+              set: { recording: "paper" },
+              evidence: { id: "paper", title: "Independent session record", text: "A paper copy will survive changes on the host." }
+            },
+            {
+              label: "Save the session on the computer",
+              outcome: "You start a session log on disk and keep a notebook beside the keyboard. The printer stays with the researchers.",
+              next: 4,
+              set: { recording: "disk" },
+              evidence: { id: "disk", title: "Local session log", text: "The session is recorded on the same host under suspicion." }
+            }
+          ]
+        },
+        {
+          kicker: "THE VISITOR RETURNS",
+          count: "SCENE 04 / 10",
+          title: "Someone at the other keyboard",
+          body: [
+            "Three nights later, a bell sounds at the terminal.",
+            "<code>visitor3</code>",
+            "Your hands are in your lap.",
+            "Someone types a command. Pauses. Corrects a mistake.",
+            "The small correction makes your stomach tighten. A person is sitting at another keyboard, somewhere beyond this room.",
+            "The visitor acquires administrator access, then connects outward. Names of defense installations pass across the screen.",
+            "A search follows.",
+            "Then the local session log disappears.",
+            "You reach for your notebook so quickly that the pen rolls under the desk."
+          ],
+          clue: {
+            title: "Session excerpt · visitor3",
+            text: "DESTINATIONS: defense and military systems\\nSEARCH TERMS: nuclear; SDI\\nLOCAL LOG: deleted",
+            note: "SDI means Strategic Defense Initiative, a US missile-defense programme."
+          },
+          choices: [
+            {
+              label: "Examine the destinations",
+              outcome: function (state) {
+                if (state.flags.recording === "paper") {
+                  return "A contractor’s computer in Virginia appears in the connection trail. The paper copy preserves the times, including the command that erased the local log. You pass a warning to its administrator.";
+                }
+                return "A contractor’s computer in Virginia appears in the connection trail. You record the times and pass a warning to its administrator, but the local session log is gone.";
+              },
+              next: 5,
+              evidence: { id: "route", title: "Outbound route to a Virginia contractor", text: "The visitor used another computer as a relay." }
+            },
+            {
+              label: "Examine the files being sought",
+              outcome: function (state) {
+                if (state.flags.recording === "paper") {
+                  return "The searches repeatedly concern defense work. You preserve the surviving details on the independent printout and warn the affected administrators. This suggests a purpose; it doesn’t identify an employer.";
+                }
+                return "The searches repeatedly concern defense work. You preserve the surviving details in your notebook and warn the affected administrators. This suggests a purpose; it doesn’t identify an employer.";
+              },
+              next: 5,
+              evidence: { id: "targeting", title: "Defense information was being sought", text: "Searches include nuclear and SDI-related material." }
+            }
+          ]
+        },
+        {
+          kicker: "WHAT YOU CAN PROVE",
+          count: "SCENE 05 / 10",
+          title: "Please hold",
+          body: [
+            "The first official you reach asks what the loss amounts to.",
+            "You mention the accounting discrepancy. Hear yourself doing it. Regret it immediately.",
+            "You try again: unauthorized access, military computers, somebody removing records.",
+            "The next call asks for dates. The one after that asks which office is responsible.",
+            "By lunchtime, your coffee has a skin.",
+            "Mara puts a fresh sheet of paper beside you.",
+            "<q>Start with what you can demonstrate.</q>",
+            "You write the account name at the top. Underneath, you separate what happened from what you think it means."
+          ],
+          clue: {
+            title: "Incident brief",
+            text: "CONFIRMED: unauthorized access and outward connections\\nSUSPECTED: deliberate collection of defense information\\nUNKNOWN: identity and employer"
+          },
+          choices: [
+            {
+              label: "Prepare the incident brief",
+              outcome: "A network technician agrees to help trace the connections. For the first time, somebody on the telephone gives you a number to call back.",
+              next: 6,
+              immediate: false,
+              evidence: { id: "brief", title: "A trace team agrees to help", text: "The investigation now has a technical contact." }
+            }
+          ]
+        },
+        {
+          kicker: "THE WRONG END OF THE WIRE",
+          count: "SCENE 06 / 10",
+          title: "A country is a large place",
+          body: [
+            "Over the following weeks, the trail crosses telephone exchanges, network operators, and other people’s computers.",
+            "The machine in Virginia was another stop along the way.",
+            "Eventually, operators follow the route into West Germany.",
+            "You put a pin in the map, then take it out. A country is a large place to accuse.",
+            "The next trace will need several people watching the same live connection. Finding them after the caller arrives will take time.",
+            "Arranging everything beforehand means more calls, more people, and another delay."
+          ],
+          clue: {
+            title: "Tracing requirement",
+            text: "The last visible computer may be a relay.\\nA live connection must last long enough to trace it through successive operators."
+          },
+          choices: [
+            {
+              label: "Coordinate the operators in advance",
+              outcome: "It takes days, but you arrange the call order and a common reference time. The overseas operator will be ready.",
+              next: 7,
+              set: { prepared: true },
+              evidence: { id: "coordination", title: "Operators are coordinated in advance", text: "The call order and reference time are agreed." }
+            },
+            {
+              label: "Call the overseas team when activity begins",
+              outcome: "You keep the preparations local. The overseas specialists will have to be located after the visitor returns.",
+              next: 7,
+              set: { prepared: false },
+              evidence: { id: "late-contact", title: "Overseas contact remains unprepared", text: "The next trace will depend on finding the right people live." }
+            }
+          ]
+        },
+        {
+          kicker: "THE DECISION",
+          count: "SCENE 07 / 10",
+          title: "The plate on the table",
+          body: [
+            "At home, you find a plate covered with another plate. The food has gone cold.",
+            "You eat standing up, then notice you’re still holding the laboratory notebook.",
+            "The next morning, your supervisor closes the office door.",
+            "<q>We can end this here.</q>",
+            "The compromised machine can be disconnected and rebuilt. The research can move on.",
+            "Or the team can prepare a controlled return: a decoy separated from the research systems, with outgoing connections blocked.",
+            "Nobody promises the visitor will accept it.",
+            "Your supervisor waits for an answer."
+          ],
+          clue: {
+            title: "Two defensible courses",
+            text: "STOP NOW: contain the compromise and hand over the evidence.\\nCONTINUE: authorize one monitored decoy operation."
+          },
+          choices: [
+            {
+              label: "Disconnect and rebuild",
+              outcome: "You close the external connection, preserve what remains, and begin recovery. Nobody can ask you to trade more access for more certainty.",
+              ending: "contained"
+            },
+            {
+              label: "Prepare the controlled decoy",
+              outcome: "Research work moves away from the exposed machine. The team prepares the bait and agrees when to terminate the operation.",
+              next: 8,
+              set: { decoy: true },
+              evidence: { id: "decoy", title: "A separated decoy is authorized", text: "The bait will not expose the research systems." }
+            }
+          ]
+        },
+        {
+          kicker: "THE BAIT",
+          count: "SCENE 08 / 10",
+          title: "An attractive pile of paperwork",
+          body: [
+            "The defense project exists only because you type its name.",
+            "You give it a budget meeting. A delayed shipment. A committee that needs another committee to approve a revised schedule.",
+            "Mara reads over your shoulder.",
+            "<q>I’ve worked on less convincing real projects.</q>",
+            "You need something worth opening. You also need the visitor to remain connected while the operators work.",
+            "Two possible packages lie beside the keyboard.",
+            "You can make one ready before the next visit."
+          ],
+          clue: {
+            title: "The decoy brief",
+            text: "VISITOR’S INTEREST: defense information\\nTRACE REQUIREMENT: a sustained connection\\nCONTENTS: entirely invented"
+          },
+          choices: [
+            {
+              label: "A short, enticing technical brief",
+              outcome: "You prepare a compact report with a compelling title. It should attract attention, but it can be read or copied quickly.",
+              next: 9,
+              set: { bait: "brief" },
+              evidence: { id: "short-bait", title: "A short decoy brief is ready", text: "The visitor may finish it before the trace is complete." }
+            },
+            {
+              label: "A substantial defense-project archive",
+              outcome: "You prepare progress reports, correspondence, and appendices. Relevant titles draw attention; the quantity may keep the connection occupied.",
+              next: 9,
+              set: { bait: "archive" },
+              evidence: { id: "archive-bait", title: "A substantial decoy archive is ready", text: "The visitor may remain connected while the trace catches up." }
+            }
+          ]
+        },
+        {
+          kicker: "THE STING",
+          count: "SCENE 09 / 10",
+          title: "Stay on the line",
+          body: [
+            "The visitor returns.",
+            "For several seconds, nothing happens. You become aware of the fluorescent light buzzing overhead.",
+            "Then the decoy directory opens.",
+            "On the telephone, an operator reads back a circuit reference. Someone else asks them to repeat it.",
+            "The visitor requests a file.",
+            "You watch the transfer and the telephone at the same time, as if staring could make either one move at the proper speed.",
+            "The last known relay has been identified. The originating subscriber connection has not.",
+            "The research systems remain separated. You can end the session now, or give the trace more time."
+          ],
+          clue: {
+            title: "Live trace status",
+            text: "RELAY: identified\\nSUBSCRIBER CONNECTION: unconfirmed\\nACCESSIBLE SYSTEM: decoy only"
+          },
+          choices: [
+            {
+              label: "End the session and hand over the case",
+              outcome: "You disconnect. The investigators receive the route and the evidence you have, but no completed subscriber trace.",
+              ending: "partial"
+            },
+            {
+              label: "Keep the decoy available for the trace",
+              outcome: function (state) {
+                if (state.flags.prepared === true && state.flags.bait === "archive") {
+                  return "The archive keeps the visitor occupied. The overseas operator confirms the originating subscriber connection before the visitor disconnects.";
+                }
+                if (state.flags.prepared === true) {
+                  return "The operators are ready, but the short brief finishes transferring before the last exchange is traced. The visitor disconnects.";
+                }
+                if (state.flags.bait === "archive") {
+                  return "The archive keeps the visitor occupied, but the overseas specialist is reached only after the transfer finishes and the line closes.";
+                }
+                return "The brief is copied before the overseas team joins the trace. The line closes with the originating connection unresolved.";
+              },
+              ending: function (state) {
+                if (state.flags.prepared === true && state.flags.bait === "archive") {
+                  return "traced";
+                }
+                return "partial";
+              }
+            }
+          ]
+        }
+      ];
+
+      var state = {
+        scene: 0,
+        choiceMade: false,
+        ending: null,
+        flags: { recording: null, prepared: null, bait: null, decoy: false },
+        evidence: [],
+        decisions: ["Case opened after hours."]
+      };
+
+      var storyCard = document.getElementById("story-card");
+      var sceneKicker = document.getElementById("scene-kicker");
+      var sceneCount = document.getElementById("scene-count");
+      var progressFill = document.getElementById("progress-fill");
+      var progressTrack = document.querySelector(".progress-track");
+      var storyTitle = document.getElementById("story-title");
+      var storyBody = document.getElementById("story-body");
+      var clueCard = document.getElementById("clue-card");
+      var clueTitle = document.getElementById("clue-title");
+      var clueText = document.getElementById("clue-text");
+      var clueNote = document.getElementById("clue-note");
+      var decisionHeading = document.getElementById("decision-heading");
+      var choiceList = document.getElementById("choice-list");
+      var feedback = document.getElementById("feedback");
+      var feedbackTitle = document.getElementById("feedback-title");
+      var feedbackCopy = document.getElementById("feedback-copy");
+      var feedbackActions = document.getElementById("feedback-actions");
+      var evidenceList = document.getElementById("evidence-list");
+      var recordingValue = document.getElementById("recording-value");
+      var operatorsValue = document.getElementById("operators-value");
+      var baitValue = document.getElementById("bait-value");
+      var decisionLog = document.getElementById("decision-log");
+      var caseStatus = document.getElementById("case-status");
+      var topStatus = document.getElementById("top-status");
+      var resetButton = document.getElementById("reset-button");
+
+      function addEvidence(item) {
+        if (!item) return;
+        for (var i = 0; i < state.evidence.length; i += 1) {
+          if (state.evidence[i].id === item.id) return;
+        }
+        state.evidence.push(item);
+      }
+
+      function addDecision(text) {
+        state.decisions.push(text);
+        if (state.decisions.length > 4) state.decisions.shift();
+      }
+
+      function updateNotebook() {
+        if (state.evidence.length === 0) {
+          evidenceList.innerHTML = '<li><p class="empty-note">No confirmed leads yet. Keep looking.</p></li>';
+        } else {
+          evidenceList.innerHTML = state.evidence.map(function (item) {
+            return '<li class="evidence-item"><strong>' + item.title + '</strong><span>' + item.text + '</span></li>';
+          }).join("");
+        }
+
+        if (state.flags.recording === "paper") {
+          recordingValue.textContent = "Independent paper";
+          recordingValue.className = "";
+        } else if (state.flags.recording === "disk") {
+          recordingValue.textContent = "Local disk log";
+          recordingValue.className = "";
+        } else {
+          recordingValue.textContent = "Not chosen";
+          recordingValue.className = "pending";
+        }
+
+        if (state.flags.prepared === true) {
+          operatorsValue.textContent = "Ready in advance";
+          operatorsValue.className = "";
+        } else if (state.flags.prepared === false) {
+          operatorsValue.textContent = "Contact at activity";
+          operatorsValue.className = "";
+        } else {
+          operatorsValue.textContent = "Not contacted";
+          operatorsValue.className = "pending";
+        }
+
+        if (state.flags.bait === "brief") {
+          baitValue.textContent = "Short brief";
+          baitValue.className = "";
+        } else if (state.flags.bait === "archive") {
+          baitValue.textContent = "Substantial archive";
+          baitValue.className = "";
+        } else {
+          baitValue.textContent = "Not prepared";
+          baitValue.className = "pending";
+        }
+
+        decisionLog.innerHTML = state.decisions.map(function (item) {
+          return "<li>" + item + "</li>";
+        }).join("");
+
+        if (state.ending) {
+          caseStatus.textContent = "Case closed";
+          caseStatus.className = "case-status closed";
+          topStatus.textContent = "Case closed";
+        } else {
+          caseStatus.textContent = "Inquiry active";
+          caseStatus.className = "case-status";
+          topStatus.textContent = "Inquiry active";
+        }
+      }
+
+      function renderClue(clue) {
+        if (!clue) {
+          clueCard.hidden = true;
+          return;
+        }
+        clueCard.hidden = false;
+        clueTitle.textContent = clue.title;
+        clueText.textContent = clue.text;
+        if (clue.note) {
+          clueNote.hidden = false;
+          clueNote.textContent = clue.note;
+        } else {
+          clueNote.hidden = true;
+          clueNote.textContent = "";
+        }
+      }
+
+      function makeButton(label, className) {
+        var button = document.createElement("button");
+        button.type = "button";
+        button.className = className;
+        button.textContent = label;
+        return button;
+      }
+
+      function renderChoiceButton(choice, index) {
+        var button = document.createElement("button");
+        button.type = "button";
+        button.className = "choice-button";
+        button.innerHTML = '<span class="choice-letter">' + String.fromCharCode(65 + index) + '</span><span class="choice-label">' + choice.label + '</span><span class="choice-arrow" aria-hidden="true">›</span>';
+        button.addEventListener("click", function () {
+          selectChoice(choice);
+        });
+        choiceList.appendChild(button);
+      }
+
+      function renderAdvanceButton(choice) {
+        var button = makeButton(choice.label, "choice-button advance-button");
+        button.addEventListener("click", function () {
+          if (choice.next !== undefined) {
+            renderScene(choice.next);
+          }
+        });
+        choiceList.appendChild(button);
+      }
+
+      function selectChoice(choice) {
+        if (state.choiceMade) return;
+        state.choiceMade = true;
+
+        if (choice.set) {
+          Object.keys(choice.set).forEach(function (key) {
+            state.flags[key] = choice.set[key];
+          });
+        }
+        addEvidence(choice.evidence);
+        addDecision(choice.label);
+
+        var outcome = typeof choice.outcome === "function" ? choice.outcome(state) : choice.outcome;
+        feedback.hidden = false;
+        feedbackTitle.textContent = choice.label;
+        feedbackCopy.innerHTML = outcome || "";
+        choiceList.innerHTML = "";
+        decisionHeading.hidden = true;
+
+        var continueButton = makeButton("Continue", "continue-button");
+        continueButton.innerHTML = 'Continue <span aria-hidden="true">→</span>';
+        continueButton.addEventListener("click", function () {
+          var destination = typeof choice.ending === "function" ? choice.ending(state) : choice.ending;
+          if (destination) {
+            renderEnding(destination);
+          } else {
+            renderScene(choice.next);
+          }
+        });
+        feedbackActions.innerHTML = "";
+        feedbackActions.appendChild(continueButton);
+        updateNotebook();
+        window.setTimeout(function () {
+          continueButton.focus();
+        }, 80);
+      }
+
+      function renderScene(index) {
+        var scene = scenes[index];
+        if (!scene) return;
+        state.scene = index;
+        state.choiceMade = false;
+        state.ending = null;
+
+        sceneKicker.textContent = scene.kicker;
+        sceneCount.textContent = scene.count;
+        storyTitle.textContent = scene.title;
+        storyBody.innerHTML = scene.body.map(function (paragraph) {
+          return "<p>" + paragraph + "</p>";
+        }).join("");
+
+        renderClue(scene.clue);
+        feedback.hidden = true;
+        feedbackActions.innerHTML = "";
+        choiceList.innerHTML = "";
+        decisionHeading.hidden = scene.choices.length === 1 && scene.choices[0].immediate === true;
+        if (!decisionHeading.hidden) {
+          decisionHeading.textContent = scene.choices.length === 1 ? "Next" : "What do you do?";
+        }
+
+        if (scene.choices.length === 1 && scene.choices[0].immediate === true) {
+          renderAdvanceButton(scene.choices[0]);
+        } else {
+          scene.choices.forEach(function (choice, indexInScene) {
+            renderChoiceButton(choice, indexInScene);
+          });
+        }
+
+        var progress = Math.round((index / (scenes.length - 1)) * 100);
+        progressFill.style.width = progress + "%";
+        progressTrack.setAttribute("aria-valuenow", String(progress));
+        updateNotebook();
+
+        window.setTimeout(function () {
+          storyCard.focus({ preventScroll: true });
+        }, 40);
+      }
+
+      function renderEnding(kind) {
+        state.ending = kind;
+        state.choiceMade = true;
+        var ending = {
+          traced: {
+            kicker: "CASE CLOSED · ORIGIN FOUND",
+            count: "OUTCOME A",
+            title: "An address",
+            stamp: "Originating connection traced",
+            body: [
+              "<q>We have the originating line.</q>",
+              "You write the reference twice.",
+              "It leads to a subscriber connection in Hanover. An address gives investigators somewhere to begin; it doesn’t tell you who was sitting at the keyboard.",
+              "That takes further investigation.",
+              "When the formal update eventually arrives, it describes a suspect and a wider espionage inquiry.",
+              "You read it beneath the same desk lamp where you first unfolded the accounts.",
+              "The original discrepancy is still circled in red.",
+              "Outside, somebody starts a car. The morning shift is coming in.",
+              "For once, you leave before they arrive."
+            ]
+          },
+          partial: {
+            kicker: "CASE CLOSED · TRAIL INCOMPLETE",
+            count: "OUTCOME B",
+            title: "The last confirmed connection",
+            stamp: "Intrusion investigated; caller unresolved",
+            body: [
+              "The line goes quiet.",
+              "You have enough to show that something serious happened, and enough to warn the people whose systems appeared in the trail.",
+              "You don’t have a completed trace to the caller.",
+              "The team closes the decoy operation. Further inquiries pass to people with other offices, other records, and their own unanswered questions.",
+              "You return the borrowed equipment.",
+              "In the notebook, you draw a line beneath the last confirmed connection.",
+              "Below it, you leave space."
+            ]
+          },
+          contained: {
+            kicker: "CASE CLOSED · SYSTEM CONTAINED",
+            count: "OUTCOME C",
+            title: "Dinner while it’s warm",
+            stamp: "Intrusion contained; evidence handed over",
+            body: [
+              "The external connection goes down.",
+              "For the next several days, your work becomes repairs: rebuilding the machine, replacing credentials, checking what else might have changed.",
+              "Nobody asks you to chase a signal across an ocean.",
+              "The evidence goes to the investigators. The researchers get their computer back.",
+              "One afternoon, the room is quiet enough that you can hear a bicycle bell outside.",
+              "You still don’t know who used the account.",
+              "You lock the notebook in a drawer and go home while dinner is warm."
+            ]
+          }
+        }[kind];
+
+        sceneKicker.textContent = ending.kicker;
+        sceneCount.textContent = ending.count;
+        storyTitle.textContent = ending.title;
+        storyBody.innerHTML = '<div class="ending-stamp">' + ending.stamp + '</div>' + ending.body.map(function (paragraph) {
+          return "<p>" + paragraph + "</p>";
+        }).join("") + '<div class="historical-note"><strong>The real case.</strong> This fictional game dramatizes the investigation recounted in Clifford Stoll’s nonfiction book, <em>The Cuckoo’s Egg</em>. In 1986, a 75-cent accounting discrepancy at Lawrence Berkeley Laboratory led Stoll to an intruder. The investigation ultimately exposed espionage connected to the Soviet KGB. <a href="https://www.simonandschuster.com/books/The-Cuckoos-Egg/Cliff-Stoll/9781668048160" target="_blank" rel="noopener noreferrer">About the book ↗</a><br><br>The dialogue, composite characters, sample records, decoy arrangements, and alternative endings in this game are invented or simplified.</div>';
+
+        clueCard.hidden = true;
+        decisionHeading.hidden = true;
+        feedback.hidden = true;
+        choiceList.innerHTML = "";
+        var restart = makeButton("Start a new investigation", "restart-button");
+        restart.addEventListener("click", resetGame);
+        choiceList.appendChild(restart);
+
+        progressFill.style.width = "100%";
+        progressTrack.setAttribute("aria-valuenow", "100");
+        updateNotebook();
+        window.setTimeout(function () {
+          storyCard.focus({ preventScroll: true });
+        }, 40);
+      }
+
+      function resetGame() {
+        state = {
+          scene: 0,
+          choiceMade: false,
+          ending: null,
+          flags: { recording: null, prepared: null, bait: null, decoy: false },
+          evidence: [],
+          decisions: ["Case opened after hours."]
+        };
+        renderScene(0);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      resetButton.addEventListener("click", resetGame);
+      renderScene(0);
+    }());
+  </script>
+</body>
+</html>
