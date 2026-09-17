@@ -1106,6 +1106,10 @@
       var activeUtterance = null;
       var narrationState = "idle";
       var narratorVoice = null;
+      var narrationQueue = [];
+      var narrationIndex = 0;
+      var narrationTimer = null;
+      var narrationRun = 0;
       var ambientContext = null;
       var ambientMaster = null;
       var ambientNodes = [];
@@ -1309,29 +1313,48 @@
       }
 
       function getNarrationText() {
-        var parts = [storyTitle.textContent, storyBody.textContent];
+        var parts = [storyTitle.textContent];
+        var bodyParts = Array.prototype.map.call(storyBody.querySelectorAll("p"), function (paragraph) {
+          return paragraph.textContent.trim();
+        }).filter(function (paragraph) {
+          return paragraph;
+        });
+        if (bodyParts.length) parts.push(bodyParts.join("\n\n"));
         if (!clueCard.hidden) {
           parts.push("Evidence recovered. " + clueTitle.textContent + ". " + clueText.textContent);
           if (!clueNote.hidden) parts.push(clueNote.textContent);
         }
         if (!feedback.hidden) parts.push(feedbackCopy.textContent);
-        return parts.join(".\\n\\n").replace(/[ \\t]+/g, " ").replace(/\\n{3,}/g, "\\n\\n").trim();
+        return parts.join("\n\n").replace(/[ \\t]+/g, " ").replace(/\\n{3,}/g, "\\n\\n").trim();
       }
 
       function stopNarration() {
         var utterance = activeUtterance;
         activeUtterance = null;
+        narrationRun += 1;
+        narrationQueue = [];
+        narrationIndex = 0;
+        if (narrationTimer) {
+          window.clearTimeout(narrationTimer);
+          narrationTimer = null;
+        }
         narrationState = "idle";
         if (speechSupported) window.speechSynthesis.cancel();
         setVoiceUI("idle");
         return utterance;
       }
 
-      function speakCurrentScene() {
-        if (!speechSupported) return;
-        stopNarration();
-        refreshNarratorVoice();
-        var utterance = new SpeechSynthesisUtterance(getNarrationText());
+      function startNarrationPart(runId) {
+        if (runId !== narrationRun) return;
+        if (narrationIndex >= narrationQueue.length) {
+          activeUtterance = null;
+          narrationState = "idle";
+          setVoiceUI("idle", "Scene finished.");
+          return;
+        }
+
+        var utterance = new SpeechSynthesisUtterance(narrationQueue[narrationIndex]);
+        narrationIndex += 1;
         var voice = narratorVoice;
         if (voice) {
           utterance.voice = voice;
@@ -1345,21 +1368,28 @@
         activeUtterance = utterance;
         narrationState = "speaking";
         utterance.onstart = function () {
-          if (activeUtterance === utterance) {
+          if (activeUtterance === utterance && runId === narrationRun) {
             narrationState = "speaking";
             setVoiceUI("speaking");
           }
         };
         utterance.onend = function () {
-          if (activeUtterance === utterance) {
-            activeUtterance = null;
+          if (activeUtterance !== utterance || runId !== narrationRun) return;
+          activeUtterance = null;
+          if (narrationIndex < narrationQueue.length) {
+            narrationTimer = window.setTimeout(function () {
+              narrationTimer = null;
+              startNarrationPart(runId);
+            }, 170);
+          } else {
             narrationState = "idle";
             setVoiceUI("idle", "Scene finished.");
           }
         };
         utterance.onerror = function (event) {
-          if (activeUtterance !== utterance) return;
+          if (activeUtterance !== utterance || runId !== narrationRun) return;
           activeUtterance = null;
+          narrationQueue = [];
           narrationState = "idle";
           if (event.error === "canceled" || event.error === "interrupted") {
             setVoiceUI("idle");
@@ -1367,14 +1397,36 @@
             setVoiceUI("error", "The device voice could not finish.");
           }
         };
-        window.speechSynthesis.speak(utterance);
-        setVoiceUI("speaking");
+        try {
+          window.speechSynthesis.speak(utterance);
+          setVoiceUI("speaking");
+        } catch (error) {
+          activeUtterance = null;
+          narrationQueue = [];
+          narrationState = "idle";
+          setVoiceUI("error", "The device voice could not start.");
+        }
+      }
+
+      function speakCurrentScene() {
+        if (!speechSupported) return;
+        stopNarration();
+        refreshNarratorVoice();
+        narrationQueue = getNarrationText().split(/\n{2,}/).map(function (part) {
+          return part.trim();
+        }).filter(function (part) {
+          return part;
+        });
+        if (!narrationQueue.length) return;
+        narrationIndex = 0;
+        narrationState = "speaking";
+        startNarrationPart(narrationRun);
       }
 
       function toggleNarration() {
         if (!speechSupported) return;
-        if (!activeUtterance || !window.speechSynthesis.speaking) {
-          speakCurrentScene();
+        if (!activeUtterance) {
+          if (narrationState === "idle") speakCurrentScene();
           return;
         }
         if (window.speechSynthesis.paused) {
