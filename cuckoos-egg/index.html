@@ -1197,6 +1197,31 @@
         }
       };
 
+      // Uploaded recordings live beside the game so the page can use them
+      // without an API key. Scene 00 is included as a future-proof path; if
+      // it is not uploaded yet, the browser voice remains available as a
+      // fallback.
+      var sceneNarrationFiles = [
+        "assets/audio/scenes/cuckoos-egg-scene-00-after-hours.mp3",
+        "assets/audio/scenes/cuckoos-egg-scene-01-three-quarters.mp3",
+        "assets/audio/scenes/cuckoos-egg-scene-02-a-name-without-a-bill.mp3",
+        "assets/audio/scenes/cuckoos-egg-scene-03-a-witness-made-of-paper.mp3",
+        "assets/audio/scenes/cuckoos-egg-scene-04-someone-at-the-other-keyboard.mp3",
+        "assets/audio/scenes/cuckoos-egg-scene-05-please-hold.mp3",
+        "assets/audio/scenes/cuckoos-egg-scene-06-a-country-is-a-large-place.mp3",
+        "assets/audio/scenes/cuckoos-egg-scene-07-the-plate-on-the-table.mp3",
+        "assets/audio/scenes/cuckoos-egg-scene-08-an-attractive-pile-of-paperwork.mp3",
+        "assets/audio/scenes/cuckoos-egg-scene-09-stay-on-the-line.mp3"
+      ];
+
+      var endingNarrationFiles = {
+        traced: "assets/audio/endings/cuckoos-egg-ending-a-an-address.mp3",
+        partial: "assets/audio/endings/cuckoos-egg-ending-b-the-last-confirmed-connection.mp3",
+        contained: "assets/audio/endings/cuckoos-egg-ending-c-dinner-while-it-s-warm.mp3"
+      };
+
+      var ambientMusicFile = "assets/audio/music/jorisvermeer-noir-crime-tension-535274.mp3";
+
       var state = {
         scene: 0,
         choiceMade: false,
@@ -1219,18 +1244,41 @@
       var soundLabel = document.getElementById("sound-label");
       var voiceStatus = document.getElementById("voice-status");
       var speechSupported = "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
-      var ambientSupported = !!(window.AudioContext || window.webkitAudioContext);
+      var audioProbe = document.createElement("audio");
+      var audioSupported = !!audioProbe && typeof audioProbe.play === "function";
+      var narrationAudio = audioSupported ? audioProbe : null;
+      var ambientAudio = audioSupported ? document.createElement("audio") : null;
+      var ambientSupported = !!ambientAudio;
       var activeUtterance = null;
       var narrationState = "idle";
+      var narrationMode = null;
       var narratorVoice = null;
       var narrationQueue = [];
       var narrationIndex = 0;
       var narrationTimer = null;
       var narrationRun = 0;
-      var ambientContext = null;
-      var ambientMaster = null;
-      var ambientNodes = [];
       var ambientPlaying = false;
+      var ambientDucked = false;
+      var ambientVolume = 0.16;
+      var currentNarrationFile = null;
+
+      if (narrationAudio) {
+        narrationAudio.preload = "none";
+        narrationAudio.setAttribute("playsinline", "");
+        narrationAudio.setAttribute("aria-hidden", "true");
+        narrationAudio.hidden = true;
+        document.body.appendChild(narrationAudio);
+      }
+      if (ambientAudio) {
+        ambientAudio.preload = "none";
+        ambientAudio.loop = true;
+        ambientAudio.src = ambientMusicFile;
+        ambientAudio.volume = ambientVolume;
+        ambientAudio.setAttribute("playsinline", "");
+        ambientAudio.setAttribute("aria-hidden", "true");
+        ambientAudio.hidden = true;
+        document.body.appendChild(ambientAudio);
+      }
       var storyTitle = document.getElementById("story-title");
       var storyBody = document.getElementById("story-body");
       var clueCard = document.getElementById("clue-card");
@@ -1276,17 +1324,17 @@
         });
         narratorVoice = voices[0];
         if (narrationState === "idle") {
-          voiceStatus.textContent = "Narrator: " + narratorVoice.name + " · tap to listen.";
+          setVoiceUI("idle");
         }
       }
 
       function setVoiceUI(mode, message) {
-        if (!speechSupported) {
+        if (!speechSupported && !audioSupported) {
           voiceButton.disabled = true;
           voiceButton.setAttribute("aria-pressed", "false");
           voiceIcon.textContent = "–";
           voiceLabel.textContent = "Voice unavailable";
-          voiceStatus.textContent = "Speech is not available in this browser.";
+          voiceStatus.textContent = "Narration is not available in this browser.";
           return;
         }
 
@@ -1295,19 +1343,23 @@
         if (mode === "speaking") {
           voiceIcon.textContent = "Ⅱ";
           voiceLabel.textContent = "Pause narration";
-          voiceStatus.textContent = "Reading with " + (narratorVoice ? narratorVoice.name : "the best installed voice") + "…";
+          voiceStatus.textContent = narrationMode === "audio"
+            ? "Playing the recorded narration…"
+            : "Reading with " + (narratorVoice ? narratorVoice.name : "the installed voice") + "…";
         } else if (mode === "paused") {
           voiceIcon.textContent = "▶";
           voiceLabel.textContent = "Resume narration";
           voiceStatus.textContent = "Narration paused.";
         } else if (mode === "error") {
           voiceIcon.textContent = "▶";
-          voiceLabel.textContent = "Try narration again";
+          voiceLabel.textContent = currentNarrationFile ? "Try narration again" : "Try voice again";
           voiceStatus.textContent = message || "The device voice could not start.";
         } else {
           voiceIcon.textContent = "▶";
-          voiceLabel.textContent = "Read this scene";
-          voiceStatus.textContent = message || (narratorVoice ? "Narrator: " + narratorVoice.name + " · tap to listen." : "Best installed voice · tap to listen.");
+          voiceLabel.textContent = currentNarrationFile ? "Play narration" : "Read this scene";
+          voiceStatus.textContent = message || (currentNarrationFile
+            ? "Recorded narration · tap to listen."
+            : (narratorVoice ? "Narrator: " + narratorVoice.name + " · tap to listen." : "Installed voice · tap to listen."));
         }
       }
 
@@ -1317,7 +1369,7 @@
           soundButton.setAttribute("aria-pressed", "false");
           soundIcon.textContent = "–";
           soundLabel.textContent = "Music unavailable";
-          soundButton.title = "Web Audio is not available in this browser";
+          soundButton.title = "Audio playback is not available in this browser";
           return;
         }
         soundButton.disabled = false;
@@ -1328,105 +1380,57 @@
         soundButton.title = ambientPlaying ? "Turn quiet ambient music off" : "Start quiet ambient music";
       }
 
-      function startAmbient() {
-        if (!ambientSupported || ambientPlaying) return;
-        var AudioContextCtor = window.AudioContext || window.webkitAudioContext;
-        var context;
-        try {
-          context = new AudioContextCtor();
-        } catch (error) {
-          updateAmbientUI();
-          voiceStatus.textContent = "Ambient music is not available on this device.";
-          return;
+      function setAmbientDucked(ducked) {
+        ambientDucked = !!ducked;
+        if (ambientAudio && ambientPlaying) {
+          ambientAudio.volume = ambientDucked ? 0.045 : ambientVolume;
         }
-
-        ambientContext = context;
-        var now = context.currentTime;
-        var master = context.createGain();
-        master.gain.setValueAtTime(0.0001, now);
-        master.gain.exponentialRampToValueAtTime(0.038, now + 1.8);
-        master.connect(context.destination);
-
-        var filter = context.createBiquadFilter();
-        filter.type = "lowpass";
-        filter.frequency.value = 720;
-        filter.Q.value = 0.35;
-        filter.connect(master);
-
-        var padSpecs = [
-          [110, 0.16],
-          [146.83, 0.11],
-          [220, 0.055]
-        ];
-        var nodes = [master, filter];
-        padSpecs.forEach(function (spec) {
-          var oscillator = context.createOscillator();
-          var gain = context.createGain();
-          oscillator.type = "sine";
-          oscillator.frequency.value = spec[0];
-          gain.gain.value = spec[1];
-          oscillator.connect(gain);
-          gain.connect(filter);
-          oscillator.start();
-          nodes.push(oscillator, gain);
-        });
-
-        var lfo = context.createOscillator();
-        var lfoDepth = context.createGain();
-        lfo.type = "sine";
-        lfo.frequency.value = 0.065;
-        lfoDepth.gain.value = 0.006;
-        lfo.connect(lfoDepth);
-        lfoDepth.connect(master.gain);
-        lfo.start();
-        nodes.push(lfo, lfoDepth);
-
-        ambientMaster = master;
-        ambientNodes = nodes;
-        ambientPlaying = true;
-        updateAmbientUI();
-        if (narrationState === "idle") {
-          voiceStatus.textContent = "Quiet noir ambience on · narration uses the best installed voice.";
-        }
-        context.resume().catch(function () {
-          stopAmbient(true);
-        });
       }
 
-      function stopAmbient(immediate) {
-        var context = ambientContext;
-        var master = ambientMaster;
-        var nodes = ambientNodes.slice();
-        ambientContext = null;
-        ambientMaster = null;
-        ambientNodes = [];
-        ambientPlaying = false;
-        updateAmbientUI();
-        if (!context || !master) return;
-
-        var now = context.currentTime;
+      function startAmbient() {
+        if (!ambientSupported || ambientPlaying) return;
+        ambientPlaying = true;
+        ambientAudio.volume = ambientDucked ? 0.045 : ambientVolume;
+        var playPromise;
         try {
-          master.gain.cancelScheduledValues(now);
-          master.gain.setValueAtTime(Math.max(master.gain.value, 0.0001), now);
-          if (immediate) {
-            master.gain.setValueAtTime(0.0001, now);
-          } else {
-            master.gain.exponentialRampToValueAtTime(0.0001, now + 0.6);
-          }
-        } catch (error) {}
-        window.setTimeout(function () {
-          nodes.forEach(function (node) {
-            if (node && node.stop) {
-              try { node.stop(); } catch (error) {}
-            }
+          playPromise = ambientAudio.play();
+        } catch (error) {
+          ambientPlaying = false;
+          updateAmbientUI();
+          voiceStatus.textContent = "The uploaded music could not start. Tap again to retry.";
+          return;
+        }
+        updateAmbientUI();
+        if (narrationState === "idle") {
+          voiceStatus.textContent = "Uploaded noir music on · tap narration to listen.";
+        }
+        if (playPromise && typeof playPromise.catch === "function") {
+          playPromise.catch(function () {
+            ambientPlaying = false;
+            try { ambientAudio.pause(); } catch (error) {}
+            updateAmbientUI();
+            voiceStatus.textContent = "The uploaded music could not start. Tap again to retry.";
           });
-          try { context.close(); } catch (error) {}
-        }, immediate ? 0 : 700);
+        }
+      }
+
+      function stopAmbient() {
+        ambientPlaying = false;
+        if (ambientAudio) {
+          ambientAudio.pause();
+          try { ambientAudio.currentTime = 0; } catch (error) {}
+        }
+        updateAmbientUI();
+        if (narrationState === "idle") {
+          voiceStatus.textContent = currentNarrationFile
+            ? "Low music off · recorded narration ready."
+            : "Low music off · tap to listen with the installed voice.";
+        }
       }
 
       function toggleAmbient() {
         if (ambientPlaying) {
-          stopAmbient(false);
+          stopAmbient();
         } else {
           startAmbient();
         }
@@ -1459,6 +1463,12 @@
           narrationTimer = null;
         }
         narrationState = "idle";
+        narrationMode = null;
+        setAmbientDucked(false);
+        if (narrationAudio) {
+          narrationAudio.pause();
+          try { narrationAudio.currentTime = 0; } catch (error) {}
+        }
         if (speechSupported) window.speechSynthesis.cancel();
         setVoiceUI("idle");
         return utterance;
@@ -1469,6 +1479,8 @@
         if (narrationIndex >= narrationQueue.length) {
           activeUtterance = null;
           narrationState = "idle";
+          narrationMode = null;
+          setAmbientDucked(false);
           setVoiceUI("idle", "Scene finished.");
           return;
         }
@@ -1487,9 +1499,12 @@
         utterance.volume = 0.94;
         activeUtterance = utterance;
         narrationState = "speaking";
+        narrationMode = "speech";
         utterance.onstart = function () {
           if (activeUtterance === utterance && runId === narrationRun) {
             narrationState = "speaking";
+            narrationMode = "speech";
+            setAmbientDucked(true);
             setVoiceUI("speaking");
           }
         };
@@ -1503,6 +1518,8 @@
             }, 170);
           } else {
             narrationState = "idle";
+            narrationMode = null;
+            setAmbientDucked(false);
             setVoiceUI("idle", "Scene finished.");
           }
         };
@@ -1511,6 +1528,8 @@
           activeUtterance = null;
           narrationQueue = [];
           narrationState = "idle";
+          narrationMode = null;
+          setAmbientDucked(false);
           if (event.error === "canceled" || event.error === "interrupted") {
             setVoiceUI("idle");
           } else {
@@ -1524,27 +1543,126 @@
           activeUtterance = null;
           narrationQueue = [];
           narrationState = "idle";
+          narrationMode = null;
+          setAmbientDucked(false);
           setVoiceUI("error", "The device voice could not start.");
         }
       }
 
-      function speakCurrentScene() {
-        if (!speechSupported) return;
-        stopNarration();
+      function startSpeechNarration(runId) {
+        if (!speechSupported) return false;
         refreshNarratorVoice();
+        narrationMode = "speech";
+        setAmbientDucked(true);
         narrationQueue = getNarrationText().split(/\n{2,}/).map(function (part) {
           return part.trim();
         }).filter(function (part) {
           return part;
         });
-        if (!narrationQueue.length) return;
+        if (!narrationQueue.length) {
+          narrationMode = null;
+          narrationState = "idle";
+          setAmbientDucked(false);
+          setVoiceUI("idle");
+          return false;
+        }
         narrationIndex = 0;
         narrationState = "speaking";
-        startNarrationPart(narrationRun);
+        startNarrationPart(runId);
+        return true;
+      }
+
+      function fallbackToSpeech(runId) {
+        if (runId !== narrationRun || narrationMode !== "audio") return;
+        if (narrationAudio) narrationAudio.pause();
+        narrationMode = null;
+        narrationState = "idle";
+        if (!speechSupported) {
+          setAmbientDucked(false);
+          setVoiceUI("error", "The recorded narration could not load on this device.");
+          return;
+        }
+        startSpeechNarration(runId);
+      }
+
+      function playNarrationFile(path) {
+        if (!narrationAudio || !path) return false;
+        var runId = narrationRun;
+        narrationMode = "audio";
+        narrationState = "speaking";
+        setAmbientDucked(true);
+        try {
+          narrationAudio.pause();
+          narrationAudio.src = path;
+          narrationAudio.currentTime = 0;
+        } catch (error) {
+          fallbackToSpeech(runId);
+          return true;
+        }
+        setVoiceUI("speaking");
+        var playPromise;
+        try {
+          playPromise = narrationAudio.play();
+        } catch (error) {
+          fallbackToSpeech(runId);
+          return true;
+        }
+        if (playPromise && typeof playPromise.catch === "function") {
+          playPromise.catch(function () {
+            fallbackToSpeech(runId);
+          });
+        }
+        return true;
+      }
+
+      if (narrationAudio) {
+        narrationAudio.addEventListener("ended", function () {
+          if (narrationMode !== "audio") return;
+          narrationMode = null;
+          narrationState = "idle";
+          setAmbientDucked(false);
+          setVoiceUI("idle", "Narration finished.");
+        });
+        narrationAudio.addEventListener("error", function () {
+          fallbackToSpeech(narrationRun);
+        });
+      }
+
+      function speakCurrentScene() {
+        stopNarration();
+        if (currentNarrationFile && playNarrationFile(currentNarrationFile)) return;
+        if (!speechSupported) {
+          setVoiceUI("error", "No recorded narration is available for this scene.");
+          return;
+        }
+        startSpeechNarration(narrationRun);
       }
 
       function toggleNarration() {
-        if (!speechSupported) return;
+        if (!speechSupported && !narrationAudio) return;
+
+        if (narrationMode === "audio") {
+          if (narrationState === "speaking") {
+            narrationAudio.pause();
+            narrationState = "paused";
+            setAmbientDucked(false);
+            setVoiceUI("paused");
+          } else if (narrationState === "paused") {
+            narrationState = "speaking";
+            setAmbientDucked(true);
+            var resumePromise = narrationAudio.play();
+            if (resumePromise && typeof resumePromise.catch === "function") {
+              resumePromise.catch(function () {
+                fallbackToSpeech(narrationRun);
+              });
+            }
+            setVoiceUI("speaking");
+          } else {
+            speakCurrentScene();
+          }
+          return;
+        }
+
         if (!activeUtterance) {
           if (narrationState === "idle") speakCurrentScene();
           return;
@@ -1552,10 +1670,12 @@
         if (window.speechSynthesis.paused) {
           window.speechSynthesis.resume();
           narrationState = "speaking";
+          setAmbientDucked(true);
           setVoiceUI("speaking");
         } else {
           window.speechSynthesis.pause();
           narrationState = "paused";
+          setAmbientDucked(false);
           setVoiceUI("paused");
         }
       }
@@ -1566,11 +1686,17 @@
         window.speechSynthesis.addEventListener("voiceschanged", refreshNarratorVoice);
       }
       document.addEventListener("visibilitychange", function () {
-        if (!ambientContext) return;
+        if (!ambientAudio) return;
         if (document.hidden) {
-          ambientContext.suspend();
+          ambientAudio.pause();
         } else if (ambientPlaying) {
-          ambientContext.resume();
+          var resumePromise = ambientAudio.play();
+          if (resumePromise && typeof resumePromise.catch === "function") {
+            resumePromise.catch(function () {
+              ambientPlaying = false;
+              updateAmbientUI();
+            });
+          }
         }
       });
       refreshNarratorVoice();
@@ -1764,6 +1890,7 @@
         state.scene = index;
         state.choiceMade = false;
         state.ending = null;
+        currentNarrationFile = sceneNarrationFiles[index] || null;
 
         sceneKicker.textContent = scene.kicker;
         sceneCount.textContent = scene.count;
@@ -1794,6 +1921,7 @@
         progressFill.style.width = progress + "%";
         progressTrack.setAttribute("aria-valuenow", String(progress));
         updateNotebook();
+        setVoiceUI("idle");
 
         window.setTimeout(function () {
           storyCard.focus({ preventScroll: true });
@@ -1804,6 +1932,7 @@
         stopNarration();
         state.ending = kind;
         state.choiceMade = true;
+        currentNarrationFile = endingNarrationFiles[kind] || null;
         var ending = {
           traced: {
             kicker: "CASE CLOSED · ORIGIN FOUND",
@@ -1873,6 +2002,7 @@
         progressFill.style.width = "100%";
         progressTrack.setAttribute("aria-valuenow", "100");
         updateNotebook();
+        setVoiceUI("idle");
         window.setTimeout(function () {
           storyCard.focus({ preventScroll: true });
         }, 40);
