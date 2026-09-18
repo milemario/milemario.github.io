@@ -720,7 +720,7 @@
             <span class="sound-icon" id="sound-icon" aria-hidden="true">♪</span>
             <span id="sound-label">Low music off</span>
           </button>
-          <span class="voice-status" id="voice-status" aria-live="polite">Best installed voice · tap low music for a quiet noir underscore.</span>
+          <span class="voice-status" id="voice-status" aria-live="polite">Uploaded narration · tap low music for the noir underscore.</span>
         </div>
 
         <figure class="scene-art" id="scene-art" hidden aria-labelledby="scene-art-caption">
@@ -1573,7 +1573,7 @@
       }
 
       function fallbackToSpeech(runId) {
-        if (runId !== narrationRun || narrationMode !== "audio") return;
+        if (runId !== narrationRun || narrationMode !== "audio" || narrationState === "paused") return;
         if (narrationAudio) narrationAudio.pause();
         narrationMode = null;
         narrationState = "idle";
