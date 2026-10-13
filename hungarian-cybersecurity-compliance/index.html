@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="An offline, interactive teaching flowchart of cybersecurity compliance for a Hungarian company. Based on rules checked 12 October 2026.">
+<meta name="description" content="An offline, interactive teaching flowchart of cybersecurity compliance for a Hungarian company. Based on official sources checked 13 October 2026.">
 <title>Hungarian Company · Cybersecurity Compliance</title>
 <style>
 :root { color-scheme:light; --ink:#163531; --muted:#536a65; --green:#216a55; --mint:#e7f2ec; --paper:#fff; --bg:#f5f6f2; --line:#dbe3dc; --amber:#fff1cf; }
@@ -29,6 +29,10 @@ h1 { font-size:clamp(28px,3.2vw,46px);line-height:1.12;letter-spacing:-.035em;ma
 .workspace { display:grid;grid-template-columns:minmax(0,1fr) 344px;gap:22px;align-items:start; }
 .chart-card,.detail-card,.sources-card { border:1px solid var(--line);background:var(--paper);border-radius:13px; }
 .chart-card { overflow:hidden; }
+.reference-heading { padding:18px 20px 0; }
+.reference-heading .eyebrow { margin-bottom:5px; }
+.reference-heading h2 { margin:0 0 5px;font-size:18px;line-height:1.25; }
+.reference-heading p:not(.eyebrow) { max-width:760px;margin:0;color:var(--muted);font-size:12px;line-height:1.5; }
 .chart-toolbar { padding:17px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px; }
 .view-tabs { display:inline-flex;background:#eff2ee;border-radius:7px;padding:3px;gap:3px; }
 .view-tabs button { border:0;background:transparent;padding:7px 12px;border-radius:5px;color:var(--muted);font-size:13px;font-weight:650; }
@@ -93,102 +97,119 @@ h1 { font-size:clamp(28px,3.2vw,46px);line-height:1.12;letter-spacing:-.035em;ma
 .footer { display:flex;justify-content:space-between;gap:20px;margin-top:25px;font-size:11px;color:var(--muted); }
 .footer p { margin:0; }
 noscript p { margin:15px 20px;font-size:13px; }
-
-.exercise-card { margin:0 0 22px;padding:25px;border:1px solid var(--line);border-radius:13px;background:#fff;box-shadow:0 2px 10px #1635310a; }
+[hidden] { display:none!important; }
+.exercise-card { margin:0 0 22px;padding:clamp(18px,3vw,30px);border:1px solid var(--line);border-radius:13px;background:#fff;box-shadow:0 2px 10px #1635310a; }
 .exercise-heading { margin-bottom:18px; }
-.exercise-heading h2 { font-size:26px;line-height:1.2;letter-spacing:-.025em;margin:0 0 8px; }
+.exercise-heading h2 { font-size:clamp(23px,2.2vw,29px);line-height:1.2;letter-spacing:-.025em;margin:0 0 8px; }
 .exercise-heading p:not(.eyebrow) { max-width:850px;color:var(--muted);font-size:14px;line-height:1.55;margin:0; }
-.form-panel { min-width:0;margin:0;padding:17px;border:1px solid var(--line);border-radius:10px;background:#fbfcfa; }
-.form-panel legend { padding:0 7px;font-size:16px;font-weight:700; }
-.quick-panel { background:#f6faf7;border-color:#c9d9ce; }
-.quick-grid { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;max-width:950px; }
-.form-panel label { display:block;font-size:13px;font-weight:650;line-height:1.4;color:var(--ink); }
-.form-panel input[type="text"],.form-panel select { display:block;width:100%;margin-top:6px;min-height:42px;padding:8px 10px;border:1px solid #cbd7cd;border-radius:7px;background:#fff;color:var(--ink);font-size:14px; }
-.form-panel select { padding-right:24px; }
-.form-hint { color:var(--muted);font-size:12px;line-height:1.5;margin:11px 0 0; }
-.optional-panel { margin-top:13px;border:1px solid var(--line);border-radius:10px;background:#fff; }
-.optional-panel > summary { display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;padding:14px 16px;list-style-position:inside;font-size:14px; }
-.optional-panel > summary strong { color:var(--green); }
-.optional-panel > summary span { color:var(--muted);font-size:12px; }
-.details-body { padding:0 14px 14px; }
-.exercise-columns { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start; }
-.field-grid { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px; }
-.block-label { margin-top:13px; }
-.extra-fields { margin-top:14px;padding-top:13px;border-top:1px solid #e6ece7; }
-.annex-list { margin-top:10px;padding:11px 12px;border:1px solid var(--line);border-radius:7px;background:#fff; }
-.annex-list summary { cursor:pointer;font-size:13px;font-weight:650;color:var(--green); }
-.check-grid { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 12px;margin-top:11px; }
-.form-panel .check { display:flex;align-items:flex-start;gap:8px;font-size:12px;font-weight:450;line-height:1.4; }
-.check input { flex:none;margin:3px 0 0;accent-color:var(--green); }
-.independent-grid { margin-top:10px;padding-top:11px;border-top:1px solid #e6ece7; }
-.submit-row { display:flex;justify-content:space-between;align-items:center;gap:16px;padding-top:14px; }
-.submit-row .form-hint { margin:0; }
-.submit-row > div { display:flex;gap:8px;flex:none; }
-.assess-button,.clear-button { border-radius:7px;padding:10px 15px;font-size:14px;font-weight:650;cursor:pointer; }
-.assess-button { border:1px solid var(--green);background:var(--green);color:#fff; }
-.assess-button:hover { background:#165740; }
-.clear-button { border:1px solid var(--line);background:#fff;color:var(--ink); }
-.empty-state { margin-top:14px;padding:17px 18px;border-radius:8px;background:#f2f5f1;color:var(--muted);font-size:13px; }
+.profile-name-row { display:flex;align-items:center;gap:12px;margin:0 0 18px;max-width:650px; }
+.profile-name-row label { flex:0 0 170px;font-weight:700;font-size:13px; }
+.profile-name-row label span { color:var(--muted);font-weight:450; }
+.profile-name-row input { flex:1;min-width:0; }
+.exercise-card input[type="text"],.exercise-card select,.exercise-card textarea { width:100%;min-height:43px;margin-top:6px;padding:9px 11px;border:1px solid #cbd7cd;border-radius:7px;background:#fff;color:var(--ink);font:inherit;font-size:14px; }
+.exercise-card textarea { min-height:80px;resize:vertical;line-height:1.45; }
+.exercise-card input[type="checkbox"] { width:17px;height:17px;flex:none;margin:2px 0 0;accent-color:var(--green); }
+.exercise-card input:focus-visible,.exercise-card select:focus-visible,.exercise-card textarea:focus-visible { outline:3px solid #4a9075;outline-offset:3px; }
+.stage-nav { display:flex;align-items:center;justify-content:space-between;gap:14px;margin:0 0 20px;padding:8px;border:1px solid var(--line);border-radius:10px;background:#f7f9f6; }
+.stage-nav ol { display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;list-style:none;padding:0;margin:0;flex:1; }
+.stage-nav button { display:flex;align-items:center;justify-content:center;gap:7px;width:100%;min-height:39px;padding:7px 9px;border:1px solid transparent;border-radius:7px;background:transparent;color:var(--muted);font-size:12px;font-weight:650; }
+.stage-nav button span { display:grid;place-items:center;width:22px;height:22px;border:1px solid #cbd7cd;border-radius:50%;font-size:11px; }
+.stage-nav button[aria-current="step"] { background:#e7f2ec;border-color:#c9d9ce;color:var(--green); }
+.stage-nav button[aria-current="step"] span { background:var(--green);border-color:var(--green);color:white; }
+.stage-nav button:disabled { cursor:default;opacity:.55; }
+.stage-nav #stage-counter { margin:0 8px 0 0;color:var(--muted);white-space:nowrap;font-size:12px; }
+.stage-panel { min-height:250px; }
+.stage-panel h3 { margin:0 0 5px;font-size:20px;line-height:1.3; }
+.stage-help { margin:0 0 18px;color:var(--muted);font-size:13px;line-height:1.5; }
+.question-block { min-width:0;margin:0;padding:15px;border:1px solid var(--line);border-radius:10px;background:#fbfcfa; }
+.question-block legend { padding:0 6px;font-size:14px;font-weight:700; }
+.domain-option-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px; }
+.domain-option,.unknown-domain,.hypothesis-grid label,.service-choices label { display:flex;align-items:flex-start;gap:9px;min-width:0;padding:11px 12px;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:13px;font-weight:600;line-height:1.4;cursor:pointer; }
+.domain-option:has(input:checked),.service-choices label:has(input:checked),.hypothesis-grid label:has(input:checked) { border-color:#9bc2a9;background:#eff7f1; }
+.domain-option small { display:block;margin-top:3px;color:var(--muted);font-size:11px;font-weight:450; }
+.unknown-domain { margin-top:9px;background:#f8f8f5;font-weight:500; }
+.service-followups { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin-top:13px; }
+.service-panel { min-width:0;padding:14px;border:1px solid var(--line);border-radius:9px;background:#fff; }
+.service-panel legend { padding:0 5px;font-size:14px;font-weight:700; }
+.data-detail,#financial-threshold-wrap { grid-column:1/-1; }
+.service-panel p { margin:0 0 9px;color:var(--muted);font-size:12px;line-height:1.45; }
+.service-choices { display:grid;grid-template-columns:1fr;gap:7px; }
+.service-choices label { padding:8px 9px;font-size:12px;font-weight:500; }
+.form-hint { margin:10px 0 0;color:var(--muted);font-size:11px;line-height:1.5; }
+.answer-grid { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px 15px; }
+.answer-grid > label { display:block;min-width:0;padding:12px;border:1px solid var(--line);border-radius:9px;background:#fff;font-size:13px;font-weight:650;line-height:1.4; }
+.answer-grid > label select,.answer-grid > label textarea { font-weight:450; }
+.size-detail { margin-top:15px;padding:15px;border:1px solid #d9e3db;border-radius:9px;background:#f8faf7; }
+.size-detail h4 { margin:0 0 4px;font-size:14px; }
+.size-detail > p:not(.form-hint) { margin:0 0 12px;color:var(--muted);font-size:12px;line-height:1.5; }
+.teacher-note { margin-top:14px;padding:12px 14px;border-left:3px solid #92b9a0;border-radius:0 7px 7px 0;background:#f3f7f3;color:var(--muted);font-size:12px;line-height:1.5; }
+.teacher-note strong { color:var(--ink); }
+.hypothesis-grid { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px; }
+.hypothesis-grid label { font-weight:500; }
+.hypothesis-grid .hypothesis-unknown { background:#f8f8f5; }
+.hypothesis-fields { margin-top:14px; }
+.stage-error { margin:0 0 13px;padding:10px 12px;border:1px solid #e4b7ad;border-radius:7px;background:#fff4f1;color:#762f21;font-size:13px; }
+.wizard-actions { display:flex;align-items:center;gap:9px;margin-top:20px;padding-top:15px;border-top:1px solid var(--line); }
+.wizard-actions button { min-height:42px;padding:9px 14px;border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--ink);font-size:13px;font-weight:650; }
+.wizard-actions button:disabled { opacity:.45;cursor:default; }
+.wizard-actions .next-button,.wizard-actions .compare-button { margin-left:auto;border-color:var(--green);background:var(--green);color:#fff; }
+.wizard-actions .next-button:hover,.wizard-actions .compare-button:hover { background:#165740; }
+.wizard-actions .reset-button { color:var(--muted); }
+.empty-state { margin-top:17px;padding:16px 18px;border-radius:8px;background:#f2f5f1;color:var(--muted);font-size:13px; }
 .empty-state strong { color:var(--ink); }
 .empty-state p { margin:5px 0 0; }
-.assessment-report { margin-top:18px;padding-top:18px;border-top:1px solid var(--line); }
-.assessment-title { display:flex;align-items:center;justify-content:space-between;gap:12px; }
-.assessment-title h3 { font-size:21px;line-height:1.2;margin:0; }
-.assessment-date { font-size:11px;color:var(--muted);white-space:nowrap; }
-.assessment-warning { margin:12px 0;padding:11px 13px;border-left:3px solid #c69c3e;border-radius:0 6px 6px 0;background:#fff7e5;color:#51451e;font-size:12px;line-height:1.5; }
-.summary-grid { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin-top:12px; }
-.summary-card { min-width:0;padding:15px;border:1px solid var(--line);border-radius:9px;background:#fff; }
-.summary-card h4 { margin:0 0 7px;font-size:14px; }
-.summary-card p { margin:5px 0;font-size:13px;line-height:1.5;color:var(--muted); }
-.summary-card .evidence-line { margin-top:10px;padding-top:9px;border-top:1px solid #edf0eb;font-size:12px; }
-.summary-card.primary { border-color:#bcd8c6;background:#f8fbf8; }
-.scope-status { display:inline-block;padding:4px 8px;border-radius:999px;background:var(--mint);color:var(--green);font-size:11px;font-weight:700; }
-.scope-status.review { background:#fff1cf;color:#695516; }
-.scope-status.none { background:#eef0ed;color:#4d5a53; }
-.law-chips { display:flex;flex-wrap:wrap;gap:7px;margin-top:9px; }
-.law-chip { padding:6px 8px;border-radius:7px;background:#eef0ed;color:#4d5a53;font-size:11px;font-weight:650; }
-.law-chip.potential { background:var(--mint);color:var(--green); }
-.law-chip.check { background:#fff1cf;color:#695516; }
-.parallel-wrap { margin-top:12px;padding:14px 15px;border-radius:9px;background:#f2f5f1; }
-.parallel-wrap h4 { margin:0 0 5px;font-size:14px; }
-.parallel-wrap p { margin:4px 0;font-size:12px;line-height:1.5;color:var(--muted); }
-.full-results { margin-top:12px;border:1px solid var(--line);border-radius:9px;background:#fff; }
-.full-results > summary { cursor:pointer;padding:13px 15px;color:var(--green);font-size:13px;font-weight:700; }
-.full-results-body { padding:0 13px 14px; }
-.assessment-grid { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin-top:8px; }
-.assessment-card { min-width:0;padding:13px;border:1px solid var(--line);border-radius:8px;background:#fff; }
-.assessment-card h4 { margin:0 0 6px;font-size:13px; }
-.assessment-card p { margin:5px 0;font-size:11px;line-height:1.5;color:var(--muted); }
-.assessment-card h5 { margin:9px 0 3px;font-size:11px; }
-.assessment-card ul { margin:6px 0 0;padding-left:16px;font-size:11px; }
-.assessment-card li { padding:2px 0; }
-.assessment-facts { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 12px;margin:7px 0 0; }
-.assessment-facts div { padding:5px 0;border-bottom:1px solid #edf0eb; }
-.assessment-facts dt { font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em; }
-.assessment-facts dd { margin:1px 0 0;font-size:10.5px; }
-.assessment-links { display:flex;flex-wrap:wrap;gap:6px 10px;margin-top:9px;font-size:10px; }
-.assessment-note { margin-top:12px;padding:12px;border-radius:7px;background:#f2f5f1;font-size:11px; }
-.assessment-note h4 { margin:0 0 6px;font-size:12px; }
-.assessment-note ul { margin:4px 0 0;padding-left:17px; }
-.assessment-audit { margin-top:12px;padding:12px;border:1px solid #ead9a9;border-radius:7px;background:#fff8e8;font-size:11px; }
-.assessment-audit strong { display:block;margin-bottom:3px; }
-.print-only { display:none; }
-@media (max-width:1050px) { .exercise-columns { grid-template-columns:1fr; } .exercise-card { padding:20px; } }
-@media (max-width:760px) {
+.assessment-report { margin-top:20px;padding-top:18px;border-top:1px solid var(--line); }
+.assessment-report h3 { margin:0;font-size:21px;line-height:1.25; }
+.assessment-report h4 { margin:0 0 7px;font-size:14px; }
+.report-warning { margin:9px 0 13px;padding:10px 12px;border-left:3px solid #c69c3e;border-radius:0 6px 6px 0;background:#fff7e5;color:#51451e;font-size:12px;line-height:1.5; }
+.result-summary { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px; }
+.result-summary article,.route-card,.hypothesis-record { min-width:0;padding:13px;border:1px solid var(--line);border-radius:9px;background:#fff; }
+.result-summary p,.route-card p,.hypothesis-record p { margin:5px 0 0;color:var(--muted);font-size:12px;line-height:1.5;overflow-wrap:anywhere; }
+.result-summary .route-primary { background:#f8fbf8;border-color:#bcd8c6; }
+.status-badge { display:inline-block;padding:4px 8px;border-radius:999px;background:#e7f2ec;color:#216a55;font-size:11px;font-weight:700; }
+.status-badge.review { background:#fff1cf;color:#695516; }
+.status-badge.quiet { background:#eef0ed;color:#4d5a53; }
+.related-duty { margin-top:10px;padding:12px 13px;border-radius:8px;background:#f2f5f1; }
+.related-duty p { margin:4px 0 0;color:var(--muted);font-size:12px;line-height:1.5; }
+.related-chip-list { display:flex;flex-wrap:wrap;gap:6px;margin-top:8px; }
+.related-chip { display:inline-block;padding:5px 8px;border-radius:6px;background:#e7f2ec;color:#215c49;font-size:11px;font-weight:650; }
+.related-chip.review { background:#fff1cf;color:#695516; }
+.hypothesis-record { margin-bottom:12px;background:#fbfcfa; }
+.hypothesis-record p { overflow-wrap:anywhere; }
+.report-details { margin-top:12px;border:1px solid var(--line);border-radius:9px;background:#fff; }
+.report-details > summary { padding:12px 14px;color:var(--green);font-size:13px;font-weight:700;cursor:pointer; }
+.report-details-body { padding:0 13px 14px; }
+.route-list { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:8px; }
+.route-card h5 { margin:8px 0 3px;font-size:11px; }
+.route-card ul { margin:4px 0 0;padding-left:17px;color:var(--muted);font-size:11px;line-height:1.5; }
+.route-links { display:flex;flex-wrap:wrap;gap:6px 10px;margin-top:9px;font-size:10px; }
+.route-links a { overflow-wrap:anywhere; }
+.evidence-list { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 12px;margin:7px 0 0; }
+.evidence-list div { padding:6px 0;border-bottom:1px solid #edf0eb; }
+.evidence-list dt { color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.04em; }
+.evidence-list dd { margin:2px 0 0;font-size:12px;overflow-wrap:anywhere; }
+.followup-list { margin:6px 0 0;padding-left:18px;color:var(--muted);font-size:12px;line-height:1.55; }
+.followup-list li { padding:3px 0; }
+.reference-note { margin-top:12px;color:var(--muted);font-size:11px;line-height:1.5; }
+@media (max-width:900px) { .domain-option-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .service-followups { grid-template-columns:1fr; } }
+@media (max-width:680px) {
  .exercise-card { padding:15px; }
- .exercise-heading h2 { font-size:22px; }
- .quick-grid,.field-grid,.check-grid,.assessment-grid,.assessment-facts,.summary-grid { grid-template-columns:1fr; }
- .optional-panel > summary { align-items:flex-start;flex-direction:column;gap:4px; }
- .submit-row { display:block; }
- .submit-row > div { margin-top:12px; }
- .submit-row button { flex:1; }
- .assessment-title { display:block; }
- .assessment-date { display:block;margin-top:5px; }
+ .profile-name-row { display:block; }
+ .profile-name-row label { display:block; }
+ .stage-nav { display:block;padding:7px; }
+ .stage-nav ol { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ .stage-nav #stage-counter { margin:8px 4px 1px; }
+ .domain-option-grid,.answer-grid,.hypothesis-grid,.result-summary,.route-list,.evidence-list { grid-template-columns:1fr; }
+ .stage-panel { min-height:0; }
+ .wizard-actions { flex-wrap:wrap; }
+ .wizard-actions button { flex:1 1 42%; }
+ .wizard-actions .next-button,.wizard-actions .compare-button { margin-left:0; }
+ .wizard-actions .reset-button { flex-basis:100%; }
+ .assessment-report h3 { font-size:19px; }
 }
 @media print {
  .exercise-card { display:none!important; }
- body.print-chart .exercise-card { display:none!important; }
- .assessment-card,.assessment-note,.assessment-audit,.summary-card { break-inside:avoid; }
+ .route-card,.result-summary article,.hypothesis-record { break-inside:avoid; }
 }
 
 @media (min-width:1700px) { .workspace { grid-template-columns:minmax(0,1fr) 370px; } }
@@ -204,7 +225,7 @@ noscript p { margin:15px 20px;font-size:13px; }
 @media print {
  @page { size:A4 portrait;margin:10mm; }
  body,.shell,.workspace,.chart-card,.diagram-view,.diagram-scroller { margin:0!important;padding:0!important;background:#fff!important;display:block!important;overflow:visible!important; }
- .masthead,.hero,.explain,.footer,.chart-toolbar,.legend,.chart-caption,.guide-view,noscript { display:none!important; }
+ .masthead,.hero,.explain,.footer,.chart-toolbar,.legend,.chart-caption,.guide-view,.reference-heading,noscript { display:none!important; }
  .chart-card { border:0!important;border-radius:0!important; }
  .diagram-canvas { width:180mm!important;min-width:0!important;margin:0 auto!important; }
  #compliance-chart { width:180mm!important;height:263mm!important; }
@@ -214,163 +235,189 @@ noscript p { margin:15px 20px;font-size:13px; }
 </style>
 </head>
 <body>
-<a class="skip-link" href="#step-select">Skip to step explanations</a>
+<a class="skip-link" href="#company-exercise">Skip to the class exercise</a>
 <div class="shell">
   <div class="masthead">
     <div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2 28 7v9c0 7-7 12-12 14C11 28 4 23 4 16V7Z" fill="#216a55"/><path d="m10 16 4 4 8-9" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>HUNGARY / CYBERSECURITY</span></div>
-    <span class="date">Rules checked · 12 Oct 2026</span>
+    <span class="date">Rules checked · 13 Oct 2026</span>
   </div>
   <header class="hero">
-    <div><p class="eyebrow">A company compliance journey</p><h1>Cybersecurity compliance</h1><p class="subtitle">Use this worksheet with each company profile shown in class, then follow the flowchart to map possible duties and evidence.</p></div>
-    <button class="print-button" id="print-button" type="button">Print flowchart ↗</button>
+    <div><p class="eyebrow">A company compliance journey</p><h1>Cybersecurity compliance</h1><p class="subtitle">Use the guided exercise with each company profile shown in class. The flowchart and official sources are reference material below.</p></div>
+    <button class="print-button" id="print-button" type="button">Print reference flowchart ↗</button>
   </header>
   <section class="exercise-card" id="company-exercise" aria-labelledby="exercise-title">
   <div class="exercise-heading">
     <div>
       <p class="eyebrow">Class exercise · one company at a time</p>
-      <h2 id="exercise-title">Check a company profile</h2>
-      <p>Use only facts shown in the profile. Start with the quick screen; open the extra questions only when the profile gives you those facts. Leave missing facts as “Not stated.”</p>
+      <h2 id="exercise-title">Work out what to check</h2>
+      <p>Read the fictional company story on screen. Enter only facts it gives you, then make a hypothesis before you reveal the guidance. “The story does not say” is a useful answer.</p>
     </div>
   </div>
   <form id="company-form" novalidate>
-    <fieldset class="form-panel quick-panel">
-      <legend>Quick screen</legend>
-      <div class="quick-grid">
-        <label>Company or profile name
-          <input type="text" name="profile-label" autocomplete="off" placeholder="For example, the company shown on screen">
-        </label>
-        <label>Does a listed sector or service seem to match?
-          <select name="annex-review">
-            <option value="unknown">Not stated / not sure</option>
-            <option value="yes">Yes, a listed type may match</option>
-            <option value="no">No, I checked the list</option>
+    <div class="profile-name-row">
+      <label for="profile-label">Company name <span>(optional)</span></label>
+      <input id="profile-label" type="text" name="profile-label" autocomplete="off" placeholder="Type the name from the story">
+    </div>
+    <nav class="stage-nav" aria-label="Exercise steps">
+      <ol id="stage-list">
+        <li><button type="button" data-stage-link="0" aria-current="step"><span>1</span> Business</button></li>
+        <li><button type="button" data-stage-link="1"><span>2</span> Organisation</button></li>
+        <li><button type="button" data-stage-link="2"><span>3</span> Other facts</button></li>
+        <li><button type="button" data-stage-link="3"><span>4</span> Your hypothesis</button></li>
+      </ol>
+      <p id="stage-counter" aria-live="polite">Step 1 of 4</p>
+    </nav>
+
+    <div class="stage-error" id="stage-error" role="alert" hidden></div>
+
+    <section class="stage-panel" data-stage-panel="0" aria-labelledby="business-stage-title">
+      <h3 id="business-stage-title" tabindex="-1">What is the company’s business domain?</h3>
+      <p class="stage-help">Choose every activity the story describes. These are everyday descriptions, not legal categories.</p>
+      <fieldset class="question-block">
+        <legend>What does it do?</legend>
+        <div class="domain-option-grid" id="domain-options"></div>
+        <label class="unknown-domain"><input type="checkbox" name="domain-unknown" value="yes"> The story does not say what the company does</label>
+      </fieldset>
+      <div class="service-followups" id="service-followups" aria-live="polite"></div>
+      <div class="teacher-note"><strong>Use the story, not a company lookup.</strong> Do not infer a service just because it sounds likely from the company name.</div>
+    </section>
+
+    <section class="stage-panel" data-stage-panel="1" aria-labelledby="organisation-stage-title" hidden>
+      <h3 id="organisation-stage-title" tabindex="-1">Who owns it, and how large is it?</h3>
+      <p class="stage-help">Use the figures and ownership facts in the story. Do not decide legal size from the word “small” alone.</p>
+      <div class="answer-grid">
+        <label>What kind of organisation is described?
+          <select name="entity-type">
+            <option value="">Choose one</option><option value="company">A private or commercial company</option><option value="central-public">A national government body</option><option value="local-public">A local council or its office</option><option value="public-institution">Another public institution</option><option value="other">Another kind of organisation</option><option value="unknown">The story does not say</option>
           </select>
         </label>
-        <label>Number of employees
+        <label>Who has control of the company?
+          <select name="ownership">
+            <option value="">Choose one</option><option value="private">Private owners control it</option><option value="state-majority">The Hungarian State has majority control</option><option value="municipal-majority">A municipality has majority control</option><option value="mixed">Ownership is mixed or shared</option><option value="other">Another owner controls it</option><option value="unknown">The story does not say</option>
+          </select>
+        </label>
+        <label>How many people work for this company?
           <select name="employees">
-            <option value="unknown">Not stated</option>
-            <option value="under50">Under 50</option>
-            <option value="50plus">50 or more</option>
+            <option value="">Choose one</option><option value="lt10">Fewer than 10</option><option value="10-49">10 to 49</option><option value="50-249">50 to 249</option><option value="250plus">250 or more</option><option value="unknown">The story does not say</option>
           </select>
         </label>
-        <label>Company size under SME rules
-          <select name="sme-size">
-            <option value="unknown">Not stated</option>
-            <option value="micro-small">Micro or small</option>
-            <option value="medium">Medium</option>
-            <option value="large">Large / above SME limits</option>
+        <label>Is it part of a wider group of companies?
+          <select name="group-link">
+            <option value="">Choose one</option><option value="standalone">The story says it is independent</option><option value="group">The story says it is linked to a group</option><option value="unknown">The story does not say</option>
           </select>
         </label>
       </div>
-      <p class="form-hint">A sector or size answer is only a clue. Exact services, group figures and official decisions can change the legal result.</p>
-    </fieldset>
-
-    <details class="optional-panel">
-      <summary><strong>More company facts</strong><span>Open only if the profile states them</span></summary>
-      <div class="details-body">
-        <div class="exercise-columns">
-          <fieldset class="form-panel">
-            <legend>Services, ownership and size</legend>
-            <p class="form-hint">Tick a broad match only when the company description supports it. The exact legal definition still needs checking.</p>
-            <details class="annex-list"><summary>Compare with broad Annex 2 categories</summary><div class="check-grid">
-              <label class="check"><input type="checkbox" name="annex-service" value="Energy operators">Energy operators</label>
-              <label class="check"><input type="checkbox" name="annex-service" value="Transport operators">Transport operators</label>
-              <label class="check"><input type="checkbox" name="annex-service" value="Listed health services">Listed health services</label>
-              <label class="check"><input type="checkbox" name="annex-service" value="Drinking water or wastewater">Drinking water or wastewater</label>
-              <label class="check"><input type="checkbox" name="annex-service" value="Electronic communications or data exchange">Electronic communications or data exchange</label>
-              <label class="check"><input type="checkbox" name="annex-service" value="Trust services">Trust services</label>
-              <label class="check"><input type="checkbox" name="annex-service" value="Digital infrastructure: cloud, data centre, DNS, TLD or CDN">Digital infrastructure: cloud, data centre, DNS, TLD or CDN</label>
-              <label class="check"><input type="checkbox" name="annex-service" value="Managed ICT or managed cybersecurity services">Managed ICT or managed cybersecurity services</label>
-              <label class="check"><input type="checkbox" name="annex-service" value="Space-service ground infrastructure">Space-service ground infrastructure</label>
-            </div></details>
-            <details class="annex-list"><summary>Compare with broad Annex 3 categories</summary><div class="check-grid">
-              <label class="check"><input type="checkbox" name="annex-service" value="Postal or courier services">Postal or courier services</label>
-              <label class="check"><input type="checkbox" name="annex-service" value="Specified food production, processing or wholesale">Specified food production, processing or wholesale</label>
-              <label class="check"><input type="checkbox" name="annex-service" value="Waste management">Waste management</label>
-              <label class="check"><input type="checkbox" name="annex-service" value="Chemical production or distribution">Chemical production or distribution</label>
-              <label class="check"><input type="checkbox" name="annex-service" value="Listed manufacturing">Listed manufacturing</label>
-              <label class="check"><input type="checkbox" name="annex-service" value="Online marketplace, search or social-media platform">Online marketplace, search or social-media platform</label>
-              <label class="check"><input type="checkbox" name="annex-service" value="Research organisation">Research organisation</label>
-            </div></details>
-            <p class="form-hint">“Listed manufacturing” covers only specified product groups. The broad label alone does not establish scope.</p>
-
-            <label class="block-label">Does it provide a size-independent service listed in the Act?
-              <select name="independent-review">
-                <option value="unknown">Not stated / not sure</option>
-                <option value="yes">Yes, one may match</option>
-                <option value="no">No, I checked the list</option>
-              </select>
+      <div class="size-detail" id="size-details" hidden>
+        <h4>Figures that may change a size-based route</h4>
+        <p>For some listed services, the law looks at the entity’s legal size, staff and financial statements. Group links can change that assessment.</p>
+        <div class="answer-grid">
+          <label id="medium-status-wrap" hidden>Does a written company size assessment classify it in the medium-sized range, including linked companies?
+            <select name="medium-status"><option value="">Choose one</option><option value="yes">Yes</option><option value="no">No</option><option value="unknown">The story does not say</option></select>
+          </label>
+          <div class="answer-grid" id="financial-threshold-wrap" hidden>
+            <label>Is latest annual revenue or budget more than about €10 million equivalent?
+              <select name="revenue"><option value="">Choose one</option><option value="above">Yes</option><option value="below">No</option><option value="unknown">The story does not say</option></select>
             </label>
-            <div class="check-grid independent-grid">
-              <label class="check"><input type="checkbox" name="independent-service" value="Electronic communications service provider">Electronic communications service provider</label>
-              <label class="check"><input type="checkbox" name="independent-service" value="Trust-service provider">Trust-service provider</label>
-              <label class="check"><input type="checkbox" name="independent-service" value="DNS service provider">DNS service provider</label>
-              <label class="check"><input type="checkbox" name="independent-service" value="Top-level domain registry">Top-level domain registry</label>
-              <label class="check"><input type="checkbox" name="independent-service" value="Domain-name registration provider">Domain-name registration provider</label>
-            </div>
+            <label>Must it prepare annual financial statements that include a balance sheet?
+              <select name="accounts-obligation"><option value="">Choose one</option><option value="yes">Yes</option><option value="no">No</option><option value="unknown">The story does not say</option></select>
+            </label>
+            <label id="balance-sheet-wrap" hidden>Is the latest balance-sheet total more than about €10 million equivalent?
+              <select name="assets"><option value="">Choose one</option><option value="above">Yes</option><option value="below">No</option><option value="unknown">The story does not say</option></select>
+            </label>
+          </div>
+        </div>
+        <p class="form-hint">Use a documented company/group assessment if the story provides one. Do not calculate this legal size category from the short profile.</p>
+        <p class="form-hint">The financial test generally needs annual revenue/budget above €10 million and, where the company must prepare the relevant statements, balance-sheet total above €10 million. Do not estimate missing figures: use the company/group data and the official exchange rate at the relevant year-end.</p>
+      </div>
+    </section>
 
-            <div class="field-grid extra-fields">
-              <label>Is it a public body listed in Annex 1?
-                <select name="annex1"><option value="unknown">Not stated</option><option value="yes">Yes</option><option value="no">No</option></select>
-              </label>
-              <label>Does the state have majority influence?
-                <select name="state-control"><option value="unknown">Not stated</option><option value="yes">Yes</option><option value="no">No</option></select>
-              </label>
-              <label>Net revenue or budget above €10m equivalent?
-                <select name="revenue"><option value="unknown">Not stated</option><option value="yes">Yes</option><option value="no">No</option></select>
-              </label>
-              <label>Balance sheet above €10m equivalent?
-                <select name="assets"><option value="unknown">Not stated</option><option value="yes">Yes</option><option value="no">No</option></select>
-              </label>
+    <section class="stage-panel" data-stage-panel="2" aria-labelledby="other-facts-title" hidden>
+      <h3 id="other-facts-title" tabindex="-1">What data, products, customers or official decisions are mentioned?</h3>
+      <p class="stage-help">A customer or supplier can create contract duties without automatically giving the company the customer’s direct legal duties.</p>
+      <div class="answer-grid">
+        <label>Does it use information about people, such as names, contact details, account records or health information?
+          <select name="personal-data"><option value="">Choose one</option><option value="yes">Yes, the story describes personal information</option><option value="no">The story explicitly says it does not</option><option value="unknown">The story does not say</option></select>
+        </label>
+        <div class="data-detail" id="personal-data-detail" hidden>
+          <fieldset class="question-block"><legend>Which kind of information does the story mention?</legend>
+            <div class="hypothesis-grid">
+              <label><input type="checkbox" name="data-type" value="contact"> Names, addresses or contact/delivery details</label>
+              <label><input type="checkbox" name="data-type" value="accounts"> Account, payment or transaction records</label>
+              <label><input type="checkbox" name="data-type" value="staff"> Employee or applicant records</label>
+              <label><input type="checkbox" name="data-type" value="health"> Health, identity or other sensitive details</label>
+              <label><input type="checkbox" name="data-type" value="other"> Other information about identifiable people</label>
+              <label><input type="checkbox" name="data-type" value="type-unknown"> The story does not say which kind</label>
             </div>
-            <p class="form-hint">For some routes, check group figures and the legal size test. The tool does not calculate these for you.</p>
-          </fieldset>
-
-          <fieldset class="form-panel">
-            <legend>Official status and other laws</legend>
-            <div class="field-grid">
-              <label>Does its activity relate to defence interests?
-                <select name="defence"><option value="unknown">Not stated</option><option value="yes">Yes</option><option value="no">No</option></select>
-              </label>
-              <label>Has an authority formally identified it under the Cybersecurity Act?
-                <select name="authority"><option value="unknown">Not stated</option><option value="yes">Yes</option><option value="no">No</option></select>
-              </label>
-              <label>Is the company itself a DORA financial entity?
-                <select name="dora"><option value="unknown">Not stated</option><option value="yes">Yes</option><option value="no">No</option></select>
-              </label>
-              <label>Has it been formally designated a critical entity (CER)?
-                <select name="cer"><option value="unknown">Not stated</option><option value="yes">Yes</option><option value="no">No</option></select>
-              </label>
-              <label>Does it handle personal data?
-                <select name="gdpr"><option value="unknown">Not stated</option><option value="yes">Yes</option><option value="no">No</option></select>
-              </label>
-              <label>Does it make, import or distribute digital products in the EU?
-                <select name="cra"><option value="unknown">Not stated</option><option value="yes">Yes</option><option value="no">No</option></select>
-              </label>
-              <label>Does it supply a regulated or critical customer?
-                <select name="supplier"><option value="unknown">Not stated</option><option value="yes">Yes</option><option value="no">No</option></select>
-              </label>
-            </div>
-            <p class="form-hint">A sector alone does not establish CER designation. DORA applies to listed financial entities; a supplier contract alone is not enough. Using a digital product does not make a company its manufacturer.</p>
           </fieldset>
         </div>
+        <label class="conditional" id="financial-license-wrap" hidden>Does the company itself have permission to provide financial services, such as banking, insurance or payment services?
+          <select name="financial-license"><option value="">Choose one</option><option value="yes">Yes</option><option value="no">No; it only supplies technology or accepts card payments</option><option value="unknown">The story does not say</option></select>
+        </label>
+        <label>Does it make, import or sell software or connected devices to customers in the EU?
+          <select name="product-role"><option value="">Choose one</option><option value="maker">It makes a digital product for customers</option><option value="importer">It imports a digital product for sale in the EU</option><option value="distributor">It resells or distributes a digital product</option><option value="user">It only buys or uses products made by others</option><option value="no">The story explicitly says it does none of these</option><option value="unknown">The story does not say</option></select>
+        </label>
+        <label>Which outside business relationship is mentioned?
+          <select name="business-relationships"><option value="">Choose one</option><option value="uses-provider">It relies on an outside cloud, software, hosting or payment provider</option><option value="serves-regulated">It supplies a public, regulated or critical organisation</option><option value="both">Both are described</option><option value="neither">The story says neither</option><option value="unknown">The story does not say</option></select>
+        </label>
+        <label>Has a cybersecurity authority sent it a formal decision identifying it under the Hungarian Cybersecurity Act?
+          <select name="cyber-decision"><option value="">Choose one</option><option value="yes">Yes, the story says there is a formal decision</option><option value="no">The story explicitly says there is no decision</option><option value="unknown">The story does not say</option></select>
+        </label>
+        <label>Has an authority formally designated it as a critical entity?
+          <select name="critical-decision"><option value="">Choose one</option><option value="yes">Yes, the story says there is a formal decision</option><option value="no">The story explicitly says there is no decision</option><option value="unknown">The story does not say</option></select>
+        </label>
+        <label>Has an official decision named it as important to Hungary’s defence or security?
+          <select name="defence-decision"><option value="">Choose one</option><option value="yes">Yes, the story says there is a formal decision</option><option value="no">The story explicitly says there is no decision</option><option value="unknown">The story does not say</option></select>
+        </label>
+        <label>Does it make products or provide services for defence-related work?
+          <select name="defence-activity"><option value="">Choose one</option><option value="yes">Yes, the story describes defence-related work</option><option value="no">The story explicitly says it does not</option><option value="unknown">The story does not say</option></select>
+        </label>
       </div>
-    </details>
+    </section>
 
-    <div class="submit-row">
-      <p class="form-hint">Answers stay on this device. Clear them before the next company.</p>
-      <div>
-        <button class="assess-button" type="submit">Show the result</button>
-        <button class="clear-button" type="reset">Clear for next company</button>
+    <section class="stage-panel" data-stage-panel="3" aria-labelledby="hypothesis-title" hidden>
+      <h3 id="hypothesis-title" tabindex="-1">Make your hypothesis before you compare</h3>
+      <p class="stage-help">Pick every rule or agreement you think the class should investigate. You can choose “not enough information” and still explain what you would ask next.</p>
+      <fieldset class="question-block">
+        <legend>What may matter for this company?</legend>
+        <div class="hypothesis-grid">
+          <label><input type="checkbox" name="hypothesis" value="act"> Hungarian Cybersecurity Act — organisation and sector duties</label>
+          <label><input type="checkbox" name="hypothesis" value="gdpr"> GDPR — information about people</label>
+          <label><input type="checkbox" name="hypothesis" value="dora"> DORA — regulated financial services</label>
+          <label><input type="checkbox" name="hypothesis" value="cer"> Critical-entity resilience — a formal designation</label>
+          <label><input type="checkbox" name="hypothesis" value="cra"> Cyber Resilience Act — digital products sold in the EU</label>
+          <label><input type="checkbox" name="hypothesis" value="contracts"> Security and data clauses in contracts</label>
+          <label class="hypothesis-unknown"><input type="checkbox" name="hypothesis" value="not-enough"> Not enough information to decide yet</label>
+        </div>
+      </fieldset>
+      <div class="answer-grid hypothesis-fields">
+        <label>Which fact from the story supports your hypothesis?
+          <textarea name="supporting-fact" rows="2" placeholder="For example: the company sells internet connections to customers"></textarea>
+        </label>
+        <label>What is the most useful question to ask the company next?
+          <textarea name="next-question" rows="2" placeholder="Ask for one fact that could change the answer"></textarea>
+        </label>
+        <label>What would you do first?
+          <select name="first-action"><option value="">Choose one</option><option value="verify-service">Confirm the company’s exact service and legal entity</option><option value="verify-size">Check staff, group links and latest financial statements</option><option value="verify-decisions">Ask for any formal authority or critical-entity decisions</option><option value="map-data">Map the personal data and how it is protected</option><option value="check-finance">Confirm the financial-service authorisation and ICT providers</option><option value="check-products">Identify the product and the company’s role in selling it</option><option value="review-contracts">Read the customer and supplier security clauses</option><option value="gather-facts">Gather more facts before choosing a route</option></select>
+        </label>
       </div>
+      <div class="teacher-note"><strong>Your answers are a starting hypothesis.</strong> The guidance shows possible routes and questions to confirm; it does not grade students or certify compliance.</div>
+    </section>
+
+    <div class="wizard-actions">
+      <button class="back-button" id="stage-back" type="button" disabled>Back</button>
+      <button class="next-button" id="stage-next" type="button">Next step</button>
+      <button class="compare-button" id="compare-button" type="submit" hidden>Compare with guidance</button>
+      <button class="reset-button" type="reset">Start next company</button>
     </div>
   </form>
-  <section id="assessment-results" aria-live="polite" aria-atomic="true" tabindex="-1">
-    <div class="empty-state"><strong>The result will appear here.</strong><p>Enter the facts shown in the profile, then select “Show the result.”</p></div>
+  <section id="assessment-results" aria-live="polite" aria-atomic="false" tabindex="-1">
+    <div class="empty-state"><strong>Your comparison will appear here.</strong><p>Complete the four short steps, record your hypothesis, then select “Compare with guidance.”</p></div>
   </section>
 </section>
+
   <main class="workspace">
-    <section class="chart-card" aria-label="Compliance flowchart and step guide">
+    <section class="chart-card" aria-label="Reference compliance flowchart and step guide">
+      <div class="reference-heading"><p class="eyebrow">Reference</p><h2>Hungarian cybersecurity compliance flowchart</h2><p>Use this after the company exercise to review the general compliance journey. It does not determine an individual company’s scope.</p></div>
       <div class="chart-toolbar">
         <div class="view-tabs" role="group" aria-label="Choose a view"><button type="button" id="diagram-tab" aria-pressed="true" aria-controls="diagram-view">Diagram</button><button type="button" id="guide-tab" aria-pressed="false" aria-controls="guide-view">Step guide</button></div>
         <div class="zoom-controls" id="zoom-controls" role="group" aria-label="Diagram zoom"><button id="zoom-out" type="button" aria-label="Zoom out">−</button><output id="zoom-level" aria-live="polite">100%</output><button id="zoom-in" type="button" aria-label="Zoom in">+</button><button id="zoom-fit" type="button">Fit</button></div>
@@ -384,7 +431,7 @@ noscript p { margin:15px 20px;font-size:13px; }
 <rect width="1300" height="1900" fill="#ffffff" />
 <style>text{font-family:"DejaVu Sans",Arial,sans-serif;fill:#152339} .edge{fill:none;stroke:#536278;stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round;marker-end:url(#arrow)} .node{fill:#f0f5fb;stroke:#b9c8dc;stroke-width:1.4} .decision{fill:#fff5db;stroke:#d1b45f;stroke-width:1.6} .muted{fill:#526176} .caption{font-size:17px} a text{fill:#245c92;text-decoration:underline}</style>
 <text x="80" y="57" text-anchor="start" font-size="34" font-weight="600" class="">Cybersecurity compliance for a Hungarian company</text>
-<text x="80" y="90" text-anchor="start" font-size="18" font-weight="400" class="muted">Teaching flowchart  |  Rules checked 12 October 2026</text>
+<text x="80" y="90" text-anchor="start" font-size="18" font-weight="400" class="muted">Teaching flowchart  |  Rules checked 13 October 2026</text>
 <path d="M 520 205 L 520 235" class="edge" />
 <path d="M 520 335 L 520 365" class="edge" />
 <path d="M 520 515 L 520 565" class="edge" />
@@ -514,7 +561,7 @@ noscript p { margin:15px 20px;font-size:13px; }
         <section id="step-detail" aria-live="polite" aria-atomic="true"></section>
         <div class="step-nav"><button id="previous-step" type="button">← Previous step</button><button id="next-step" type="button">Next step →</button></div>
       </div>
-      <details class="sources-card" id="official-sources"><summary>Official sources · 11</summary><ol><li><a href="https://njt.jog.gov.hu/jogszabaly/2024-69-00-00" target="_blank" rel="noopener noreferrer"><span>[1]</span> Hungarian Cybersecurity Act — Act LXIX of 2024 <span aria-hidden="true">↗</span></a><p>Scope, responsibilities, classification, audit and supervision.</p></li><li><a href="https://sztfh.hu/tevekenysegek/kiberbiztonsagi-tanusitasok/gyakran-ismetelt-kerdesek/" target="_blank" rel="noopener noreferrer"><span>[2]</span> SZTFH — Frequently Asked Questions <span aria-hidden="true">↗</span></a><p>Supervision, registration and statutory audit guidance.</p></li><li><a href="https://njt.jog.gov.hu/jogszabaly/2024-7-20-7G" target="_blank" rel="noopener noreferrer"><span>[3]</span> 7/2024 (VI. 24.) MK decree <span aria-hidden="true">↗</span></a><p>Security classification and required security measures.</p></li><li><a href="https://njt.jog.gov.hu/jogszabaly/2024-418-20-22" target="_blank" rel="noopener noreferrer"><span>[4]</span> 418/2024 (XII. 23.) Government decree <span aria-hidden="true">↗</span></a><p>Implementation of the Hungarian Cybersecurity Act.</p></li><li><a href="https://www.naih.hu/tudnivalok-az-adatvedelmi-incidensek-kezeleserol" target="_blank" rel="noopener noreferrer"><span>[5]</span> NAIH — Personal data breach guidance <span aria-hidden="true">↗</span></a><p>Assessing and reporting personal data breaches.</p></li><li><a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng" target="_blank" rel="noopener noreferrer"><span>[6]</span> GDPR — Regulation (EU) 2016/679 <span aria-hidden="true">↗</span></a><p>Personal data processing and protection duties.</p></li><li><a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj/eng" target="_blank" rel="noopener noreferrer"><span>[7]</span> DORA — Regulation (EU) 2022/2554 <span aria-hidden="true">↗</span></a><p>Digital operational resilience for covered financial entities.</p></li><li><a href="https://njt.jog.gov.hu/jogszabaly/2024-84-00-00" target="_blank" rel="noopener noreferrer"><span>[8]</span> Hungarian Critical Entities Act — Act LXXXIV of 2024 <span aria-hidden="true">↗</span></a><p>Hungarian critical-entity designation and resilience framework.</p></li><li><a href="https://eur-lex.europa.eu/eli/dir/2022/2557/oj/eng" target="_blank" rel="noopener noreferrer"><span>[9]</span> CER Directive — Directive (EU) 2022/2557 <span aria-hidden="true">↗</span></a><p>EU framework for identifying and strengthening critical entities.</p></li><li><a href="https://eur-lex.europa.eu/eli/reg/2024/2847/oj/eng" target="_blank" rel="noopener noreferrer"><span>[10]</span> Cyber Resilience Act — Regulation (EU) 2024/2847 <span aria-hidden="true">↗</span></a><p>Cybersecurity requirements for products with digital elements and relevant economic operators.</p></li><li><a href="https://njt.jog.gov.hu/jogszabaly/2011-112-00-00" target="_blank" rel="noopener noreferrer"><span>[11]</span> Hungarian data-protection act — Act CXII of 2011 (Infotv) <span aria-hidden="true">↗</span></a><p>Hungarian supplementary rules for personal data and information rights.</p></li></ol></details>
+      <details class="sources-card" id="official-sources"><summary>Official sources · 11</summary><ol><li><a href="https://njt.jog.gov.hu/jogszabaly/2024-69-00-00" target="_blank" rel="noopener noreferrer"><span>[1]</span> Hungarian Cybersecurity Act — Act LXIX of 2024 <span aria-hidden="true">↗</span></a><p>Consolidated text in force 1 October 2026: scope, entity types, service lists, size thresholds, designations and incident handling.</p></li><li><a href="https://sztfh.hu/tevekenysegek/kiberbiztonsagi-tanusitasok/gyakran-ismetelt-kerdesek/" target="_blank" rel="noopener noreferrer"><span>[2]</span> SZTFH — Frequently Asked Questions <span aria-hidden="true">↗</span></a><p>Supervision, registration and statutory audit guidance.</p></li><li><a href="https://njt.jog.gov.hu/jogszabaly/2024-7-20-7G" target="_blank" rel="noopener noreferrer"><span>[3]</span> 7/2024 (VI. 24.) MK decree <span aria-hidden="true">↗</span></a><p>Security classification and required security measures.</p></li><li><a href="https://njt.jog.gov.hu/jogszabaly/2024-418-20-22" target="_blank" rel="noopener noreferrer"><span>[4]</span> 418/2024 (XII. 23.) Government decree <span aria-hidden="true">↗</span></a><p>Implementation of the Hungarian Cybersecurity Act.</p></li><li><a href="https://www.naih.hu/tudnivalok-az-adatvedelmi-incidensek-kezeleserol" target="_blank" rel="noopener noreferrer"><span>[5]</span> NAIH — Personal data breach guidance <span aria-hidden="true">↗</span></a><p>Assessing and reporting personal data breaches.</p></li><li><a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng" target="_blank" rel="noopener noreferrer"><span>[6]</span> GDPR — Regulation (EU) 2016/679 <span aria-hidden="true">↗</span></a><p>Personal data processing and protection duties.</p></li><li><a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj/eng" target="_blank" rel="noopener noreferrer"><span>[7]</span> DORA — Regulation (EU) 2022/2554 <span aria-hidden="true">↗</span></a><p>Digital operational resilience for covered financial entities.</p></li><li><a href="https://njt.jog.gov.hu/jogszabaly/2024-84-00-00" target="_blank" rel="noopener noreferrer"><span>[8]</span> Hungarian Critical Entities Act — Act LXXXIV of 2024 <span aria-hidden="true">↗</span></a><p>Hungarian critical-entity designation and resilience framework.</p></li><li><a href="https://eur-lex.europa.eu/eli/dir/2022/2557/oj/eng" target="_blank" rel="noopener noreferrer"><span>[9]</span> CER Directive — Directive (EU) 2022/2557 <span aria-hidden="true">↗</span></a><p>EU framework for identifying and strengthening critical entities.</p></li><li><a href="https://eur-lex.europa.eu/eli/reg/2024/2847/oj/eng" target="_blank" rel="noopener noreferrer"><span>[10]</span> Cyber Resilience Act — Regulation (EU) 2024/2847 <span aria-hidden="true">↗</span></a><p>Cybersecurity requirements for products with digital elements and relevant economic operators.</p></li><li><a href="https://njt.jog.gov.hu/jogszabaly/2011-112-00-00" target="_blank" rel="noopener noreferrer"><span>[11]</span> Hungarian data-protection act — Act CXII of 2011 (Infotv) <span aria-hidden="true">↗</span></a><p>Hungarian supplementary rules for personal data and information rights.</p></li></ol></details>
       <section class="regimes"><h2>Other regimes to assess</h2><p><b>GDPR</b> — personal data processing</p><p><b>DORA</b> — listed financial entities; ICT contracts can reach suppliers</p><p><b>CER</b> — formal critical-entity designation</p><p><b>CRA</b> — relevant product and economic-operator roles</p><p>Check each scope separately. A customer contract does not automatically make a supplier subject to the customer’s statute.</p></section>
     </aside>
   </main>
@@ -522,8 +569,8 @@ noscript p { margin:15px 20px;font-size:13px; }
 </div>
 <script>
 'use strict';
-const STEPS = [{"id": "map", "title": "Map the company", "kind": "Preparation", "summary": "Start with what the company actually does. Its services, ownership, workforce, finances, systems and data shape the compliance assessment.", "actions": ["List the business services, relevant sectors and systems.", "Record the company facts and the data it handles."], "evidence": "Company profile, service inventory and system inventory.", "refs": []}, {"id": "requirements", "title": "Identify all applicable requirements", "kind": "Preparation", "summary": "Several regimes can apply at the same time. Assess privacy, financial-sector, critical-entity, digital-product and contractual requirements alongside the Cybersecurity Act.", "actions": ["Check GDPR / Infotv, DORA, CER and CRA where relevant.", "Review supplier and customer security commitments."], "evidence": "A register of applicable obligations, owners and deadlines.", "refs": [6, 7, 8, 9, 10, 11]}, {"id": "scope", "title": "Do the Act’s organisational duties apply?", "kind": "Decision", "summary": "Assess scope under Act LXIX of 2024. Sector, statutory size tests, state influence, specified services and formal designations matter.", "actions": ["Check the current statutory categories and annexes.", "Consider the exceptions: fewer than 50 employees is not an automatic exemption."], "evidence": "A documented scope assessment with its legal basis.", "refs": [1]}, {"id": "other", "title": "Meet the remaining applicable duties", "kind": "If scope answer is No", "summary": "Document the scope decision and follow the other laws and agreements that apply to the company.", "actions": ["Implement the relevant privacy, sector, product and contractual requirements.", "Continue to the ongoing-compliance stage below."], "evidence": "Scope decision and evidence for the remaining obligations.", "refs": [1, 6, 7, 8, 9, 10, 11]}, {"id": "authority", "title": "Confirm the competent authority", "kind": "If scope answer is Yes", "summary": "Confirm the authority assigned to the company and its systems. The chart identifies SZTFH, NBSZ NKI and the defence authority as possible routes.", "actions": ["Verify the statutory allocation of supervision.", "Record the correct registration, notification and reporting channels."], "evidence": "Authority contact details and a record of the allocation.", "refs": [1, 2]}, {"id": "register", "title": "Register, notify and assign responsibilities", "kind": "Regulated path", "summary": "Complete the required notifications and registration. Appoint the responsible security officer and make responsibilities clear.", "actions": ["Complete the applicable submissions and track their deadlines.", "Assign management, security and operational responsibilities."], "evidence": "Submission records, appointments and responsibility assignments.", "refs": [1]}, {"id": "classify", "title": "Classify systems and assess risks", "kind": "Regulated path", "summary": "Assess each relevant electronic information system under the applicable classification rules. The security classes are alap, jelentős and magas.", "actions": ["Document the system’s classification and risk assessment.", "Use the result to identify the required protections."], "evidence": "System classifications and a risk register.", "refs": [3]}, {"id": "controls", "title": "Implement controls and retain evidence", "kind": "Regulated path", "summary": "Turn requirements into daily practices. Cover technical protections, people, suppliers and the ability to respond and recover.", "actions": ["Implement access control, patching, backups and supplier security.", "Maintain response and recovery plans; train staff and perform required testing."], "evidence": "Policies, operational records, training records and test results.", "refs": [3]}, {"id": "audit-scope", "title": "Is a statutory external audit required?", "kind": "Decision", "summary": "Assess the audit requirement separately for the company and its relevant systems.", "actions": ["Check the applicable entity and system exceptions.", "Follow the audit branch when required; then continue operating the controls."], "evidence": "A documented audit-scope decision.", "refs": [1, 2]}, {"id": "audit", "title": "Use a registered auditor when required", "kind": "If audit answer is Yes", "summary": "Engage a registered auditor and complete the statutory audit within the deadlines applicable to the company.", "actions": ["Track the contract, first audit and repeat-audit deadlines.", "Assign owners to findings and retain evidence of remediation."], "evidence": "Audit contract, audit report and remediation records.", "refs": [1, 2]}, {"id": "operate", "title": "Maintain all applicable compliance duties", "kind": "All paths rejoin here", "summary": "Compliance continues while the systems are used and changed. Keep the controls working and handle incidents under each applicable reporting regime.", "actions": ["Operate the controls and retain evidence of their operation.", "Assess the reporting obligations and deadlines for each incident."], "evidence": "Control records, incident records and applicable notifications.", "refs": [4, 5, 6, 7, 8, 9, 10, 11]}, {"id": "review", "title": "Review changes and reassess scope", "kind": "Continuous review", "summary": "Changes can affect both the legal scope and the protections needed. Return to the company map when the relevant facts or rules change.", "actions": ["Review changes in services, size, ownership, systems, risks and law.", "Update the obligations register, controls and evidence."], "evidence": "Updated scope assessments, risk reviews and action records.", "refs": [1, 3]}];
-const SOURCES = [{"id": 1, "title": "Hungarian Cybersecurity Act — Act LXIX of 2024", "detail": "Scope, responsibilities, classification, audit and supervision.", "url": "https://njt.jog.gov.hu/jogszabaly/2024-69-00-00"}, {"id": 2, "title": "SZTFH — Frequently Asked Questions", "detail": "Supervision, registration and statutory audit guidance.", "url": "https://sztfh.hu/tevekenysegek/kiberbiztonsagi-tanusitasok/gyakran-ismetelt-kerdesek/"}, {"id": 3, "title": "7/2024 (VI. 24.) MK decree", "detail": "Security classification and required security measures.", "url": "https://njt.jog.gov.hu/jogszabaly/2024-7-20-7G"}, {"id": 4, "title": "418/2024 (XII. 23.) Government decree", "detail": "Implementation of the Hungarian Cybersecurity Act.", "url": "https://njt.jog.gov.hu/jogszabaly/2024-418-20-22"}, {"id": 5, "title": "NAIH — Personal data breach guidance", "detail": "Assessing and reporting personal data breaches.", "url": "https://www.naih.hu/tudnivalok-az-adatvedelmi-incidensek-kezeleserol"}, {"id": 6, "title": "GDPR — Regulation (EU) 2016/679", "detail": "Personal data processing and protection duties.", "url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng"}, {"id": 7, "title": "DORA — Regulation (EU) 2022/2554", "detail": "Digital operational resilience for covered financial entities.", "url": "https://eur-lex.europa.eu/eli/reg/2022/2554/oj/eng"}, {"id": 8, "title": "Hungarian Critical Entities Act — Act LXXXIV of 2024", "detail": "Hungarian critical-entity designation and resilience framework.", "url": "https://njt.jog.gov.hu/jogszabaly/2024-84-00-00"}, {"id": 9, "title": "CER Directive — Directive (EU) 2022/2557", "detail": "EU framework for identifying and strengthening critical entities.", "url": "https://eur-lex.europa.eu/eli/dir/2022/2557/oj/eng"}, {"id": 10, "title": "Cyber Resilience Act — Regulation (EU) 2024/2847", "detail": "Cybersecurity requirements for products with digital elements and relevant economic operators.", "url": "https://eur-lex.europa.eu/eli/reg/2024/2847/oj/eng"}, {"id": 11, "title": "Hungarian data-protection act — Act CXII of 2011 (Infotv)", "detail": "Hungarian supplementary rules for personal data and information rights.", "url": "https://njt.jog.gov.hu/jogszabaly/2011-112-00-00"}];
+const STEPS = [{"id": "map", "title": "Map the company", "kind": "Preparation", "summary": "Start with what the company actually does. Its services, ownership, workforce, finances, systems and data shape the compliance assessment.", "actions": ["List the business services, relevant sectors and systems.", "Record the company facts and the data it handles."], "evidence": "Company profile, service inventory and system inventory.", "refs": []}, {"id": "requirements", "title": "Identify all applicable requirements", "kind": "Preparation", "summary": "Several regimes can apply at the same time. Assess privacy, financial-sector, critical-entity, digital-product and contractual requirements alongside the Cybersecurity Act.", "actions": ["Check GDPR / Infotv, DORA, CER and CRA where relevant.", "Review supplier and customer security commitments."], "evidence": "A register of applicable obligations, owners and deadlines.", "refs": [6, 7, 8, 9, 10, 11]}, {"id": "scope", "title": "Do the Act’s organisational duties apply?", "kind": "Decision", "summary": "Assess scope under Act LXIX of 2024. Exact services, statutory size tests, state influence and formal decisions matter. DORA-covered entities also retain specific Hungarian incident-handling duties.", "actions": ["Check the current statutory categories and annexes.", "Consider the exceptions: fewer than 50 employees is not an automatic exemption."], "evidence": "A documented scope assessment with its legal basis.", "refs": [1]}, {"id": "other", "title": "Meet the remaining applicable duties", "kind": "If scope answer is No", "summary": "Document the scope decision and follow the other laws and agreements that apply to the company.", "actions": ["Implement the relevant privacy, sector, product and contractual requirements.", "Continue to the ongoing-compliance stage below."], "evidence": "Scope decision and evidence for the remaining obligations.", "refs": [1, 6, 7, 8, 9, 10, 11]}, {"id": "authority", "title": "Confirm the competent authority", "kind": "If scope answer is Yes", "summary": "Confirm the authority assigned to the company and its systems. The chart identifies SZTFH, NBSZ NKI and the defence authority as possible routes.", "actions": ["Verify the statutory allocation of supervision.", "Record the correct registration, notification and reporting channels."], "evidence": "Authority contact details and a record of the allocation.", "refs": [1, 2]}, {"id": "register", "title": "Register, notify and assign responsibilities", "kind": "Regulated path", "summary": "Complete the required notifications and registration. Appoint the responsible security officer and make responsibilities clear.", "actions": ["Complete the applicable submissions and track their deadlines.", "Assign management, security and operational responsibilities."], "evidence": "Submission records, appointments and responsibility assignments.", "refs": [1]}, {"id": "classify", "title": "Classify systems and assess risks", "kind": "Regulated path", "summary": "Assess each relevant electronic information system under the applicable classification rules. The security classes are alap, jelentős and magas.", "actions": ["Document the system’s classification and risk assessment.", "Use the result to identify the required protections."], "evidence": "System classifications and a risk register.", "refs": [3]}, {"id": "controls", "title": "Implement controls and retain evidence", "kind": "Regulated path", "summary": "Turn requirements into daily practices. Cover technical protections, people, suppliers and the ability to respond and recover.", "actions": ["Implement access control, patching, backups and supplier security.", "Maintain response and recovery plans; train staff and perform required testing."], "evidence": "Policies, operational records, training records and test results.", "refs": [3]}, {"id": "audit-scope", "title": "Is a statutory external audit required?", "kind": "Decision", "summary": "Assess the audit requirement separately for the company and its relevant systems.", "actions": ["Check the applicable entity and system exceptions.", "Follow the audit branch when required; then continue operating the controls."], "evidence": "A documented audit-scope decision.", "refs": [1, 2]}, {"id": "audit", "title": "Use a registered auditor when required", "kind": "If audit answer is Yes", "summary": "Engage a registered auditor and complete the statutory audit within the deadlines applicable to the company.", "actions": ["Track the contract, first audit and repeat-audit deadlines.", "Assign owners to findings and retain evidence of remediation."], "evidence": "Audit contract, audit report and remediation records.", "refs": [1, 2]}, {"id": "operate", "title": "Maintain all applicable compliance duties", "kind": "All paths rejoin here", "summary": "Compliance continues while the systems are used and changed. Keep the controls working and handle incidents under each applicable reporting regime.", "actions": ["Operate the controls and retain evidence of their operation.", "Assess the reporting obligations and deadlines for each incident."], "evidence": "Control records, incident records and applicable notifications.", "refs": [4, 5, 6, 7, 8, 9, 10, 11]}, {"id": "review", "title": "Review changes and reassess scope", "kind": "Continuous review", "summary": "Changes can affect both the legal scope and the protections needed. Return to the company map when the relevant facts or rules change.", "actions": ["Review changes in services, size, ownership, systems, risks and law.", "Update the obligations register, controls and evidence."], "evidence": "Updated scope assessments, risk reviews and action records.", "refs": [1, 3]}];
+const SOURCES = [{"id": 1, "title": "Hungarian Cybersecurity Act — Act LXIX of 2024", "detail": "Consolidated text in force 1 October 2026: scope, entity types, service lists, size thresholds, designations and incident handling.", "url": "https://njt.jog.gov.hu/jogszabaly/2024-69-00-00"}, {"id": 2, "title": "SZTFH — Frequently Asked Questions", "detail": "Supervision, registration and statutory audit guidance.", "url": "https://sztfh.hu/tevekenysegek/kiberbiztonsagi-tanusitasok/gyakran-ismetelt-kerdesek/"}, {"id": 3, "title": "7/2024 (VI. 24.) MK decree", "detail": "Security classification and required security measures.", "url": "https://njt.jog.gov.hu/jogszabaly/2024-7-20-7G"}, {"id": 4, "title": "418/2024 (XII. 23.) Government decree", "detail": "Implementation of the Hungarian Cybersecurity Act.", "url": "https://njt.jog.gov.hu/jogszabaly/2024-418-20-22"}, {"id": 5, "title": "NAIH — Personal data breach guidance", "detail": "Assessing and reporting personal data breaches.", "url": "https://www.naih.hu/tudnivalok-az-adatvedelmi-incidensek-kezeleserol"}, {"id": 6, "title": "GDPR — Regulation (EU) 2016/679", "detail": "Personal data processing and protection duties.", "url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng"}, {"id": 7, "title": "DORA — Regulation (EU) 2022/2554", "detail": "Digital operational resilience for covered financial entities.", "url": "https://eur-lex.europa.eu/eli/reg/2022/2554/oj/eng"}, {"id": 8, "title": "Hungarian Critical Entities Act — Act LXXXIV of 2024", "detail": "Hungarian critical-entity designation and resilience framework.", "url": "https://njt.jog.gov.hu/jogszabaly/2024-84-00-00"}, {"id": 9, "title": "CER Directive — Directive (EU) 2022/2557", "detail": "EU framework for identifying and strengthening critical entities.", "url": "https://eur-lex.europa.eu/eli/dir/2022/2557/oj/eng"}, {"id": 10, "title": "Cyber Resilience Act — Regulation (EU) 2024/2847", "detail": "Cybersecurity requirements for products with digital elements and relevant economic operators.", "url": "https://eur-lex.europa.eu/eli/reg/2024/2847/oj/eng"}, {"id": 11, "title": "Hungarian data-protection act — Act CXII of 2011 (Infotv)", "detail": "Hungarian supplementary rules for personal data and information rights.", "url": "https://njt.jog.gov.hu/jogszabaly/2011-112-00-00"}];
 const byId = id => document.getElementById(id);
 const escapeHtml = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 let current = 0;
@@ -599,207 +646,525 @@ window.addEventListener('afterprint', () => {
 });
 byId('print-button').addEventListener('click', () => { document.body.classList.add('print-chart'); window.print(); });
 
-
 const companyForm = byId('company-form');
 const assessmentResults = byId('assessment-results');
-const triText = value => ({yes:'Yes',no:'No',unknown:'Not stated / unclear'}[value] || value);
-const selectedValues = name => [...companyForm.querySelectorAll('input[name="' + name + '"]:checked')].map(input => input.value);
-const htmlList = values => values.length ? '<ul>' + values.map(value => '<li>' + escapeHtml(value) + '</li>').join('') + '</ul>' : '<p>No route indicated by the facts entered.</p>';
-const sourceLinks = ids => ids.map(id => {
-  const source = SOURCES.find(item => item.id === id);
-  return source ? '<a href="' + escapeHtml(source.url) + '" target="_blank" rel="noopener noreferrer">[' + id + '] ' + escapeHtml(source.title) + ' ↗</a>' : '';
-}).join('');
+const stagePanels = [...document.querySelectorAll('[data-stage-panel]')];
+const stageLinks = [...document.querySelectorAll('[data-stage-link]')];
+const stageError = byId('stage-error');
+const domainOptions = [
+  {id:'energy',label:'Energy',hint:'Electricity, gas, oil, heat or hydrogen',services:[
+    {id:'electric-power',label:'Generates, transmits or sells electricity to others',route:'size'},
+    {id:'gas-or-oil',label:'Provides gas or oil services, or operates related infrastructure',route:'size'},
+    {id:'heat-or-hydrogen',label:'Provides district heating or hydrogen services',route:'size'},
+    {id:'energy-user',label:'Only buys or uses energy; it does not provide an energy service',route:'none'}]},
+  {id:'water',label:'Water',hint:'Drinking water or wastewater services',services:[
+    {id:'water-utility',label:'Supplies drinking water to customers',route:'size'},
+    {id:'wastewater-utility',label:'Collects or treats wastewater',route:'size'},
+    {id:'water-user',label:'Only uses water services from another provider',route:'none'}]},
+  {id:'communications',label:'Internet, telephone and IT',hint:'Connectivity, cloud, hosting or managed IT',services:[
+    {id:'connectivity',label:'Sells internet or telephone connections to customers',route:'independent'},
+    {id:'cloud-hosting',label:'Provides cloud, data-centre or content-delivery hosting',route:'size'},
+    {id:'managed-ict',label:'Manages IT systems or cybersecurity for other organisations',route:'size'},
+    {id:'trust-service',label:'Provides digital trust/signature services to others',route:'independent'},
+    {id:'dns-service',label:'Provides DNS, top-level domain or domain-registration services',route:'independent'},
+    {id:'it-user',label:'Only uses technology for its own work',route:'none'}]},
+  {id:'finance',label:'Financial services',hint:'Banking, payments, insurance or investment',services:[
+    {id:'bank',label:'Provides banking services, such as accounts or lending',route:'finance'},
+    {id:'insurance',label:'Provides insurance or reinsurance services',route:'finance'},
+    {id:'payments',label:'Provides payment or electronic-money services',route:'finance'},
+    {id:'investment',label:'Provides investment, trading or financial-market services',route:'finance'},
+    {id:'finance-tech',label:'Supplies technology to a financial company but does not provide financial services itself',route:'none'},
+    {id:'card-payments-only',label:'Only accepts card payments for its own goods or services',route:'none'}]},
+  {id:'delivery-transport',label:'Delivery and transport',hint:'Courier, postal, freight, passengers or infrastructure',services:[
+    {id:'courier-parcels',label:'Collects and delivers parcels or letters for customers as a courier',route:'size'},
+    {id:'bike-courier',label:'Delivers parcels locally by bicycle',route:'size'},
+    {id:'freight',label:'Moves freight or cargo for customers (this alone is not a listed transport type)',route:'none'},
+    {id:'passenger-transport',label:'Carries passengers or operates transport infrastructure',route:'size'},
+    {id:'transport-user',label:'Only buys delivery or transport from another business',route:'none'}]},
+  {id:'health',label:'Healthcare and medicines',hint:'Care, laboratories, medicines or medical devices',services:[
+    {id:'health-provider',label:'Provides healthcare or runs a medical laboratory',route:'size'},
+    {id:'medicine',label:'Researches, makes or wholesales medicines',route:'size'},
+    {id:'medical-device',label:'Makes medical devices identified as critical for public-health emergencies',route:'size'}]},
+  {id:'food-chemicals-waste',label:'Food, chemicals and waste',hint:'Production, processing, wholesale or waste services',services:[
+    {id:'food-business',label:'Produces or processes food, or sells it wholesale to businesses',route:'size'},
+    {id:'chemical-business',label:'Makes or distributes chemical substances',route:'size'},
+    {id:'waste-business',label:'Collects or treats waste as a service',route:'size'}]},
+  {id:'manufacturing',label:'Manufacturing',hint:'Electronics, electrical goods, vehicles, machinery or cement',services:[
+    {id:'listed-manufacturing',label:'Makes electronics, electrical equipment, vehicles, machinery or cement',route:'size'},
+    {id:'other-manufacturing',label:'Makes another kind of product',route:'review'},
+    {id:'product-user',label:'Only buys or uses products made by others',route:'none'}]},
+  {id:'online-research',label:'Online services and research',hint:'Marketplaces, search, social platforms or research',services:[
+    {id:'marketplace',label:'Runs an online marketplace where customers can buy from other businesses',route:'size'},
+    {id:'search-social',label:'Runs a search service or social-media platform',route:'size'},
+    {id:'research-site',label:'Operates a research organisation or research site',route:'size'},
+    {id:'own-store',label:'Only sells or books its own goods, rooms or services online',route:'none'}]},
+  {id:'hospitality-retail',label:'Hospitality, retail or other services',hint:'Hotels, shops, professional services or something else',services:[
+    {id:'own-accommodation',label:'Sells its own hotel rooms or accommodation',route:'none'},
+    {id:'shared-booking',label:'Shares a booking platform with other companies; who sells what is unclear',route:'review'},
+    {id:'other-service',label:'Provides another service not described above',route:'none'}]},
+  {id:'public-defence',label:'Public administration or defence',hint:'Government bodies or defence-related work',services:[
+    {id:'public-body',label:'Provides a public service or is part of public administration',route:'public-review'},
+    {id:'defence-supplier',label:'Makes products or provides services for defence work',route:'defence-review'},
+    {id:'other-public',label:'Another activity; the story needs more detail',route:'none'}]}
+];
+const domainById = Object.fromEntries(domainOptions.map(domain => [domain.id, domain]));
+let activeStage = 0;
+let maxVisitedStage = 0;
 
-function makeRegimeCard(title, status, message, refs) {
-  const klass = status === 'Potential route' ? '' : status === 'No direct route indicated' ? ' none' : ' review';
-  return '<article class="assessment-card"><h4>' + escapeHtml(title) + '</h4><span class="scope-status' + klass + '">' + escapeHtml(status) + '</span><p>' + escapeHtml(message) + '</p><div class="assessment-links">' + sourceLinks(refs) + '</div></article>';
+function getValue(name) {
+  const control = companyForm.elements.namedItem(name);
+  return control && 'value' in control ? control.value : '';
 }
-
-function runCompanyAssessment() {
-  const val = name => companyForm.elements.namedItem(name).value;
-  const profile = val('profile-label').trim() || 'Company profile';
-  const employees = val('employees');
-  const sme = val('sme-size');
-  const revenue = val('revenue');
-  const assets = val('assets');
-  const annexReview = val('annex-review');
-  const independentReview = val('independent-review');
-  const annexServices = selectedValues('annex-service');
-  const independentServices = selectedValues('independent-service');
-  const publicBody = val('annex1');
-  const stateControl = val('state-control');
-  const defence = val('defence');
-  const authority = val('authority');
-  const dora = val('dora');
-  const cer = val('cer');
-  const gdpr = val('gdpr');
-  const cra = val('cra');
-  const supplier = val('supplier');
-  const actRoutes = [];
-  const actChecks = [];
-  const financialTest = revenue === 'yes' && assets === 'yes';
-  const sizeTest = employees === '50plus' || financialTest;
-  const annexSizeTest = sizeTest || sme === 'medium' || sme === 'large';
-
-  if (publicBody === 'yes') actRoutes.push('The profile indicates a public-administration organisation. Check that the exact body appears in Act Annex 1 (§1(1)(a)).');
-  else if (publicBody === 'unknown') actChecks.push('Confirm whether the organisation is one of the public bodies listed in Act Annex 1.');
-
-  if (stateControl === 'yes') {
-    if (sizeTest) actRoutes.push('Majority state influence is stated and the employee or paired financial threshold is met (§1(1)(b)).');
-    else if ([employees, revenue, assets].includes('unknown')) actChecks.push('Majority state influence is stated. Verify 50+ employees or both the revenue/budget and balance-sheet thresholds (§1(1)(b)).');
-    else actChecks.push('Majority state influence is stated, but the entered figures do not meet the threshold shown in §1(1)(b). Verify the correct group and year-end figures.');
-  } else if (stateControl === 'unknown') actChecks.push('Check ownership and whether the state has majority influence.');
-
-  if (annexServices.length && annexReview === 'no') actChecks.push('The answers conflict: a service category is ticked but the Annex 2/3 review says “no match.” Reconcile this with the screen-shared description.');
-  const annexMatches = annexReview === 'yes' || annexServices.length > 0;
-  if (annexMatches) {
-    if (!annexServices.length) actChecks.push('A listed service is reported, but no Annex 2/3 category is selected. Identify the exact provider type.');
-    else if (annexSizeTest) actRoutes.push('A selected Annex 2/3 service type and the entered size facts indicate a possible scope route (§1(1)(d)). Check the exact statutory entity type and linked-company data.');
-    else if ([employees, revenue, assets, sme].includes('unknown')) actChecks.push('An Annex 2/3 service type is selected. Verify medium-enterprise status, 50+ employees, or both financial thresholds.');
-    else actChecks.push('An Annex 2/3 service type is selected, but the entered size facts do not show the general size test. Verify the precise provider definition, group data and any other route.');
-  } else if (annexReview === 'unknown') actChecks.push('Compare the company’s precise service and legal entity type with Annexes 2 and 3. A broad industry label alone is not enough.');
-
-  if (independentServices.length) actRoutes.push('A selected provider type appears in the size-independent list in §1(1)(e). Confirm that the service matches the legal definition and the relevant Annex.');
-  if (independentReview === 'yes' && !independentServices.length) actChecks.push('A size-independent provider type is reported, but none is selected. Identify whether it is electronic communications, trust, DNS, TLD registry or domain registration.');
-  else if (independentReview === 'unknown' && !independentServices.length) actChecks.push('Check for an electronic communications, trust, DNS, top-level-domain registry or domain-registration service.');
-  if (independentServices.length && independentReview === 'no') actChecks.push('The answers conflict: a size-independent provider type is ticked but the review says “none.” Reconcile the profile facts.');
-
-  if (defence === 'yes') actRoutes.push('The profile indicates activity related to defence interests (§1(1)(f)); confirm the precise activity and competent defence authority.');
-  else if (defence === 'unknown') actChecks.push('Check whether the company conducts activity related to defence interests.');
-  if (authority === 'yes' && dora === 'yes') actChecks.push('A DORA-covered entity is reported. The Cybersecurity Act excludes DORA entities from the §1(1)(c) authority-designation route. Check whether a separate route under §1(1)(a), (b), (d), (e) or (f) applies.');
-  else if (authority === 'yes' && !actRoutes.length) actRoutes.push('The profile reports formal authority identification. Verify the written decision, statutory route and any exclusions (§1(1)(c)).');
-  else if (authority === 'yes') actChecks.push('Keep the formal identification decision. The organisation already appears to have another Cybersecurity Act route, so assess the recorded category and any exclusions.');
-  else if (authority === 'unknown' && dora !== 'yes' && !actRoutes.length) actChecks.push('Check whether a national or defence cybersecurity authority has formally identified the organisation under §1(1)(c).');
-
-  const overall = actRoutes.length ? 'Possible Act route · verify exact scope' : actChecks.length ? 'Scope needs more facts' : 'No Act route indicated by these answers';
-  const overallClass = actRoutes.length ? '' : actChecks.length ? ' review' : ' none';
-  const doraScopeNote = dora === 'yes' ? '<p>Under §1(1)(c), DORA-covered entities are excluded from the authority-identification route. Separately, §1(10) applies the Act’s incident-handling provisions to DORA entities. Check other §1(1) scope routes and DORA’s own incident duties.</p>' : '';
-  const actBody = doraScopeNote + (actRoutes.length ? '<h5>Possible route(s)</h5>' + htmlList(actRoutes) : '') +
-    (actChecks.length ? '<h5>Check before deciding</h5>' + htmlList(actChecks) : '') +
-    (!actRoutes.length && !actChecks.length ? '<p>The selected facts do not show a direct route under the listed Act tests. Keep the scope decision and recheck it when the company or law changes.</p>' : '') +
-    '<p>Do not use the screen as a filing decision. Confirm the exact category, competent authority and current deadlines.</p>';
-
-  const missing = [];
-  if (publicBody === 'unknown') missing.push('Annex 1 public-body status');
-  if (stateControl === 'unknown') missing.push('majority state influence');
-  if (employees === 'unknown') missing.push('employee count');
-  if (sme === 'unknown') missing.push('SME size class and group data');
-  if (revenue === 'unknown') missing.push('annual net revenue or budget against the €10m threshold');
-  if (assets === 'unknown') missing.push('balance-sheet total against the €10m threshold');
-  if (annexReview === 'unknown' && !annexServices.length) missing.push('whether an exact Annex 2/3 provider type matches');
-  if (independentReview === 'unknown' && !independentServices.length) missing.push('size-independent provider type');
-  if (defence === 'unknown') missing.push('defence-interest activity');
-  if (authority === 'unknown') missing.push('formal cybersecurity authority identification');
-  if (dora === 'unknown') missing.push('DORA financial-entity status');
-  if (cer === 'unknown') missing.push('formal CER critical-entity designation');
-  if (gdpr === 'unknown') missing.push('personal-data processing');
-  if (cra === 'unknown') missing.push('product role under the CRA');
-  if (supplier === 'unknown') missing.push('regulated-customer and supplier-contract relationship');
-
-  const valueLabel = (value, map = {}) => map[value] || triText(value);
-  const annexLabel = annexServices.length ? annexServices.join('; ') : valueLabel(annexReview,{yes:'Match reported; exact type not selected',no:'No match after review'});
-  const independentLabel = independentServices.length ? independentServices.join('; ') : valueLabel(independentReview,{yes:'Match reported; exact type not selected',no:'None after review'});
-  const facts = [
-    ['Organisation', profile],
-    ['Public body · Annex 1', triText(publicBody)],
-    ['Majority state influence', triText(stateControl)],
-    ['Employees', valueLabel(employees, {under50:'Under 50','50plus':'50 or more'})],
-    ['SME size class', valueLabel(sme, {'micro-small':'Micro or small',medium:'Medium',large:'Above SME ceiling'})],
-    ['Revenue / budget over €10m equivalent', triText(revenue)],
-    ['Balance sheet over €10m equivalent', triText(assets)],
-    ['Annex 2/3 service review', annexLabel],
-    ['Size-independent services', independentLabel],
-    ['Formal cybersecurity authority identification', triText(authority)],
-  ];
-  const factMarkup = '<dl class="assessment-facts">' + facts.map(([key,value]) => '<div><dt>' + escapeHtml(key) + '</dt><dd>' + escapeHtml(value) + '</dd></div>').join('') + '</dl>';
-
-  const regime = (title, value, yesMessage, noMessage, unknownMessage, refs) => {
-    const status = value === 'yes' ? 'Potential route' : value === 'no' ? 'No direct route indicated' : 'Check the profile';
-    const message = value === 'yes' ? yesMessage : value === 'no' ? noMessage : unknownMessage;
-    return makeRegimeCard(title, status, message, refs);
-  };
-  const regimes = [
-    regime('GDPR / Hungarian Infotv', gdpr, 'Personal-data processing is stated. Identify controller/processor roles and security duties. Infotv supplements GDPR where applicable. A cyber incident does not automatically make every breach notifiable.', 'No personal-data processing is stated. Verify the profile and consider whether staff, customer or account data are still handled.', 'Check whether the company handles personal data and in what role.', [5,6,11]),
-    regime('DORA', dora, 'The company is reported as a DORA financial entity. Confirm the exact Article 2 entity type. An ICT supplier contract alone does not make the supplier a DORA financial entity.', 'No direct DORA financial-entity route is indicated. Contract controls may still flow down from a DORA-regulated customer.', 'Check whether the company itself is one of DORA’s listed financial entities. Supplier status alone is not enough.', [7]),
-    regime('CER / Hungarian critical-entity rules', cer, 'A formal critical-entity designation is reported. Verify the designation letter, service and current resilience duties.', 'No direct CER route is indicated by the stated facts. A sector label alone does not establish critical-entity designation.', 'Check whether a competent authority has formally designated the company as a critical entity.', [8,9]),
-    regime('Cyber Resilience Act', cra, 'A manufacturer, importer or distributor role is reported. Check the exact product, role and market obligations.', 'No direct economic-operator route is indicated. Merely buying or using a digital product does not make the user its manufacturer.', 'Check the product type and whether the company acts as manufacturer, importer or distributor for the EU market.', [10]),
-    regime('Supplier and customer contracts', supplier, 'Review contract, data-processing and security clauses. Contract duties can apply without making a supplier directly subject to its customer’s statute.', 'No regulated or critical customer relationship is stated. Check the actual customer and service contracts.', 'Check whether the company supplies a regulated/critical customer or processes its data.', [1,7,8]),
-  ];
-
-  const nextSteps = actRoutes.length || actChecks.length ? [
-    'Match the legal entity and exact service to the Act section and Annex entry. Record the facts and reason for the decision.',
-    'Confirm the competent authority and the current registration, notification and incident-reporting channels.',
-    'If in scope, assign management and security responsibility, inventory relevant systems and suppliers, assess risks, classify systems where required, and implement the required controls.',
-    'Check whether a statutory audit applies to this route. Verify its date and any transition rule with the authority; do not copy another entity’s deadline.'
-  ] : [
-    'Keep the source facts and this scope screen with the company’s records. Reassess if services, ownership, size, designation or law changes.',
-    'Check the applicable GDPR, DORA, CER, CRA and contract routes shown here; “no Act route indicated” does not mean no cybersecurity duties.'
-  ];
-
-  const auditSource = SOURCES.find(source => source.id === 2);
-  const auditNote = actRoutes.length || actChecks.length ? '<div class="assessment-audit"><strong>Deadline to verify as of 12 October 2026</strong>For an SZTFH-supervised organisation already operating before 1 January 2025, SZTFH states that the first audit deadline was 30 June 2026, which has passed. New organisations and other authority routes follow different timelines. Confirm the company’s exact status in current guidance. <a href="' + escapeHtml(auditSource.url) + '" target="_blank" rel="noopener noreferrer">SZTFH supervision guidance ↗</a></div>' : '';
-
-  const routeSummary = actRoutes.length ? actRoutes[0] : actChecks.length ? actChecks[0] : 'These answers do not indicate a direct Cybersecurity Act route. Keep the scope note and check again if the facts change.';
-  const firstAction = actRoutes.length
-    ? 'Verify the exact legal entity and service definition against the Act and its Annexes.'
-    : actChecks.length
-      ? 'Resolve the first open scope question before deciding whether the Act applies.'
-      : 'Record why no direct route is indicated, and revisit the decision if the company changes.';
-  const evidenceText = 'Keep the company profile, service list, size facts and any formal authority decision with the scope note.';
-  const askNext = missing.length ? missing[0] : 'Confirm the exact legal entity and service it provides.';
-  const parallelChecks = [
-    {name:'GDPR / Infotv', value:gdpr, refs:[5,6,11], question:'Does it handle personal data?'},
-    {name:'DORA', value:dora, refs:[7], question:'Is it itself a listed financial entity?'},
-    {name:'CER', value:cer, refs:[8,9], question:'Has an authority formally designated it?'},
-    {name:'Cyber Resilience Act', value:cra, refs:[10], question:'Does it act as a product manufacturer, importer or distributor?'},
-    {name:'Customer contracts', value:supplier, refs:[1,7,8], question:'Does it supply a regulated customer?'}
-  ];
-  const focusRule = parallelChecks.find(item => item.value === 'yes') || parallelChecks.find(item => item.value === 'unknown') || parallelChecks[0];
-  const focusStatus = focusRule.value === 'yes' ? 'Potential route' : focusRule.value === 'no' ? 'No route indicated' : 'Ask one question';
-  const focusClass = focusRule.value === 'yes' ? '' : focusRule.value === 'no' ? ' none' : ' review';
-  const focusText = focusRule.value === 'yes'
-    ? 'This profile suggests a parallel duty to check. Confirm the exact role and current requirements.'
-    : focusRule.value === 'no'
-      ? 'The other listed checks do not show a direct route from the facts entered.'
-      : focusRule.question;
-  const lawChips = parallelChecks.map(item => {
-    const status = item.value === 'yes' ? 'Potential' : item.value === 'no' ? 'Not indicated' : 'Not stated';
-    const klass = item.value === 'yes' ? ' potential' : item.value === 'unknown' ? ' check' : '';
-    return '<span class="law-chip' + klass + '">' + escapeHtml(item.name) + ' · ' + status + '</span>';
+function checkedValues(name) {
+  return [...companyForm.querySelectorAll('input[name="' + name + '"]:checked')].map(input => input.value);
+}
+function selectedDomains() { return checkedValues('domain').filter(id => domainById[id]); }
+function selectedServices() {
+  return selectedDomains().flatMap(domainId => {
+    const domain = domainById[domainId];
+    return checkedValues('service-' + domainId).filter(id => id !== 'unknown').map(id => {
+      const item = domain.services.find(service => service.id === id);
+      return item ? {...item,domainId,domainLabel:domain.label} : null;
+    }).filter(Boolean);
+  });
+}
+function renderDomains() {
+  byId('domain-options').innerHTML = domainOptions.map(domain =>
+    '<label class="domain-option"><input type="checkbox" name="domain" value="' + escapeHtml(domain.id) + '"><span><strong>' + escapeHtml(domain.label) + '</strong><small>' + escapeHtml(domain.hint) + '</small></span></label>'
+  ).join('');
+}
+function renderServiceFollowups() {
+  byId('service-followups').innerHTML = selectedDomains().map(domainId => {
+    const domain = domainById[domainId];
+    const items = domain.services.map(item =>
+      '<label><input type="checkbox" name="service-' + escapeHtml(domain.id) + '" value="' + escapeHtml(item.id) + '" data-service-choice="' + escapeHtml(domain.id) + '"><span>' + escapeHtml(item.label) + '</span></label>'
+    ).join('');
+    return '<fieldset class="service-panel"><legend>' + escapeHtml(domain.label) + '</legend><p>Which service does the story describe? Select all that fit.</p><div class="service-choices">' + items +
+      '<label class="service-unknown"><input type="checkbox" name="service-' + escapeHtml(domain.id) + '" value="unknown" data-service-unknown="' + escapeHtml(domain.id) + '"><span>The story does not give enough detail</span></label></div></fieldset>';
   }).join('');
-  const detailCards = '<div class="assessment-grid">' +
-    '<article class="assessment-card"><h4>Hungarian Cybersecurity Act · Act LXIX/2024</h4><span class="scope-status' + overallClass + '">' + escapeHtml(overall) + '</span>' + actBody + '<div class="assessment-links">' + sourceLinks([1,2,3,4]) + '</div></article>' +
-    regimes.join('') +
-    '<article class="assessment-card"><h4>Facts used</h4>' + factMarkup + '</article></div>' +
-    '<div class="assessment-note"><h4>Possible next steps</h4>' + htmlList(nextSteps) + '</div>' + auditNote +
-    '<div class="assessment-note"><h4>Other facts to request</h4>' + htmlList(missing.length ? missing : ['No “Not stated” selections remain. Verify that the profile details and group figures are accurate.']) +
-    '<p>Confirm the exact legal entity, service role, linked-company figures, authority decisions, financial status, CER designation, product role and customer contracts as relevant.</p></div>';
+  updateConditionalQuestions();
+}
+const sizeReviewDomains = new Set(['energy','water','communications','delivery-transport','health','food-chemicals-waste','manufacturing','online-research','hospitality-retail']);
+function hasAnnexSizeActivity() {
+  return selectedServices().some(item => ['size','review'].includes(item.route)) || selectedDomains().some(id => sizeReviewDomains.has(id) && checkedValues('service-' + id).includes('unknown'));
+}
+function hasAtLeast50Employees() { return ['50-249','250plus'].includes(getValue('employees')); }
+function isStateControlledCompany() { return getValue('entity-type') === 'company' && getValue('ownership') === 'state-majority'; }
+function isSizeSensitive() { return isStateControlledCompany() || hasAnnexSizeActivity(); }
+function needsMediumSizeFact() { return hasAnnexSizeActivity() && !hasAtLeast50Employees(); }
+function needsFinancialThresholdFacts() {
+  return !hasAtLeast50Employees() && (isStateControlledCompany() || (hasAnnexSizeActivity() && getValue('medium-status') !== 'yes'));
+}
+function hasFinanceActivity() { return selectedDomains().includes('finance') || selectedServices().some(item => item.route === 'finance'); }
+function updateConditionalQuestions() {
+  const sizeDetails = byId('size-details');
+  const shouldShowSize = isSizeSensitive();
+  if (!shouldShowSize && !sizeDetails.hidden) {
+    ['medium-status','revenue','accounts-obligation','assets'].forEach(name => companyForm.elements.namedItem(name).value = '');
+  }
+  sizeDetails.hidden = !shouldShowSize;
+  const mediumWrap = byId('medium-status-wrap');
+  const shouldAskMedium = shouldShowSize && needsMediumSizeFact();
+  if (!shouldAskMedium && !mediumWrap.hidden) companyForm.elements.namedItem('medium-status').value = '';
+  mediumWrap.hidden = !shouldAskMedium;
+  const financialWrap = byId('financial-threshold-wrap');
+  const shouldAskFinancials = shouldShowSize && needsFinancialThresholdFacts();
+  if (!shouldAskFinancials && !financialWrap.hidden) {
+    ['revenue','accounts-obligation','assets'].forEach(name => companyForm.elements.namedItem(name).value = '');
+  }
+  financialWrap.hidden = !shouldAskFinancials;
+  const accounts = getValue('accounts-obligation');
+  const balanceSheetWrap = byId('balance-sheet-wrap');
+  if (accounts === 'no' && !balanceSheetWrap.hidden) companyForm.elements.namedItem('assets').value = '';
+  balanceSheetWrap.hidden = !shouldAskFinancials || accounts === 'no';
+  const financeWrap = byId('financial-license-wrap');
+  const shouldShowFinance = hasFinanceActivity();
+  if (!shouldShowFinance && !financeWrap.hidden) companyForm.elements.namedItem('financial-license').value = '';
+  financeWrap.hidden = !shouldShowFinance;
+  const personalDataWrap = byId('personal-data-detail');
+  const shouldShowDataTypes = getValue('personal-data') === 'yes';
+  if (!shouldShowDataTypes && !personalDataWrap.hidden) companyForm.querySelectorAll('input[name="data-type"]').forEach(input => input.checked = false);
+  personalDataWrap.hidden = !shouldShowDataTypes;
+}
+function invalidateComparison() {
+  assessmentResults.innerHTML = '<div class="empty-state"><strong>Your comparison is out of date.</strong><p>When you finish the steps, compare your updated hypothesis with the guidance.</p></div>';
+}
+function clearError() {
+  stageError.hidden = true;
+  stageError.textContent = '';
+}
+function showStage(index, moveFocus = false) {
+  activeStage = Math.max(0, Math.min(3,index));
+  stagePanels.forEach(panel => panel.hidden = Number(panel.dataset.stagePanel) !== activeStage);
+  stageLinks.forEach((button,i) => {
+    button.disabled = i > maxVisitedStage;
+    if (i === activeStage) button.setAttribute('aria-current','step');
+    else button.removeAttribute('aria-current');
+  });
+  byId('stage-counter').textContent = 'Step ' + (activeStage + 1) + ' of 4';
+  byId('stage-back').disabled = activeStage === 0;
+  byId('stage-next').hidden = activeStage === 3;
+  byId('compare-button').hidden = activeStage !== 3;
+  clearError();
+  if (moveFocus) stagePanels[activeStage].querySelector('h3').focus({preventScroll:true});
+}
+function validateStage(index) {
+  const required = (name,label) => getValue(name) ? '' : label;
+  const missing = [];
+  if (index === 0) {
+    const selected = selectedDomains();
+    const unknownDomain = companyForm.querySelector('input[name="domain-unknown"]').checked;
+    if (!selected.length && !unknownDomain) missing.push('Choose a business domain or say that the story does not tell you.');
+    selected.forEach(id => {
+      if (!checkedValues('service-' + id).length) missing.push('Choose the ' + domainById[id].label + ' service described, or select “The story does not give enough detail.”');
+    });
+  }
+  if (index === 1) {
+    [['entity-type','Choose the kind of organisation, or select “The story does not say.”'],['ownership','Choose who controls it, or select “The story does not say.”'],['employees','Choose a staff range, or select “The story does not say.”'],['group-link','Say whether the story describes a wider company group.']].forEach(([name,label]) => { const error=required(name,label); if(error) missing.push(error); });
+    if (isSizeSensitive()) {
+      if (needsMediumSizeFact()) {const error=required('medium-status','Say whether a written assessment classifies it in the medium-sized range.');if(error)missing.push(error);}
+      if (needsFinancialThresholdFacts()) {
+        [['revenue','Choose the revenue or budget answer.'],['accounts-obligation','Say whether the company must prepare financial statements that include a balance sheet.']].forEach(([name,label]) => {const error=required(name,label);if(error)missing.push(error);});
+        if (getValue('accounts-obligation') !== 'no') {const error=required('assets','Choose the balance-sheet answer, or say the story does not say.');if(error)missing.push(error);}
+      }
+    }
+  }
+  if (index === 2) {
+    const fields = [['personal-data','Answer the personal-information question.'],['product-role','Choose the product role or say the story does not say.'],['business-relationships','Choose the outside relationship or say the story does not say.'],['cyber-decision','Answer whether there is a formal cybersecurity decision.'],['critical-decision','Answer whether there is a critical-entity decision.'],['defence-decision','Answer whether there is a defence/security decision.'],['defence-activity','Answer whether the work is defence-related.']];
+    if (hasFinanceActivity()) fields.push(['financial-license','Answer whether it is authorised to provide financial services.']);
+    fields.forEach(([name,label]) => {const error=required(name,label);if(error)missing.push(error);});
+    if (getValue('personal-data') === 'yes' && !checkedValues('data-type').length) missing.push('Choose the personal-information types described, or choose “The story does not say which kind.”');
+  }
+  if (index === 3) {
+    const hypotheses = checkedValues('hypothesis');
+    if (!hypotheses.length) missing.push('Choose at least one possible rule, or “Not enough information to decide yet.”');
+    if (hypotheses.includes('not-enough') && hypotheses.length > 1) missing.push('Choose “Not enough information” by itself, or select the rules you want to investigate.');
+    if (getValue('supporting-fact').trim().length < 3) missing.push('Write one fact from the story that supports your hypothesis.');
+    if (getValue('next-question').trim().length < 3) missing.push('Write one useful question you would ask the company.');
+    if (!getValue('first-action')) missing.push('Choose your first action.');
+  }
+  return missing;
+}
+function canLeaveStage(index) {
+  const errors = validateStage(index);
+  if (!errors.length) { clearError(); return true; }
+  stageError.textContent = errors[0];
+  stageError.hidden = false;
+  const panel = stagePanels[index];
+  const control = panel.querySelector('select:not([disabled]),input:not([disabled]),textarea:not([disabled]),button:not([disabled])');
+  if (control) control.focus({preventScroll:true});
+  return false;
+}
 
-  assessmentResults.innerHTML = '<div class="assessment-report">' +
-    '<div class="assessment-title"><h3>Screen result · ' + escapeHtml(profile) + '</h3><span class="assessment-date">First-pass classroom check</span></div>' +
-    '<p class="assessment-warning">Use this to guide discussion. It is not a legal opinion, formal scope decision or filing decision.</p>' +
-    '<div class="summary-grid">' +
-      '<article class="summary-card primary"><h4>Hungarian Cybersecurity Act</h4><span class="scope-status' + overallClass + '">' + escapeHtml(overall) + '</span><p>' + escapeHtml(routeSummary) + '</p></article>' +
-      '<article class="summary-card"><h4>First action and evidence</h4><p>' + escapeHtml(firstAction) + '</p><p class="evidence-line"><strong>Keep:</strong> ' + escapeHtml(evidenceText) + '</p></article>' +
-      '<article class="summary-card"><h4>One parallel check · ' + escapeHtml(focusRule.name) + '</h4><span class="scope-status' + focusClass + '">' + escapeHtml(focusStatus) + '</span><p>' + escapeHtml(focusText) + '</p><div class="assessment-links">' + sourceLinks(focusRule.refs) + '</div></article>' +
-      '<article class="summary-card"><h4>One fact to ask next</h4><p>' + escapeHtml(askNext) + '</p></article>' +
+function collectFacts() {
+  return {
+    profile:getValue('profile-label').trim() || 'Company profile',
+    domains:selectedDomains(),
+    domainUnknown:companyForm.querySelector('input[name="domain-unknown"]').checked,
+    services:selectedServices(),
+    serviceUnknown:selectedDomains().filter(id => checkedValues('service-' + id).includes('unknown')),
+    entityType:getValue('entity-type'),ownership:getValue('ownership'),employees:getValue('employees'),groupLink:getValue('group-link'),
+    mediumStatus:getValue('medium-status'),revenue:getValue('revenue'),accountsObligation:getValue('accounts-obligation'),assets:getValue('assets'),
+    personalData:getValue('personal-data'),dataTypes:checkedValues('data-type').filter(value => value !== 'type-unknown'),dataTypeUnknown:checkedValues('data-type').includes('type-unknown'),
+    financialLicense:getValue('financial-license'),productRole:getValue('product-role'),businessRelationships:getValue('business-relationships'),
+    cyberDecision:getValue('cyber-decision'),criticalDecision:getValue('critical-decision'),defenceDecision:getValue('defence-decision'),defenceActivity:getValue('defence-activity'),
+    hypotheses:checkedValues('hypothesis'),supportingFact:getValue('supporting-fact').trim(),nextQuestion:getValue('next-question').trim(),firstAction:getValue('first-action')
+  };
+}
+
+function assessFacts(f) {
+  const routes = [];
+  const questions = [];
+  const serviceEvidence = f.services || [];
+  const sizeServices = serviceEvidence.filter(item => ['size','review'].includes(item.route));
+  const independentServices = serviceEvidence.filter(item => item.route === 'independent');
+  const financeActivity = serviceEvidence.some(item => item.route === 'finance');
+  const financeContext = financeActivity || f.domains.includes('finance');
+  const staff50 = ['50-249','250plus'].includes(f.employees);
+  const staffUnder50 = ['lt10','10-49'].includes(f.employees);
+  const financialThresholds = f.revenue === 'above' && (f.accountsObligation === 'no' || (['yes','unknown'].includes(f.accountsObligation) && f.assets === 'above'));
+  const financialThresholdUnknown = f.revenue === 'unknown' || (f.revenue === 'above' && (f.accountsObligation === 'unknown' || (f.accountsObligation === 'yes' && f.assets === 'unknown')));
+  const sizeCandidate = staff50 || financialThresholds || f.mediumStatus === 'yes';
+  const thresholdUnknown = financialThresholdUnknown || f.mediumStatus === 'unknown';
+  const unclearActService = f.serviceUnknown.some(domainId => {
+    const domain = domainById[domainId];
+    return domain && domain.services.some(item => item.route !== 'none');
+  });
+  const hasActCandidate = sizeServices.length > 0 || independentServices.length > 0 || unclearActService || ['central-public','local-public','public-institution'].includes(f.entityType) || f.ownership === 'state-majority' || f.cyberDecision === 'yes' || f.criticalDecision === 'yes' || f.defenceDecision === 'yes' || f.defenceActivity === 'yes';
+
+  const addQuestion = (text,priority,key) => {
+    if (!questions.some(item => item.key === key)) questions.push({text,priority,key});
+  };
+  const addRoute = (text,source='Hungarian Cybersecurity Act §1') => routes.push({text,source});
+
+  if (['central-public','local-public','public-institution'].includes(f.entityType)) {
+    addRoute('Public-administration possibility: check whether this exact legal body appears in the Act’s list of covered government and local bodies (Annex 1). A public label alone is not enough.');
+    addQuestion('What is the exact legal body, and does that name appear in the Act’s list of covered government and local bodies (Annex 1)?',95,'public-body');
+  }
+  f.serviceUnknown.forEach(domainId => {
+    const domain = domainById[domainId];
+    if (domain && domain.services.some(item => item.route !== 'none')) {
+      addQuestion('The story places the company in ' + domain.label + ' but does not identify its exact service. Which customer-facing activity does it actually provide?',100,'unclear-domain-service-' + domainId);
+    }
+  });
+  if (f.ownership === 'state-majority' && f.entityType === 'company') {
+    if (staff50 || financialThresholds) addRoute('Majority State control plus a statutory staff or financial threshold suggests the state-influenced company route (§1(1)(b)). Verify the entity, group and year-end figures.');
+    else if (!staffUnder50 || thresholdUnknown) addQuestion('What are the company’s staff count, group-adjusted annual revenue/budget and, where required, year-end balance-sheet figures? These decide the majority-State route.',100,'state-size');
+  } else if (f.ownership === 'state-majority' && ['unknown','other'].includes(f.entityType)) {
+    addQuestion('Is this a commercial company or a public/other body? The majority-State company test applies only to the relevant business entity type.',94,'state-entity-type');
+  } else if (f.ownership === 'unknown' && (sizeServices.length || ['central-public','local-public','public-institution'].includes(f.entityType))) {
+    addQuestion('Who has majority control: the Hungarian State, a municipality, or private owners?',75,'ownership');
+  }
+
+  if (independentServices.length) {
+    const names = independentServices.map(item => item.label).join('; ');
+    addRoute('Possible provider route without the general staff-size test: ' + names + '. Confirm the exact provider definition and that it falls within the Act’s listed service types (§1(1)(e)).');
+    addQuestion('Does the company itself provide this service to customers, and do the Act’s service lists include this exact provider type?',100,'independent-service');
+  }
+  if (sizeServices.length) {
+    const names = sizeServices.map(item => item.label).join('; ');
+    const reviewService = sizeServices.find(item => item.route === 'review');
+    if (reviewService && reviewService.id === 'shared-booking') {
+      addQuestion('Does the shared booking platform let customers book directly with other hotel companies, or is it only a shared system for the group’s own hotels? Which legal entities operate it?',110,'platform-role');
+    } else if (reviewService) {
+      addQuestion('What exact product or service does the company provide, and do the Act’s sector lists cover it?',105,'exact-review-service');
+    }
+    if (sizeCandidate) {
+      addRoute('Possible size-based route for a listed service: ' + names + '. Confirm the exact service, legal entity and applicable size test (§1(1)(d)).');
+      if (!reviewService) addQuestion('What licence, legal service definition and group-adjusted size evidence confirms the exact provider type in the Act’s sector lists?',90,'annex-exact');
+    } else if (staffUnder50 && f.mediumStatus === 'no' && !financialThresholdUnknown && !financialThresholds) {
+      if (!reviewService) addQuestion('Does ' + names + ' exactly match a provider type in the Act’s sector lists, and are the linked-company figures complete?',75,'annex-service-no-threshold');
+    } else {
+      if (!reviewService) addQuestion('What are the exact service/licence, documented medium-business status and group-adjusted financial figures?',95,'annex-size');
+    }
+  }
+  if (sizeServices.length && f.groupLink === 'group') {
+    addQuestion('Which partner or linked companies are included in the size assessment, and what are the combined figures?',82,'group-size');
+  } else if ((sizeServices.length || f.ownership === 'state-majority') && f.groupLink === 'unknown') {
+    addQuestion('Is this company linked to partner or group companies whose figures could change its legal size assessment?',78,'group-size-unknown');
+  }
+  if (f.cyberDecision === 'yes') {
+    if (f.financialLicense === 'yes') {
+      addQuestion('Does the written authority decision identify a route other than the DORA-excluded authority-identification route?',84,'authority-dora');
+    } else {
+      addRoute('A formal cybersecurity-authority identification is described. Check the written decision and any DORA exception (§1(1)(c)).');
+      addQuestion('What exact organisation and service does the authority decision identify?',88,'authority-decision');
+    }
+  } else if (f.cyberDecision === 'unknown' && hasActCandidate && f.financialLicense !== 'yes') {
+    addQuestion('Has a Hungarian cybersecurity authority issued a formal identification decision for this legal entity?',72,'authority-status');
+  }
+  if (f.criticalDecision === 'yes' || f.defenceDecision === 'yes') {
+    addRoute('A formal critical-entity or national-defence/security designation is described. It can change which Hungarian Cybersecurity Act duties apply; check the decision and the special rules in §1(2)–(2a).');
+  }
+  if (f.defenceActivity === 'yes') {
+    addRoute('The described defence-related business activity may create a separate route (§1(1)(f)); confirm the legal activity and the responsible authority.');
+    addQuestion('What product or service is supplied for defence-related work, and what legal classification or authority record supports it?',86,'defence-activity');
+  }
+  if (f.criticalDecision === 'yes') addQuestion('What services and systems does the formal critical-entity decision cover?',85,'critical-decision');
+  if (f.defenceDecision === 'yes') addQuestion('What organisation and systems are named in the national-defence/security decision?',84,'defence-decision');
+  const criticalContext = sizeServices.length > 0 || independentServices.length > 0 || financeActivity || ['central-public','local-public','public-institution'].includes(f.entityType) || f.defenceActivity === 'yes' || f.domainUnknown;
+  if (f.criticalDecision === 'unknown' && criticalContext) addQuestion('Has an authority formally designated the company as a critical entity?',68,'critical-status');
+  if (f.defenceDecision === 'unknown' && f.defenceActivity === 'yes') addQuestion('Has an official decision named the company as important to national defence or security?',70,'defence-designation');
+  if (financeContext && f.financialLicense === 'unknown') addQuestion('Is the company itself authorised as a bank, insurer, payment, investment or other DORA-covered financial entity?',100,'financial-authorisation');
+  if (financeContext && f.financialLicense === 'no') addQuestion('What service does it provide to financial firms, and do any contracts impose security requirements?',48,'finance-supplier');
+  if (financeActivity && f.financialLicense === 'yes') addQuestion('Which ICT suppliers support the financial service, and what incident-reporting and recovery commitments do their contracts contain?',92,'dora-suppliers');
+  if (financeContext && !financeActivity && f.financialLicense === 'yes') addQuestion('What exact authorised financial service does it provide? Confirm this is more than a technology supplier or a business that only accepts card payments.',100,'financial-service');
+
+  const cyberDecisionExcludedByDora = financeActivity && f.financialLicense === 'yes' && f.cyberDecision === 'yes';
+  const actIncidentDuty = financeActivity && f.financialLicense === 'yes';
+  if (actIncidentDuty) addRoute('Specific incident-handling provisions of the Hungarian Cybersecurity Act also apply to DORA-covered entities (§1(10)); this does not establish every organisational duty under the Act.');
+  if (cyberDecisionExcludedByDora) {
+    routes.push({text:'The authority-identification route in §1(1)(c) excludes DORA-covered entities. Check any separate statutory route and the Act’s incident-handling provisions.',source:'Hungarian Cybersecurity Act §1(1)(c), §1(10)'});
+  }
+
+  const parallel = [];
+  const putParallel = (id,title,status,message,refs,priority) => parallel.push({id,title,status,message,refs,priority});
+  if (f.personalData === 'yes') putParallel('gdpr','GDPR / Hungarian Infotv','possible','The story describes information about people. Map the company’s role, the data and its security duties.',[6,11,5],60);
+  else if (f.personalData === 'no') putParallel('gdpr','GDPR / Hungarian Infotv','none','The story explicitly says no personal information is used. Check that this covers staff, customer and account records too.',[6,11],20);
+  else {
+    putParallel('gdpr','GDPR / Hungarian Infotv','review','Find out whether the company uses names, contact details, staff, account or other information about identifiable people.',[6,11],45);
+    addQuestion('What information about customers, staff or other identifiable people does the company use?',55,'personal-data');
+  }
+
+  if (financeActivity && f.financialLicense === 'yes') putParallel('dora','DORA','possible','The company says it is authorised to provide a financial service. Confirm the exact DORA entity type and map its ICT risk, incident and third-party duties.',[7,1],100);
+  else if (financeContext && f.financialLicense === 'yes') putParallel('dora','DORA','review','A financial authorisation is described, but the story does not identify the exact service. Confirm whether the company itself is a DORA-covered entity.',[7],95);
+  else if (financeContext && f.financialLicense === 'unknown') putParallel('dora','DORA','review','The financial activity needs a factual check: is the company itself authorised, or does it only supply technology / accept card payments?', [7],95);
+  else if (financeContext) putParallel('dora','DORA','none','The story says it is not itself authorised to provide financial services. A technology supplier can still have contract duties.',[7],25);
+  else putParallel('dora','DORA','not-relevant','No financial-service activity is selected. Revisit if the company itself provides a regulated financial service.',[7],5);
+
+  if (f.criticalDecision === 'yes' || f.defenceDecision === 'yes') putParallel('cer','Critical-entity resilience','possible','A formal critical-entity or national-defence/security decision is described. Confirm the designation, covered services and required resilience plan.',[8,9,1],90);
+  else if (f.criticalDecision === 'no' && f.defenceDecision === 'no') putParallel('cer','Critical-entity resilience','none','The story explicitly says neither designation exists. A sector alone does not establish critical-entity status.',[8,9],15);
+  else if (criticalContext) putParallel('cer','Critical-entity resilience','review','Check for a formal critical-entity or national-defence/security decision; a sector label alone is not enough.',[8,9,1],35);
+  else putParallel('cer','Critical-entity resilience','not-relevant','No high-impact service or formal designation is described. Revisit this if the company facts change.',[8,9,1],5);
+
+  const productRole = ['maker','importer','distributor'].includes(f.productRole);
+  if (productRole) putParallel('cra','Cyber Resilience Act','possible','The company has a product-maker, importer or distributor role. Confirm the product has digital elements and check the applicable role and dates.',[10],65);
+  else if (['user','no'].includes(f.productRole)) putParallel('cra','Cyber Resilience Act','none','The story describes use of products made by others, not an economic-operator role. Check the facts if the company sells its own product.',[10],15);
+  else if (f.domains.some(id => ['health','manufacturing','communications'].includes(id)) || f.domainUnknown) {
+    putParallel('cra','Cyber Resilience Act','review','Check whether it makes, imports or distributes a software or connected product for the EU market.',[10],25);
+    addQuestion('Does the company make, import or distribute software or a connected device for the EU market?',42,'product-role');
+  } else putParallel('cra','Cyber Resilience Act','not-relevant','No product-maker, importer or distributor activity is suggested by this story. Buying or using software alone does not create that role.',[10],5);
+
+  const contractRelationship = ['uses-provider','serves-regulated','both'].includes(f.businessRelationships);
+  if (contractRelationship) putParallel('contracts','Supplier and customer contracts','possible','The story mentions an outside provider or a regulated/critical customer. Review actual security, data-processing, incident and audit clauses.',[1,7,8],55);
+  else if (f.businessRelationships === 'neither') putParallel('contracts','Supplier and customer contracts','none','The story says neither relationship exists. Confirm important service providers and customer terms before closing the check.',[1,7,8],12);
+  else {
+    putParallel('contracts','Supplier and customer contracts','review','Check whether the company relies on an outside provider or supplies a regulated/critical customer.',[1,7,8],30);
+    addQuestion('Which outside cloud, software, payment or hosting provider does it rely on, and what do the contracts require?',50,'supplier-contract');
+  }
+
+  const actStatus = routes.length ? 'possible' : questions.some(q => ['public-body','state-size','state-entity-type','ownership','independent-service','annex-exact','annex-size','annex-service-no-threshold','exact-review-service','platform-role','group-size','group-size-unknown','authority-dora','authority-decision','authority-status','defence-activity','critical-decision','defence-decision','critical-status','defence-designation','financial-authorisation','finance-supplier'].includes(q.key) || q.key.startsWith('unclear-domain-service-')) ? 'review' : 'none';
+  if (f.financialLicense === 'yes' && f.criticalDecision !== 'yes' && f.defenceDecision !== 'yes' && !sizeServices.length && !independentServices.length && !['central-public','local-public','public-institution'].includes(f.entityType) && f.ownership !== 'state-majority' && f.defenceActivity !== 'yes' && f.cyberDecision !== 'yes') {
+    addQuestion('Has a formal critical-entity or national-defence/security decision added organisation-specific duties?',66,'financial-designation');
+  }
+  questions.sort((a,b) => b.priority-a.priority);
+  const uniqueQuestions = questions.slice(0,8);
+  const related = [...parallel].filter(item => ['possible','review'].includes(item.status)).sort((a,b) => b.priority-a.priority)[0];
+  const actSummary = routes.length ? routes.slice(0,3).map(item => item.text).join(' ') : actStatus === 'review' ? 'A business or organisation fact could change the Hungarian Cybersecurity Act route. Resolve the open question before deciding.' : 'No organisational route was surfaced from the facts entered. This is not a formal scope decision.';
+  let action = 'Gather the evidence for the highest-priority open question before deciding which route applies.';
+  if (routes.length && (sizeServices.length || independentServices.length || f.cyberDecision === 'yes' || f.defenceActivity === 'yes')) action = 'Confirm the exact legal entity, service and any size or official-decision evidence against the current Act.';
+  else if (financeActivity && f.financialLicense === 'yes') action = 'Confirm the exact DORA entity type, then map ICT risks, incident steps and critical suppliers.';
+  else if (f.personalData === 'yes') action = 'Map the personal information, the company’s role and the security controls that protect it.';
+  else if (contractRelationship) action = 'Read the outside provider or customer agreement for security, incident, data and audit clauses.';
+  else if (productRole) action = 'Identify the exact product and the company’s maker, importer or distributor role.';
+
+  const actStatusLabel = actStatus === 'possible' ? 'Possible route to verify' : actStatus === 'review' ? 'More information needed' : 'No route surfaced';
+  const regimeCards = [
+    {id:'act',title:'Hungarian Cybersecurity Act · Act LXIX/2024',status:actStatus,message:actSummary,refs:[1]},
+    ...parallel.map(item => ({...item,title:item.title,status:item.status,message:item.message}))
+  ];
+  const pretty = (value,labels) => labels[value] || value || 'The story does not say';
+  const activityText = f.domainUnknown ? 'The story does not say' : [
+    ...f.services.map(item => item.label),
+    ...f.serviceUnknown.map(id => (domainById[id] ? domainById[id].label + ': exact service not stated' : 'Exact service not stated'))
+  ].join('; ') || 'No activity selected';
+  const financeNotNeeded = staff50 || (sizeServices.length > 0 && f.mediumStatus === 'yes' && f.ownership !== 'state-majority');
+  const mediumDisplay = f.mediumStatus ? pretty(f.mediumStatus,{yes:'Documented as medium-sized',no:'Documented as not medium-sized',unknown:'The story does not say'}) : (sizeServices.length ? 'Not needed; 50+ employees are stated' : 'Not part of the selected route');
+  const revenueDisplay = f.revenue ? pretty(f.revenue,{above:'More than about €10m equivalent',below:'€10m equivalent or less',unknown:'The story does not say'}) : (financeNotNeeded ? 'Not needed for the route shown' : 'Not part of the selected route');
+  const accountsDisplay = f.accountsObligation ? pretty(f.accountsObligation,{yes:'Yes',no:'No',unknown:'The story does not say'}) : (financeNotNeeded ? 'Not needed for the route shown' : 'Not part of the selected route');
+  const assetsDisplay = f.accountsObligation === 'no' ? 'Not applicable (no balance-sheet accounts)' : f.assets ? pretty(f.assets,{above:'More than about €10m equivalent',below:'€10m equivalent or less',unknown:'The story does not say'}) : (financeNotNeeded ? 'Not needed for the route shown' : 'Not part of the selected route');
+  const factRows = [
+    ['Business activities',activityText],
+    ['Organisation',pretty(f.entityType,{company:'Company or commercial business','central-public':'National government body','local-public':'Local council or its office','public-institution':'Other public institution',other:'Another kind of organisation',unknown:'The story does not say'})],
+    ['Ownership/control',pretty(f.ownership,{private:'Private owners control it','state-majority':'The Hungarian State has majority control','municipal-majority':'A municipality has majority control',mixed:'Ownership is mixed or shared',other:'Another owner controls it',unknown:'The story does not say'})],
+    ['Employees',pretty(f.employees,{lt10:'Fewer than 10','10-49':'10 to 49','50-249':'50 to 249','250plus':'250 or more',unknown:'The story does not say'})],
+    ['Company group',pretty(f.groupLink,{standalone:'The story says it is independent',group:'The story says it is linked to a wider group',unknown:'The story does not say'})],
+    ['Documented medium-size assessment',mediumDisplay],
+    ['Annual revenue or budget',revenueDisplay],
+    ['Must prepare balance-sheet accounts',accountsDisplay],
+    ['Balance-sheet total',assetsDisplay],
+    ['Personal information',pretty(f.personalData,{yes:'Yes',no:'The story explicitly says none',unknown:'The story does not say'})],
+    ['Information types',f.personalData === 'no' ? 'Not applicable' : f.dataTypes.length ? f.dataTypes.map(value => ({contact:'Names, addresses or contact/delivery details',accounts:'Account, payment or transaction records',staff:'Employee or applicant records',health:'Health, identity or other sensitive details',other:'Other information about people'}[value] || value)).join('; ') : (f.dataTypeUnknown ? 'The story does not say which type' : 'Not stated')],
+    ['Financial-service authorisation',f.financialLicense ? pretty(f.financialLicense,{yes:'Yes',no:'No; technology supplier/card payments only',unknown:'The story does not say'}) : 'No financial-service activity selected'],
+    ['Digital-product role',pretty(f.productRole,{maker:'Makes a digital product',importer:'Imports a digital product',distributor:'Resells/distributes a digital product',user:'Only buys or uses others’ products',no:'The story explicitly says none',unknown:'The story does not say'})],
+    ['Outside business relationship',pretty(f.businessRelationships,{'uses-provider':'Relies on an outside provider','serves-regulated':'Supplies a public, regulated or critical organisation',both:'Both are described',neither:'The story says neither',unknown:'The story does not say'})],
+    ['Cybersecurity decision',pretty(f.cyberDecision,{yes:'Formal decision described',no:'The story explicitly says none',unknown:'The story does not say'})],
+    ['Critical-entity decision',pretty(f.criticalDecision,{yes:'Formal decision described',no:'The story explicitly says none',unknown:'The story does not say'})],
+    ['Defence/security decision',pretty(f.defenceDecision,{yes:'Formal decision described',no:'The story explicitly says none',unknown:'The story does not say'})],
+    ['Defence-related activity',pretty(f.defenceActivity,{yes:'Described',no:'The story explicitly says none',unknown:'The story does not say'})]
+  ];
+  return {profile:f.profile,routes,questions:uniqueQuestions,parallel,related,action,actStatus,actStatusLabel,actSummary,regimeCards,factRows,actIncidentDuty,cyberDecisionExcludedByDora};
+}
+
+function sourceLinks(ids) {
+  return ids.map(id => {
+    const source = SOURCES.find(item => item.id === id);
+    return source ? '<a href="' + escapeHtml(source.url) + '" target="_blank" rel="noopener noreferrer">[' + id + '] ' + escapeHtml(source.title) + ' ↗</a>' : '';
+  }).join('');
+}
+function statusLabel(status) {
+  return ({possible:'Possible route to verify',review:'More information needed',none:'No trigger shown by these facts','not-relevant':'Not indicated by this story'})[status] || status;
+}
+function statusClass(status) { return status === 'possible' ? '' : ['review'].includes(status) ? ' review' : ' quiet'; }
+function renderAssessment(f,facts) {
+  const firstQuestion = facts.questions[0] ? facts.questions[0].text : 'Confirm the exact legal entity and service, then keep the evidence with the scope note.';
+  const relatedText = facts.related ? facts.related.message : 'No second route is established by the facts entered. Check relevant personal-data, product and contract roles as the story supports them.';
+  const chips = facts.parallel.map(item => '<span class="related-chip' + (item.status === 'review' ? ' review' : '') + '">' + escapeHtml(item.title) + ' · ' + escapeHtml(statusLabel(item.status)) + '</span>').join('');
+  const hypothesisNames = {act:'Hungarian Cybersecurity Act',gdpr:'GDPR',dora:'DORA',cer:'Critical-entity resilience',cra:'Cyber Resilience Act',contracts:'Security and data clauses in contracts','not-enough':'Not enough information to decide yet'};
+  const hypothesis = (f.hypotheses || []).map(value => hypothesisNames[value] || value).join('; ') || 'No hypothesis recorded';
+  const actionNames = {'verify-service':'Confirm the exact company service and legal entity','verify-size':'Check staff, group links and financial statements','verify-decisions':'Ask for formal authority or critical-entity decisions','map-data':'Map personal information and how it is protected','check-finance':'Confirm financial-service authorisation and ICT providers','check-products':'Identify the product and the company’s role','review-contracts':'Read the customer/supplier security clauses','gather-facts':'Gather more facts before choosing a route'};
+  const records = '<div class="hypothesis-record"><h4>Your starting hypothesis</h4><p><strong>Rules to investigate:</strong> ' + escapeHtml(hypothesis) + '</p><p><strong>Supporting fact:</strong> ' + escapeHtml(f.supportingFact || '—') + '</p><p><strong>Your question:</strong> ' + escapeHtml(f.nextQuestion || '—') + '</p><p><strong>First action:</strong> ' + escapeHtml(actionNames[f.firstAction] || f.firstAction || '—') + '</p></div>';
+  const cards = facts.regimeCards.map(card => '<article class="route-card"><h4>' + escapeHtml(card.title) + '</h4><span class="status-badge' + statusClass(card.status) + '">' + escapeHtml(statusLabel(card.status)) + '</span><p>' + escapeHtml(card.message) + '</p><div class="route-links">' + sourceLinks(card.refs) + '</div></article>').join('');
+  const factMarkup = '<dl class="evidence-list">' + facts.factRows.map(([key,value]) => '<div><dt>' + escapeHtml(key) + '</dt><dd>' + escapeHtml(value || 'Not stated') + '</dd></div>').join('') + '</dl>';
+  const followups = facts.questions.length ? '<ul class="followup-list">' + facts.questions.map(item => '<li>' + escapeHtml(item.text) + '</li>').join('') + '</ul>' : '<p>No open fact was selected as a priority. Confirm the source text and exact legal entity before closing the review.</p>';
+  assessmentResults.innerHTML = '<div class="assessment-report"><h3>Compare your hypothesis · ' + escapeHtml(f.profile) + '</h3>' +
+    '<p class="report-warning">This is classroom guidance, not a legal opinion, compliance certificate or filing decision. A company can have several routes at once.</p>' + records +
+    '<div class="result-summary">' +
+      '<article class="route-primary"><h4>Hungarian Cybersecurity Act</h4><span class="status-badge' + statusClass(facts.actStatus) + '">' + escapeHtml(facts.actStatusLabel) + '</span><p>' + escapeHtml(facts.actSummary) + '</p></article>' +
+      '<article><h4>First action</h4><p>' + escapeHtml(facts.action) + '</p></article>' +
+      '<article><h4>One related duty · ' + escapeHtml(facts.related ? facts.related.title : 'Other routes') + '</h4><p>' + escapeHtml(relatedText) + '</p>' + (facts.related ? '<div class="route-links">' + sourceLinks(facts.related.refs) + '</div>' : '') + '</article>' +
+      '<article><h4>One useful question to ask next</h4><p>' + escapeHtml(firstQuestion) + '</p></article>' +
     '</div>' +
-    '<div class="parallel-wrap"><h4>Other regulations and contracts</h4><p>These can apply alongside the Cybersecurity Act. “Not stated” means check the profile or ask the company.</p><div class="law-chips">' + lawChips + '</div></div>' +
-    '<details class="full-results"><summary>Show detailed routes, missing facts and official sources</summary><div class="full-results-body">' + detailCards +
-    '<p class="print-only assessment-date">Rules checked against the listed official sources on 12 October 2026. Confirm the live consolidated law and regulator guidance before operational use.</p>' +
-    '</div></details></div>';
+    '<div class="related-duty"><h4>Other routes to check alongside it</h4><p>These results are independent and can apply together. “Not stated” stays an open question; it is not a “No.”</p><div class="related-chip-list">' + chips + '</div></div>' +
+    '<details class="report-details"><summary>Show all route explanations, facts and follow-up questions</summary><div class="report-details-body"><div class="route-list">' + cards + '</div><section class="route-card"><h4>Facts used</h4>' + factMarkup + '</section><section class="route-card"><h4>Questions that could change the result</h4>' + followups + '</section><p class="reference-note">The Hungarian Cybersecurity Act text was checked in the National Legislation Database as in force on 1 October 2026. The routes are deliberately provisional: confirm exact statutory service definitions, entity and timing from the current official sources.</p></div></details>' +
+    '</div>';
+}
+function runCompanyAssessment() {
+  const facts = collectFacts();
+  renderAssessment(facts,assessFacts(facts));
 }
 
-function clearCompanyAssessment() {
-  assessmentResults.innerHTML = '<div class="empty-state"><strong>The result will appear here.</strong><p>Enter the facts shown in the profile, then select “Show the result.”</p></div>';
-}
-
+renderDomains();
+showStage(0);
+updateConditionalQuestions();
+companyForm.addEventListener('change', event => {
+  const target = event.target;
+  if (target.name === 'domain-unknown' && target.checked) {
+    companyForm.querySelectorAll('input[name="domain"]').forEach(input => input.checked = false);
+    renderServiceFollowups();
+  } else if (target.name === 'domain') {
+    if (target.checked) companyForm.querySelector('input[name="domain-unknown"]').checked = false;
+    renderServiceFollowups();
+  } else if (target.dataset.serviceUnknown && target.checked) {
+    const domainId = target.dataset.serviceUnknown;
+    companyForm.querySelectorAll('[data-service-choice="' + domainId + '"]').forEach(input => input.checked = false);
+  } else if (target.dataset.serviceChoice && target.checked) {
+    const domainId = target.dataset.serviceChoice;
+    const unknown = companyForm.querySelector('[data-service-unknown="' + domainId + '"]');
+    if (unknown) unknown.checked = false;
+  } else if (target.name === 'hypothesis' && target.value === 'not-enough' && target.checked) {
+    companyForm.querySelectorAll('input[name="hypothesis"]').forEach(input => { if (input !== target) input.checked = false; });
+  } else if (target.name === 'hypothesis' && target.value !== 'not-enough' && target.checked) {
+    const unknown = companyForm.querySelector('input[name="hypothesis"][value="not-enough"]');
+    if (unknown) unknown.checked = false;
+  } else if (target.name === 'data-type' && target.value === 'type-unknown' && target.checked) {
+    companyForm.querySelectorAll('input[name="data-type"]').forEach(input => { if (input !== target) input.checked = false; });
+  } else if (target.name === 'data-type' && target.value !== 'type-unknown' && target.checked) {
+    const unknown = companyForm.querySelector('input[name="data-type"][value="type-unknown"]');
+    if (unknown) unknown.checked = false;
+  }
+  updateConditionalQuestions();
+  invalidateComparison();
+});
+companyForm.addEventListener('input', event => {
+  if (event.target.matches('input[type="text"],textarea')) invalidateComparison();
+});
+byId('stage-next').addEventListener('click', () => {
+  if (!canLeaveStage(activeStage)) return;
+  maxVisitedStage = Math.max(maxVisitedStage,activeStage+1);
+  showStage(activeStage+1,true);
+});
+byId('stage-back').addEventListener('click', () => showStage(activeStage-1,true));
+stageLinks.forEach((button,index) => button.addEventListener('click', () => {
+  if (index <= maxVisitedStage) showStage(index,true);
+}));
 companyForm.addEventListener('submit', event => {
   event.preventDefault();
+  if (activeStage !== 3 || !canLeaveStage(3)) return;
   runCompanyAssessment();
   assessmentResults.focus({preventScroll:true});
 });
-companyForm.addEventListener('reset', () => clearCompanyAssessment());
+companyForm.addEventListener('reset', () => {
+  window.setTimeout(() => {
+    maxVisitedStage = 0;
+    showStage(0);
+    renderServiceFollowups();
+    updateConditionalQuestions();
+    assessmentResults.innerHTML = '<div class="empty-state"><strong>Ready for the next company.</strong><p>Enter the next story’s facts and form a new hypothesis before you compare.</p></div>';
+  },0);
+});
+
+window.complianceExerciseQA = {collectFacts,assessFacts,runCompanyAssessment};
 
 selectStep('map');
 setZoom(100);
