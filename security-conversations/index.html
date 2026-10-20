@@ -641,7 +641,7 @@
         VPN:"Virtual private network", ZTNA:"Zero trust network access"
       };
       function markAbbreviations(value) {
-        return value.replace(/\\b(MFA|DLP|EDR|SIEM|IAM|PAM|MDM|SAST|WAF|CASB|VPN|ZTNA)\\b/g, function (term) {
+        return value.replace(/\b(MFA|DLP|EDR|SIEM|IAM|PAM|MDM|SAST|WAF|CASB|VPN|ZTNA)\b/g, function (term) {
           return '<abbr class="abbr-token" title="' + abbreviationDefinitions[term] + '">' + term + '</abbr>';
         });
       }
