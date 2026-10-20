@@ -1,0 +1,771 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071b2d">
+  <meta name="description" content="Practice choosing the right cybersecurity control in realistic workplace conversations.">
+  <title>Security in Conversation · A Cybersecurity Game</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #071b2d;
+      --bg2: #0a2438;
+      --panel: rgba(12, 39, 59, .88);
+      --panel-2: #102f48;
+      --panel-3: #153b56;
+      --line: rgba(171, 207, 226, .17);
+      --text: #f4f8fa;
+      --muted: #a9bfcc;
+      --dim: #7f9baa;
+      --teal: #6dd5d0;
+      --teal-soft: rgba(109, 213, 208, .12);
+      --gold: #f0c677;
+      --red: #ee8d7b;
+      --green: #93d9aa;
+      --shadow: 0 24px 70px rgba(0,0,0,.28);
+      --radius: 22px;
+    }
+    * { box-sizing: border-box; }
+    html { min-height: 100%; background: var(--bg); scroll-behavior: smooth; }
+    body {
+      min-width: 320px; min-height: 100vh; margin: 0; color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+      background:
+        radial-gradient(circle at 81% 6%, rgba(109,213,208,.11), transparent 29rem),
+        radial-gradient(circle at 10% 83%, rgba(240,198,119,.07), transparent 30rem),
+        linear-gradient(145deg, #061724 0%, #092238 54%, #061926 100%);
+    }
+    body::before {
+      content: ""; position: fixed; inset: 0; pointer-events: none; opacity: .075; z-index: -1;
+      background-image: linear-gradient(rgba(255,255,255,.14) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.14) 1px, transparent 1px);
+      background-size: 72px 72px; mask-image: linear-gradient(to bottom, black, transparent 76%);
+    }
+    button, a { font: inherit; }
+    button { color: inherit; }
+    a { color: inherit; }
+    button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+    [hidden] { display: none !important; }
+    .shell { width: min(1160px, calc(100% - 40px)); margin: 0 auto; }
+    .topbar { min-height: 82px; display: flex; align-items: center; justify-content: space-between; gap: 16px; border-bottom: 1px solid var(--line); }
+    .brand { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; }
+    .brand-mark { width: 42px; height: 42px; display: grid; place-items: center; border: 1px solid rgba(109,213,208,.55); border-radius: 13px; color: var(--teal); background: var(--teal-soft); font-weight: 900; letter-spacing: -.06em; }
+    .brand strong, .brand small { display: block; }
+    .brand strong { letter-spacing: -.02em; }
+    .brand small { margin-top: 1px; color: var(--muted); font-size: .77rem; }
+    .top-actions { display: flex; align-items: center; gap: 10px; }
+    .quiet-button { display: inline-flex; align-items: center; gap: 8px; padding: 10px 13px; border: 1px solid var(--line); border-radius: 10px; background: rgba(255,255,255,.035); color: var(--muted); text-decoration: none; cursor: pointer; transition: .18s ease; }
+    .quiet-button:hover { color: var(--text); border-color: rgba(109,213,208,.5); background: var(--teal-soft); }
+    main { padding: 45px 0 68px; }
+    .eyebrow { margin: 0 0 13px; color: var(--teal); font-size: .75rem; font-weight: 850; letter-spacing: .16em; text-transform: uppercase; }
+    .hero { display: grid; grid-template-columns: minmax(0,1.2fr) minmax(270px,.8fr); align-items: center; gap: 38px; padding: 25px 0 38px; }
+    h1 { max-width: 730px; margin: 0; font-size: clamp(2.7rem, 6.5vw, 5.3rem); line-height: .98; letter-spacing: -.065em; }
+    .hero-copy { max-width: 670px; margin: 21px 0 0; color: var(--muted); font-size: clamp(1rem, 1.8vw, 1.14rem); line-height: 1.7; }
+    .hero-copy strong { color: var(--text); font-weight: 700; }
+    .hero-visual { min-height: 255px; position: relative; display: grid; place-items: center; overflow: hidden; border: 1px solid var(--line); border-radius: 28px; background: radial-gradient(circle at 50% 50%, rgba(109,213,208,.12), transparent 55%), rgba(7,27,45,.54); }
+    .orbit { position: absolute; width: 190px; height: 190px; border: 1px solid rgba(109,213,208,.28); border-radius: 50%; }
+    .orbit::before, .orbit::after { content: ""; position: absolute; inset: 19px; border: 1px dashed rgba(240,198,119,.29); border-radius: 50%; }
+    .orbit::after { inset: 42px; border-style: solid; border-color: rgba(109,213,208,.25); }
+    .orbit-core { position: relative; z-index: 1; width: 92px; height: 92px; display: grid; place-items: center; border: 1px solid rgba(109,213,208,.6); border-radius: 27px; background: linear-gradient(145deg, rgba(109,213,208,.24), rgba(11,39,60,.96)); box-shadow: 0 0 55px rgba(109,213,208,.18); color: var(--teal); font-size: 2.15rem; }
+    .orbit-tag { position: absolute; z-index: 2; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: #0c2940; color: var(--muted); font-size: .72rem; font-weight: 750; letter-spacing: .04em; box-shadow: 0 8px 20px rgba(0,0,0,.18); }
+    .tag-a { top: 24px; left: 22px; } .tag-b { top: 50px; right: 18px; color: var(--gold); } .tag-c { bottom: 32px; left: 28px; color: var(--teal); } .tag-d { right: 24px; bottom: 22px; }
+    .start-card { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 27px; }
+    .start-button { min-height: 51px; display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 12px 18px; border: 1px solid rgba(109,213,208,.7); border-radius: 12px; color: #05252f; background: linear-gradient(135deg, #86e3d8, #56c6c4); font-weight: 850; cursor: pointer; box-shadow: 0 12px 27px rgba(47,177,176,.15); transition: transform .18s ease, filter .18s ease; }
+    .start-button:hover { transform: translateY(-2px); filter: brightness(1.06); }
+    .start-button.secondary { color: var(--text); border-color: var(--line); background: var(--panel-2); box-shadow: none; }
+    .best-score { color: var(--dim); font-size: .83rem; }
+    .best-score strong { color: var(--gold); }
+    .how-panel { margin-top: 29px; padding: 18px 19px; border: 1px solid var(--line); border-radius: 15px; background: rgba(255,255,255,.025); }
+    .how-panel strong { display: block; margin-bottom: 5px; color: var(--text); font-size: .88rem; }
+    .how-panel p { margin: 0; max-width: 690px; color: var(--muted); font-size: .86rem; }
+    .game-heading { display: flex; justify-content: space-between; align-items: end; gap: 20px; margin: 3px 0 19px; }
+    .game-heading h2 { margin: 0; font-size: clamp(1.5rem, 3.3vw, 2.2rem); letter-spacing: -.04em; }
+    .round-label { color: var(--gold); font-size: .82rem; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; }
+    .progress-wrap { margin: 0 0 23px; }
+    .progress-meta { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 8px; color: var(--muted); font-size: .76rem; }
+    .progress-track { height: 7px; overflow: hidden; border-radius: 8px; background: rgba(255,255,255,.08); }
+    .progress-fill { width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #5acac5, #f0c677); transition: width .35s ease; }
+    .game-layout { display: grid; grid-template-columns: minmax(0,1fr) 285px; gap: 18px; align-items: start; }
+    .case-panel, .coach-panel, .end-panel { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); box-shadow: var(--shadow); overflow: hidden; }
+    .case-head { display: flex; justify-content: space-between; align-items: start; gap: 18px; padding: 22px 25px 18px; border-bottom: 1px solid var(--line); }
+    .case-head h3 { margin: 5px 0 0; font-size: 1.28rem; letter-spacing: -.025em; }
+    .case-category { color: var(--teal); font-size: .7rem; font-weight: 850; letter-spacing: .13em; text-transform: uppercase; }
+    .setting { flex: 0 0 auto; padding: 6px 9px; border: 1px solid var(--line); border-radius: 99px; color: var(--muted); font-size: .72rem; }
+    .case-body { padding: 23px 25px 26px; }
+    .scenario-context { margin: 0 0 20px; color: var(--muted); font-size: .91rem; }
+    .speaker-row { display: flex; align-items: center; gap: 11px; margin-bottom: 11px; }
+    .avatar { width: 37px; height: 37px; display: grid; place-items: center; border: 1px solid rgba(240,198,119,.45); border-radius: 12px; color: var(--gold); background: rgba(240,198,119,.09); font-size: .8rem; font-weight: 850; }
+    .speaker-name { display: block; font-size: .85rem; font-weight: 800; }
+    .speaker-role { display: block; color: var(--dim); font-size: .75rem; }
+    .quote { position: relative; margin: 0; padding: 20px 21px; border: 1px solid rgba(109,213,208,.2); border-radius: 4px 17px 17px 17px; color: var(--text); background: linear-gradient(135deg, rgba(109,213,208,.08), rgba(255,255,255,.025)); font-size: clamp(1rem,1.5vw,1.13rem); line-height: 1.68; }
+    .quote::before { content: "“"; position: absolute; top: -16px; right: 15px; color: rgba(109,213,208,.24); font-family: Georgia, serif; font-size: 4rem; line-height: 1; }
+    .question { margin: 24px 0 11px; font-size: .9rem; font-weight: 850; }
+    .choice-hint { margin: 0 0 12px; color: var(--dim); font-size: .75rem; }
+    .choices { display: grid; gap: 10px; }
+    .tool-choice { width: 100%; display: grid; grid-template-columns: 42px minmax(0,1fr) 25px; align-items: center; gap: 13px; padding: 13px 14px; border: 1px solid var(--line); border-radius: 13px; background: rgba(255,255,255,.028); text-align: left; cursor: pointer; transition: transform .16s ease, border-color .16s ease, background .16s ease; }
+    .tool-choice:hover:not(:disabled) { transform: translateY(-1px); border-color: rgba(109,213,208,.5); background: rgba(109,213,208,.07); }
+    .tool-choice:disabled { cursor: default; }
+    .tool-choice.selected { border-color: rgba(109,213,208,.75); background: rgba(109,213,208,.105); }
+    .tool-choice.best-answer { border-color: rgba(147,217,170,.7); background: rgba(147,217,170,.1); }
+    .tool-icon { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px; color: var(--teal); background: rgba(109,213,208,.1); font-size: .78rem; font-weight: 900; letter-spacing: -.03em; }
+    .tool-choice strong { display: block; font-size: .91rem; }
+    .tool-choice small { display: block; margin-top: 3px; color: var(--muted); font-size: .77rem; line-height: 1.4; }
+    .choice-key { display: grid; place-items: center; width: 23px; height: 23px; border: 1px solid var(--line); border-radius: 7px; color: var(--dim); font-size: .7rem; font-weight: 800; }
+    .feedback { margin-top: 17px; padding: 18px; border: 1px solid var(--line); border-radius: 15px; background: rgba(255,255,255,.035); }
+    .feedback.strong { border-color: rgba(147,217,170,.38); background: rgba(147,217,170,.06); }
+    .feedback.support { border-color: rgba(240,198,119,.35); background: rgba(240,198,119,.05); }
+    .feedback.poor { border-color: rgba(238,141,123,.34); background: rgba(238,141,123,.05); }
+    .feedback-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+    .feedback-title { margin: 0; font-size: 1rem; }
+    .fit-pill { padding: 5px 8px; border-radius: 7px; color: var(--green); background: rgba(147,217,170,.11); font-size: .69rem; font-weight: 850; letter-spacing: .04em; text-transform: uppercase; }
+    .support .fit-pill { color: var(--gold); background: rgba(240,198,119,.1); }
+    .poor .fit-pill { color: var(--red); background: rgba(238,141,123,.1); }
+    .feedback-copy { margin: 0; color: var(--muted); font-size: .87rem; }
+    .best-fit { margin: 9px 0 0; color: var(--teal); font-size: .82rem; font-weight: 800; }
+    .reply-box, .lesson-box { margin-top: 15px; padding: 13px 14px; border-radius: 11px; background: rgba(0,0,0,.15); }
+    .reply-box small, .lesson-box small { display: block; margin-bottom: 4px; color: var(--gold); font-size: .66rem; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; }
+    .reply-box p, .lesson-box p { margin: 0; color: var(--text); font-size: .82rem; line-height: 1.55; }
+    .lesson-box p { color: var(--muted); }
+    .continue-row { display: flex; justify-content: flex-end; margin-top: 15px; }
+    .continue-button { min-height: 43px; display: inline-flex; align-items: center; gap: 10px; padding: 10px 15px; border: 0; border-radius: 10px; color: #06242c; background: var(--teal); font-weight: 850; cursor: pointer; }
+    .continue-button:hover { filter: brightness(1.08); }
+    .coach-panel { padding: 21px; }
+    .score-label { color: var(--dim); font-size: .7rem; font-weight: 850; letter-spacing: .14em; text-transform: uppercase; }
+    .score-number { display: flex; align-items: baseline; gap: 5px; margin: 5px 0 2px; }
+    .score-number strong { color: var(--gold); font-size: 2.9rem; line-height: 1; letter-spacing: -.06em; }
+    .score-number span { color: var(--dim); font-size: .8rem; }
+    .score-note { margin: 0; color: var(--muted); font-size: .81rem; }
+    .side-divider { height: 1px; margin: 19px 0; background: var(--line); }
+    .coach-title { margin: 0 0 8px; color: var(--text); font-size: .86rem; }
+    .coach-copy { margin: 0; color: var(--muted); font-size: .79rem; line-height: 1.6; }
+    .tool-pills { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; }
+    .tool-pill { padding: 5px 8px; border: 1px solid var(--line); border-radius: 7px; color: var(--muted); font-size: .68rem; }
+    .keyboard-note { margin-top: 17px; padding: 11px; border-radius: 10px; color: var(--dim); background: rgba(255,255,255,.035); font-size: .72rem; }
+    .end-panel { padding: clamp(22px,4vw,40px); }
+    .end-top { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 25px; padding-bottom: 25px; border-bottom: 1px solid var(--line); }
+    .end-top h2 { margin: 0; font-size: clamp(2rem,4.5vw,3.4rem); line-height: 1; letter-spacing: -.06em; }
+    .end-top p { max-width: 650px; margin: 13px 0 0; color: var(--muted); }
+    .final-score { width: 130px; height: 130px; display: grid; place-items: center; align-content: center; border: 1px solid rgba(240,198,119,.5); border-radius: 50%; background: rgba(240,198,119,.07); }
+    .final-score strong { color: var(--gold); font-size: 2.6rem; line-height: 1; }
+    .final-score span { margin-top: 5px; color: var(--dim); font-size: .7rem; text-transform: uppercase; letter-spacing: .11em; }
+    .result-heading { margin: 23px 0 12px; font-size: 1rem; }
+    .result-list { display: grid; gap: 9px; }
+    .result-item { display: grid; grid-template-columns: 35px minmax(0,1fr) auto; align-items: center; gap: 11px; padding: 12px; border: 1px solid var(--line); border-radius: 11px; background: rgba(255,255,255,.025); }
+    .result-number { color: var(--dim); font-size: .75rem; font-weight: 850; }
+    .result-item strong { display: block; font-size: .83rem; }
+    .result-item small { display: block; margin-top: 2px; color: var(--muted); font-size: .74rem; }
+    .result-points { color: var(--gold); font-size: .78rem; font-weight: 850; white-space: nowrap; }
+    .end-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+    footer { padding: 0 0 27px; color: #7894a4; text-align: center; font-size: .78rem; }
+    dialog { width: min(760px, calc(100% - 28px)); max-height: min(82vh, 780px); padding: 0; border: 1px solid rgba(171,207,226,.28); border-radius: 20px; color: var(--text); background: #0a2337; box-shadow: 0 30px 100px rgba(0,0,0,.55); }
+    dialog::backdrop { background: rgba(1,8,14,.76); backdrop-filter: blur(5px); }
+    .dialog-head { position: sticky; top: 0; z-index: 2; display: flex; justify-content: space-between; align-items: start; gap: 14px; padding: 20px 22px; border-bottom: 1px solid var(--line); background: #0a2337; }
+    .dialog-head h2 { margin: 0; font-size: 1.35rem; }
+    .dialog-head p { margin: 4px 0 0; color: var(--muted); font-size: .82rem; }
+    .close-button { width: 37px; height: 37px; border: 1px solid var(--line); border-radius: 10px; background: rgba(255,255,255,.04); color: var(--text); cursor: pointer; font-size: 1.2rem; }
+    .guide-search { width: calc(100% - 44px); margin: 17px 22px 0; padding: 11px 13px; border: 1px solid var(--line); border-radius: 10px; background: rgba(0,0,0,.15); color: var(--text); }
+    .guide-list { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; padding: 16px 22px 22px; }
+    .guide-item { padding: 13px; border: 1px solid var(--line); border-radius: 11px; background: rgba(255,255,255,.025); }
+    .guide-item strong { display: block; font-size: .87rem; }
+    .guide-item small { display: block; margin: 2px 0 6px; color: var(--teal); font-size: .67rem; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; }
+    .guide-item p { margin: 0; color: var(--muted); font-size: .76rem; line-height: 1.5; }
+    .guide-empty { grid-column: 1/-1; color: var(--muted); font-size: .85rem; }
+    @media (max-width: 860px) {
+      .hero { grid-template-columns: minmax(0,1fr) minmax(230px,.68fr); gap: 23px; }
+      .game-layout { grid-template-columns: minmax(0,1fr) 245px; }
+      .coach-panel { padding: 17px; }
+    }
+    @media (max-width: 700px) {
+      .shell { width: min(100% - 26px, 1160px); }
+      .topbar { min-height: 70px; }
+      .top-actions .quiet-button span { display: none; }
+      main { padding-top: 29px; }
+      .hero { grid-template-columns: 1fr; padding: 14px 0 29px; }
+      .hero-visual { min-height: 190px; }
+      .orbit { width: 150px; height: 150px; }
+      .tag-a { top: 17px; left: 15px; } .tag-b { top: 28px; right: 14px; } .tag-c { bottom: 19px; left: 18px; } .tag-d { right: 16px; bottom: 14px; }
+      .game-layout { grid-template-columns: 1fr; }
+      .coach-panel { order: -1; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+      .coach-panel .side-divider { display: none; }
+      .score-block { grid-row: span 2; }
+      .tool-pills { margin-top: 8px; }
+      .case-head { padding: 19px 18px 16px; }
+      .case-body { padding: 19px 18px 21px; }
+      .end-top { grid-template-columns: 1fr; }
+      .final-score { width: 96px; height: 96px; }
+      .final-score strong { font-size: 2.1rem; }
+      .result-item { grid-template-columns: 24px minmax(0,1fr) auto; gap: 8px; }
+    }
+    @media (max-width: 460px) {
+      .brand small { font-size: .69rem; }
+      .hero-visual { min-height: 165px; }
+      .game-heading { align-items: start; flex-direction: column; gap: 5px; }
+      .setting { max-width: 108px; white-space: normal; text-align: center; }
+      .coach-panel { grid-template-columns: 1fr; }
+      .score-block { grid-row: auto; }
+      .guide-list { grid-template-columns: 1fr; }
+      .tool-choice { grid-template-columns: 37px minmax(0,1fr) 23px; gap: 10px; padding: 11px; }
+      .tool-icon { width: 36px; height: 36px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Mário Mile course activities home">
+        <span class="brand-mark" aria-hidden="true">SC</span>
+        <span><strong>Security in Conversation</strong><small>Cybersecurity decision game</small></span>
+      </a>
+      <div class="top-actions">
+        <button class="quiet-button" id="openGuide" type="button" aria-haspopup="dialog"><span aria-hidden="true">▦</span><span>Tool guide</span></button>
+        <a class="quiet-button" href="https://github.com/milemario/milemario.github.io/tree/main/security-conversations" target="_blank" rel="noopener noreferrer" aria-label="View the game source on GitHub"><span aria-hidden="true">↗</span><span>Source</span></a>
+      </div>
+    </header>
+
+    <main>
+      <section id="introScreen" class="hero" aria-labelledby="heroTitle">
+        <div>
+          <p class="eyebrow">A practical cybersecurity conversation game</p>
+          <h1 id="heroTitle">Choose the tool.<br>Start the conversation.</h1>
+          <p class="hero-copy">A colleague tells you about a security problem. You have three tools to choose from. Pick the <strong>best first fit</strong>, then see what it can do, what it cannot do, and what you could say next.</p>
+          <div class="start-card">
+            <button class="start-button" type="button" data-rounds="5">Quick chat <span aria-hidden="true">→</span><small>5 cases</small></button>
+            <button class="start-button secondary" type="button" data-rounds="10">Full shift <span aria-hidden="true">→</span><small>10 cases</small></button>
+            <span class="best-score" id="bestScoreLabel"></span>
+          </div>
+          <div class="how-panel">
+            <strong>How to play</strong>
+            <p>Choose one control for each situation. Some other choices may help too, but the game asks which tool addresses the main issue first. In real incidents, contain immediate harm and involve your security team.</p>
+          </div>
+        </div>
+        <div class="hero-visual" aria-hidden="true">
+          <span class="orbit"></span><span class="orbit-core">◈</span>
+          <span class="orbit-tag tag-a">MFA</span><span class="orbit-tag tag-b">SIEM</span>
+          <span class="orbit-tag tag-c">DLP</span><span class="orbit-tag tag-d">EDR</span>
+        </div>
+      </section>
+
+      <section id="gameScreen" hidden aria-labelledby="gameTitle">
+        <div class="game-heading">
+          <div><p class="eyebrow">Live conversation</p><h2 id="gameTitle">What would you recommend?</h2></div>
+          <span class="round-label" id="roundLabel"></span>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-meta"><span id="progressText">Conversation 1 of 5</span><span id="progressPercent">0% complete</span></div>
+          <div class="progress-track" id="progressTrack" role="progressbar" aria-label="Game progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+        <div class="game-layout">
+          <article class="case-panel">
+            <div class="case-head">
+              <div><span class="case-category" id="scenarioCategory"></span><h3 id="scenarioTitle"></h3></div>
+              <span class="setting" id="scenarioSetting"></span>
+            </div>
+            <div class="case-body">
+              <p class="scenario-context" id="scenarioContext"></p>
+              <div class="speaker-row">
+                <span class="avatar" id="speakerAvatar" aria-hidden="true"></span>
+                <span><span class="speaker-name" id="speakerName"></span><span class="speaker-role" id="speakerRole"></span></span>
+              </div>
+              <blockquote class="quote" id="scenarioQuote"></blockquote>
+              <p class="question">Which security tool would you bring into the conversation first?</p>
+              <p class="choice-hint">Choose one. Press 1, 2 or 3 on your keyboard if you like.</p>
+              <div class="choices" id="choices" role="group" aria-label="Choose a security tool"></div>
+              <section class="feedback" id="feedback" aria-live="polite" hidden>
+                <div class="feedback-top"><h4 class="feedback-title" id="feedbackTitle"></h4><span class="fit-pill" id="fitPill"></span></div>
+                <p class="feedback-copy" id="feedbackCopy"></p>
+                <p class="best-fit" id="bestFit"></p>
+                <div class="reply-box"><small>A useful thing to say next</small><p id="replyCopy"></p></div>
+                <div class="lesson-box"><small>The useful distinction</small><p id="lessonCopy"></p></div>
+                <div class="continue-row"><button class="continue-button" id="continueButton" type="button">Next conversation <span aria-hidden="true">→</span></button></div>
+              </section>
+            </div>
+          </article>
+
+          <aside class="coach-panel" aria-label="Game status and tool categories">
+            <div class="score-block">
+              <div class="score-label">Tool fit score</div>
+              <div class="score-number"><strong id="liveScore">0</strong><span>points</span></div>
+              <p class="score-note" id="scoreNote">Choose tools that address the problem at hand.</p>
+            </div>
+            <div class="side-divider"></div>
+            <div>
+              <h3 class="coach-title">Think in layers</h3>
+              <p class="coach-copy">Is the issue about identity, data, devices, activity visibility, applications, or recovery? Naming the problem helps you choose a useful starting point.</p>
+            </div>
+            <div>
+              <h3 class="coach-title">Tool families in this game</h3>
+              <div class="tool-pills"><span class="tool-pill">Identity</span><span class="tool-pill">Data</span><span class="tool-pill">Endpoint</span><span class="tool-pill">Visibility</span><span class="tool-pill">Application</span><span class="tool-pill">Resilience</span><span class="tool-pill">Network</span></div>
+            </div>
+            <div class="keyboard-note">You can open the tool guide at any time to review the choices.</div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="endScreen" class="end-panel" hidden aria-labelledby="endTitle">
+        <p class="eyebrow">Shift debrief</p>
+        <div class="end-top">
+          <div><h2 id="endTitle">Good conversations start with good questions.</h2><p id="endCopy"></p></div>
+          <div class="final-score"><strong id="finalScore">0</strong><span>fit score</span></div>
+        </div>
+        <h3 class="result-heading">Your decisions</h3>
+        <div class="result-list" id="resultList"></div>
+        <div class="end-actions">
+          <button class="start-button" type="button" id="playAgain">Play another shift <span aria-hidden="true">↻</span></button>
+          <button class="start-button secondary" type="button" id="backHome">Back to start</button>
+        </div>
+      </section>
+    </main>
+
+    <footer>Educational simulation · Tool choice is a starting point; real response depends on context.</footer>
+  </div>
+
+  <dialog id="guideDialog" aria-labelledby="guideTitle">
+    <div class="dialog-head">
+      <div><h2 id="guideTitle">Cybersecurity tool guide</h2><p>Short definitions to help you compare the tools.</p></div>
+      <button class="close-button" id="closeGuide" type="button" aria-label="Close tool guide">×</button>
+    </div>
+    <input class="guide-search" id="guideSearch" type="search" placeholder="Search tools or categories" aria-label="Search the tool guide">
+    <div class="guide-list" id="guideList"></div>
+  </dialog>
+
+  <script>
+    (function () {
+      "use strict";
+      const scenarios = [
+        {
+          category: "Identity & access", title: "The password keeps getting reused", setting: "A hallway conversation",
+          context: "A payroll manager wants to know what would reduce account takeovers across staff accounts.",
+          speaker: "Nora", role: "Payroll manager", quote: "We keep seeing sign-ins with passwords that were leaked somewhere else. Payroll still only asks for a password. Can we add another check?",
+          bestTool: "Multi-factor authentication (MFA)",
+          reply: "“How many accounts are in scope, and can we start with payroll and administrator accounts? We should also plan how people recover access safely.”",
+          lesson: "MFA asks for an additional proof beyond a password. It makes stolen or reused passwords harder to use by themselves. Strong, phishing-resistant methods are a better target for high-risk accounts.",
+          choices: [
+            { tool: "Multi-factor authentication (MFA)", short: "Require a second sign-in proof beyond the password.", fit: "strong", why: "This directly addresses password-only access. MFA can reduce the value of a stolen or reused password, especially when the organization chooses phishing-resistant methods for sensitive accounts." },
+            { tool: "Security information and event management (SIEM)", short: "Collect and correlate logs from systems.", fit: "poor", why: "A SIEM can help detect unusual sign-ins, but it does not add another proof at login. It is useful monitoring around the control, not the first control to close password-only access." },
+            { tool: "Endpoint detection and response (EDR)", short: "Detect and respond to suspicious activity on devices.", fit: "support", why: "EDR can help investigate compromised devices, but the stated gap is password-only authentication. It does not add a second sign-in check." }
+          ]
+        },
+        {
+          category: "Data protection", title: "Customer files are leaving managed storage", setting: "A remote-work check-in",
+          context: "A team lead is worried about sensitive information being copied into personal cloud accounts.",
+          speaker: "Ádám", role: "Customer support lead", quote: "Some people download customer spreadsheets and move them into personal cloud drives so they can keep working at home. We need to spot that and stop sensitive files leaving.",
+          bestTool: "Data loss prevention (DLP)",
+          reply: "“Which data should be protected, and which approved services should people use? We can start by monitoring, then tune rules before blocking normal work.”",
+          lesson: "DLP applies content-aware rules to sensitive data as it moves through endpoints, email, web, or storage. Start with data classification and careful tuning so protection does not block legitimate work.",
+          choices: [
+            { tool: "Cloud access security broker (CASB)", short: "Discover and govern use of cloud services.", fit: "support", why: "A CASB can reveal cloud app use and help control unmanaged services. It may be part of the solution, while content-aware DLP rules are the more direct fit for identifying and controlling sensitive files." },
+            { tool: "Data loss prevention (DLP)", short: "Detect or restrict sensitive data movement.", fit: "strong", why: "This is the closest fit: DLP can identify sensitive content and apply policy when it is uploaded, emailed, copied, or shared. It needs clear data rules and testing to avoid disrupting approved workflows." },
+            { tool: "Endpoint detection and response (EDR)", short: "Investigate suspicious activity on work devices.", fit: "poor", why: "EDR can investigate device behavior, but the main need is to govern sensitive data leaving through cloud services. DLP is designed for that data movement problem." }
+          ]
+        },
+        {
+          category: "Endpoint security", title: "A laptop is acting strangely", setting: "A service desk escalation",
+          context: "The service desk has noticed behavior that could indicate an active compromise.",
+          speaker: "Leila", role: "Service desk analyst", quote: "A laptop opened an unknown attachment, launched a script, and then tried to change a lot of files on a shared drive. Can we see what it is doing and contain it?",
+          bestTool: "Endpoint detection and response (EDR)",
+          reply: "“Let’s isolate the device through the response process and preserve the alert details. Who else saw the same attachment, and when did the activity begin?”",
+          lesson: "EDR monitors endpoint behavior and can support investigation and containment. It is one part of incident response: preserve evidence, assess scope, and involve the incident response team.",
+          choices: [
+            { tool: "Endpoint detection and response (EDR)", short: "Investigate endpoint activity and isolate devices.", fit: "strong", why: "The suspicious behavior is happening on a laptop. EDR can show process activity, help investigate what ran, and support isolating the device while responders assess the scope." },
+            { tool: "Multi-factor authentication (MFA)", short: "Add another proof when a user signs in.", fit: "poor", why: "MFA can reduce account takeover risk, but the reported behavior is a suspicious process on an endpoint. It does not show or contain the laptop's file activity." },
+            { tool: "Security information and event management (SIEM)", short: "Bring security logs together for investigation.", fit: "support", why: "A SIEM may help correlate the endpoint alert with account or network events. The immediate need is endpoint-level visibility and containment, where EDR is the closer tool." }
+          ]
+        },
+        {
+          category: "Detection & visibility", title: "The logs are in separate places", setting: "A security team meeting",
+          context: "Analysts are trying to investigate a pattern that crosses several systems.",
+          speaker: "Péter", role: "Security analyst", quote: "We have sign-in logs, email alerts, firewall events, and endpoint alerts, but everyone searches them separately. It takes hours to work out whether they are connected.",
+          bestTool: "Security information and event management (SIEM)",
+          reply: "“Which log sources matter most for our first few investigations? Let’s agree on the use cases and retention before connecting everything.”",
+          lesson: "A SIEM centralizes and correlates security events so analysts can investigate activity across systems. Good source selection, useful detection rules, and people to review the alerts matter as much as the platform.",
+          choices: [
+            { tool: "Vulnerability management", short: "Find and prioritize known weaknesses in assets.", fit: "poor", why: "Vulnerability management helps identify and prioritize weaknesses. It does not bring sign-in, email, firewall, and endpoint events together for one investigation." },
+            { tool: "Security information and event management (SIEM)", short: "Search and correlate security events across systems.", fit: "strong", why: "This is the problem SIEM is built for: bringing security logs into a shared view and helping analysts connect events across systems and timelines." },
+            { tool: "Endpoint detection and response (EDR)", short: "Focus investigation and response on endpoints.", fit: "support", why: "EDR adds useful detail about devices, but it will not by itself unify the broader email, identity, firewall, and cloud logs described here." }
+          ]
+        },
+        {
+          category: "Identity & access", title: "Old access survives job changes", setting: "A new-starter review",
+          context: "A department manager is concerned that access is not being removed when people change roles.",
+          speaker: "Eszter", role: "People operations partner", quote: "When someone moves teams or a contractor finishes, their old app accounts sometimes stay active. We don't have a reliable owner for reviewing access.",
+          bestTool: "Identity and access management (IAM)",
+          reply: "“Which systems should change when a person joins, moves, or leaves? Let's identify the account owners and agree who approves each access review.”",
+          lesson: "IAM can centralize identity lifecycle, provisioning, deprovisioning, and access reviews. MFA protects authentication; it does not decide whether a person should still have access to an application.",
+          choices: [
+            { tool: "Data loss prevention (DLP)", short: "Control movement of sensitive information.", fit: "poor", why: "DLP can limit some ways sensitive data leaves, but it does not remove old accounts or coordinate access changes when a person changes role." },
+            { tool: "Multi-factor authentication (MFA)", short: "Strengthen how people prove their identity.", fit: "support", why: "MFA can make sign-ins safer, but these employees may still be allowed into the wrong applications. The core issue is lifecycle and authorization, which IAM can govern." },
+            { tool: "Identity and access management (IAM)", short: "Manage identities, app access, and access reviews.", fit: "strong", why: "IAM is the best starting point for joiner, mover, and leaver processes and recurring access reviews. It helps assign ownership and remove access when it is no longer needed." }
+          ]
+        },
+        {
+          category: "Privileged access", title: "Everyone knows the admin password", setting: "A platform engineering stand-up",
+          context: "Engineers need administrator access, but the current process is difficult to audit.",
+          speaker: "Bence", role: "Infrastructure engineer", quote: "Five of us use the same administrator password to manage production. If a setting changes, we can't tell who did it, and the password is in an old team document.",
+          bestTool: "Privileged access management (PAM)",
+          reply: "“Which accounts have production privileges, and can we replace the shared password with named, time-limited access first?”",
+          lesson: "PAM helps control and audit privileged accounts and sessions, often through named access, approval, credential vaulting, and time limits. SIEM can record events, but it does not remove the shared credential problem.",
+          choices: [
+            { tool: "Security information and event management (SIEM)", short: "Collect logs and alert on selected behavior.", fit: "poor", why: "A SIEM can help analyze logs after actions occur, but it will not replace the shared password or make each administrator use named access." },
+            { tool: "Privileged access management (PAM)", short: "Control, grant, and audit elevated access.", fit: "strong", why: "PAM directly addresses shared privileged credentials. It can provide named, approved, time-limited access and a better audit trail for administrative sessions." },
+            { tool: "Identity and access management (IAM)", short: "Manage identities and general application access.", fit: "support", why: "IAM can help with named identities and provisioning. PAM adds controls designed for high-risk administrator accounts and their privileged sessions." }
+          ]
+        },
+        {
+          category: "Email security", title: "The vendor invoice looks almost right", setting: "A finance team coffee break",
+          context: "Staff have reported a series of suspicious messages that imitate a supplier.",
+          speaker: "Júlia", role: "Finance controller", quote: "We keep getting invoices from addresses that differ from our supplier by one letter. One message had a link to a payment page and another had an attachment.",
+          bestTool: "Secure email gateway",
+          reply: "“Can we report the examples to the security team and verify payment changes through a known contact channel? We should check whether anyone clicked or replied.”",
+          lesson: "A secure email gateway can filter or flag malicious and impersonation messages before delivery. Staff reporting and out-of-band verification of payment changes remain important, because no filter catches every message.",
+          choices: [
+            { tool: "Secure email gateway", short: "Filter phishing, malicious links, and spoofed mail.", fit: "strong", why: "The issue is malicious or impersonation email reaching staff. Email security controls can inspect senders, links, attachments, and spoofing signals before messages are delivered." },
+            { tool: "Multi-factor authentication (MFA)", short: "Reduce risk from stolen passwords.", fit: "support", why: "MFA helps protect accounts if a password is stolen, but it will not filter a fake invoice or stop someone from replying to a convincing message." },
+            { tool: "Endpoint detection and response (EDR)", short: "Detect suspicious behavior on managed devices.", fit: "support", why: "EDR can help if a malicious attachment runs on a device, but email filtering is the earlier and more direct control for the reported problem." }
+          ]
+        },
+        {
+          category: "Vulnerability management", title: "Nobody knows what is exposed", setting: "A change advisory call",
+          context: "A team has learned that an internet-facing system is running old software.",
+          speaker: "Márk", role: "Application owner", quote: "We found an old server after a security notice came out. We don't know what else is exposed or which fixes should come first.",
+          bestTool: "Vulnerability management",
+          reply: "“Let's confirm the asset inventory and exposure first, then prioritize by exploitability, business impact, and available fixes.”",
+          lesson: "Vulnerability management combines asset visibility, scanning, prioritization, remediation, and retesting. A scanner finding is a starting point; owners still need to decide and verify the fix.",
+          choices: [
+            { tool: "Web application firewall (WAF)", short: "Filter traffic to web applications.", fit: "support", why: "A WAF can sometimes reduce exposure to specific web attacks, but it will not tell the team what assets exist or manage a broader patching and retesting process." },
+            { tool: "Vulnerability management", short: "Discover, prioritize, fix, and retest weaknesses.", fit: "strong", why: "This is the direct fit for finding exposed assets, assessing known weaknesses, prioritizing remediation, and checking that fixes worked." },
+            { tool: "Security information and event management (SIEM)", short: "Correlate activity and security logs.", fit: "poor", why: "A SIEM can help notice suspicious activity, but it does not create the asset inventory or remediation workflow the team is missing." }
+          ]
+        },
+        {
+          category: "Secrets management", title: "An API key reached a public repository", setting: "A developer asks for help",
+          context: "The team wants to catch credentials before code is merged into a shared repository.",
+          speaker: "Noémi", role: "Software developer", quote: "Someone committed a cloud API key last week. We revoked it, but it had been visible for a while. Is there a way to catch this before it happens again?",
+          bestTool: "Secrets scanning and management",
+          reply: "“For that exposed key, revoke and rotate it, then check its use. After that, let's scan commits and move active secrets into a managed store.”",
+          lesson: "Secrets scanning can detect credentials in code before or after commit. A secrets manager helps deliver and rotate secrets safely. If a key is exposed, revoke it and investigate its use; scanning alone does not undo exposure.",
+          choices: [
+            { tool: "Secrets scanning and management", short: "Detect exposed credentials and store active secrets safely.", fit: "strong", why: "Secrets scanning can catch keys before merge, while a secrets manager reduces the need to keep active credentials in source code. Any already exposed key still needs revocation and investigation." },
+            { tool: "Endpoint detection and response (EDR)", short: "Monitor suspicious behavior on devices.", fit: "poor", why: "EDR helps investigate endpoint activity, but it will not scan a code repository for committed keys or provide a safe place for application secrets." },
+            { tool: "Identity and access management (IAM)", short: "Control user identities and access permissions.", fit: "support", why: "IAM and least privilege can reduce what a compromised key can reach. They are useful supporting controls, but they will not catch the key in source code." }
+          ]
+        },
+        {
+          category: "Resilience & recovery", title: "The backups share the same admin account", setting: "A business continuity review",
+          context: "The organization can restore data, but the backup system may be reachable by an attacker.",
+          speaker: "Tamás", role: "IT operations manager", quote: "We can restore files after ransomware, but the backups are online and use the same administrator account as the servers. Could an attacker delete those too?",
+          bestTool: "Backup and recovery controls",
+          reply: "“Let's confirm which copies are isolated or immutable, who can delete them, and when we last tested a full recovery.”",
+          lesson: "Isolated or immutable backups can improve recovery options if production systems or administrator accounts are compromised. Recovery plans need protected credentials and regular restore tests.",
+          choices: [
+            { tool: "Backup and recovery controls", short: "Protect restore points and test recovery.", fit: "strong", why: "This directly addresses the risk that an attacker could alter or delete recovery copies. Isolated or immutable backups and tested restore procedures improve resilience." },
+            { tool: "Endpoint detection and response (EDR)", short: "Detect and contain suspicious endpoint activity.", fit: "support", why: "EDR can help detect and contain ransomware before it spreads, but it does not protect the backup copies from deletion by a compromised administrator." },
+            { tool: "Security information and event management (SIEM)", short: "Collect alerts and logs for investigation.", fit: "poor", why: "A SIEM might alert on unusual backup administration, but it does not provide isolated, immutable restore points or prove that recovery works." }
+          ]
+        },
+        {
+          category: "Device management", title: "A lost tablet still has work email", setting: "A quick call with HR",
+          context: "A staff member has lost a mobile device that was never enrolled in company management.",
+          speaker: "Zsófi", role: "HR business partner", quote: "A tablet with work email was left on a train. It has no required screen lock, and IT can't erase it remotely because it isn't managed.",
+          bestTool: "Mobile device management (MDM)",
+          reply: "“Let's report the loss and secure the account now. For future devices, which company data should require managed enrollment and a screen lock?”",
+          lesson: "MDM can enforce device settings, require encryption and screen locks, and support remote lock or wipe. It works best with clear enrollment rules and identity controls for access.",
+          choices: [
+            { tool: "Mobile device management (MDM)", short: "Enforce settings and manage or erase enrolled devices.", fit: "strong", why: "MDM is the best fit for requiring a screen lock, managing device configuration, and supporting remote lock or wipe. For this lost device, the team should also follow its account and incident response process." },
+            { tool: "Full-disk encryption", short: "Protect data stored on a device if it is lost.", fit: "support", why: "Encryption can protect locally stored data, but it does not give IT the ability to enforce settings or remotely manage this unmanaged tablet. It is an important device control alongside MDM." },
+            { tool: "Multi-factor authentication (MFA)", short: "Add a second proof at sign-in.", fit: "support", why: "MFA can reduce the risk of someone using a stolen password, but it does not secure cached mail or let IT manage the lost device." }
+          ]
+        },
+        {
+          category: "Application security", title: "The website returns database errors", setting: "A product team stand-up",
+          context: "The developers need time to fix a suspected input-handling bug in a public application.",
+          speaker: "András", role: "Product manager", quote: "A researcher found that crafted inputs to our public website can trigger database error messages. The code fix may take a few days. What can reduce exposure while they work?",
+          bestTool: "Web application firewall (WAF)",
+          reply: "“Let's validate the report with the application security team and prioritize a code fix. A temporary WAF rule may help while we test it carefully.”",
+          lesson: "A WAF can filter web requests and sometimes provide temporary protection for a known issue. It is not a substitute for fixing and retesting vulnerable application code.",
+          choices: [
+            { tool: "Security information and event management (SIEM)", short: "Collect and alert on relevant application logs.", fit: "poor", why: "A SIEM can help monitor for attempts, but it does not filter the malicious request. The team needs a protective layer while the underlying code is fixed." },
+            { tool: "Web application firewall (WAF)", short: "Inspect and filter requests to a web application.", fit: "strong", why: "A carefully tested WAF rule can provide a short-term layer against the reported input pattern while developers fix the code. It should be treated as temporary protection, not the final repair." },
+            { tool: "Static application security testing (SAST)", short: "Scan source code for security issues.", fit: "support", why: "SAST can help find certain coding flaws during development, but it does not filter requests to the live application while the fix is being prepared." }
+          ]
+        },
+        {
+          category: "Data protection", title: "The laptop is missing", setting: "A manager calls the help desk",
+          context: "A company laptop containing local files has been lost while traveling.",
+          speaker: "Kata", role: "Sales director", quote: "I left my laptop on a train. It has customer proposals stored locally. The device had a login password, but I don't know whether the drive was encrypted.",
+          bestTool: "Full-disk encryption",
+          reply: "“Let's report the device as lost and follow the incident process. Do we know if full-disk encryption was enabled and whether the laptop was locked?”",
+          lesson: "Full-disk encryption protects stored data when a device is powered off or locked. A login password alone does not protect the disk if someone can remove it or access it outside the normal sign-in flow.",
+          choices: [
+            { tool: "Data loss prevention (DLP)", short: "Control sensitive data as it moves between places.", fit: "poor", why: "DLP can govern copying or sending data, but it does not encrypt files already stored on a lost laptop." },
+            { tool: "Full-disk encryption", short: "Encrypt data stored on a device.", fit: "strong", why: "Full-disk encryption is the most direct control for protecting data on a lost device, particularly when it is powered off or locked. It cannot guarantee safety if the device was already unlocked." },
+            { tool: "Mobile device management (MDM)", short: "Manage settings and remotely lock or wipe enrolled devices.", fit: "support", why: "MDM can help locate, lock, or wipe an enrolled device. Encryption protects the stored data directly and should be required on company laptops, often through device management." }
+          ]
+        },
+        {
+          category: "Network security", title: "Office laptops can reach building controls", setting: "A facilities technology review",
+          context: "The office network and a sensitive building systems network have become too closely connected.",
+          speaker: "Gergő", role: "Facilities IT coordinator", quote: "The office laptops and building control systems sit on the same flat network. If one laptop is compromised, it could reach systems that operate the building.",
+          bestTool: "Network segmentation",
+          reply: "“Which systems need to communicate with building controls? Let's map the required paths and block everything else, then test the operational impact.”",
+          lesson: "Segmentation creates boundaries between network zones and restricts unnecessary traffic. It can limit lateral movement, but rules need careful design so essential building functions keep working.",
+          choices: [
+            { tool: "Network segmentation", short: "Separate systems and restrict traffic between zones.", fit: "strong", why: "The issue is broad connectivity between different trust zones. Segmentation can restrict which systems communicate and reduce the paths an attacker could use to move laterally." },
+            { tool: "Identity and access management (IAM)", short: "Control users' identities and application permissions.", fit: "support", why: "IAM can restrict who administers building systems, but it does not separate the office and building networks or control device-to-device traffic." },
+            { tool: "Endpoint detection and response (EDR)", short: "Detect suspicious behavior on managed devices.", fit: "poor", why: "EDR can detect some suspicious activity on devices, but it does not remove the network path between office laptops and building systems." }
+          ]
+        },
+        {
+          category: "Cloud security", title: "People are using unknown file-sharing apps", setting: "A marketing planning session",
+          context: "Employees have signed up for cloud services without a consistent approval or visibility process.",
+          speaker: "Réka", role: "Marketing operations lead", quote: "Teams are sharing campaign files through several apps with personal accounts. We don't know which services are being used or whether public links are on.",
+          bestTool: "Cloud access security broker (CASB)",
+          reply: "“Which cloud services are approved, and what kind of data is being shared? Let's get visibility first, then set safe sharing rules with the teams.”",
+          lesson: "A CASB can help discover cloud app usage and apply policies to cloud services. DLP can add content-aware protection; an approved workflow and user communication help make controls workable.",
+          choices: [
+            { tool: "Cloud access security broker (CASB)", short: "Discover cloud services and govern their use.", fit: "strong", why: "The team lacks visibility into which cloud services are used and how they are configured. A CASB can help discover and govern cloud app usage and sharing." },
+            { tool: "Multi-factor authentication (MFA)", short: "Strengthen sign-in to accounts.", fit: "poor", why: "MFA can protect accounts, but it will not reveal which services people are using or whether shared files are public." },
+            { tool: "Data loss prevention (DLP)", short: "Detect or restrict sensitive data movement.", fit: "support", why: "DLP can help protect sensitive content in approved and supported services. A CASB is a stronger starting point for discovering and governing the range of cloud apps described." }
+          ]
+        },
+        {
+          category: "Remote access", title: "A vendor needs one internal application", setting: "A third-party access review",
+          context: "A supplier needs remote maintenance access, but a broad network connection would expose more than necessary.",
+          speaker: "Dávid", role: "Vendor relationship manager", quote: "A supplier needs to maintain one internal application next week. Our usual VPN gives them network access beyond that system. Can we narrow it down?",
+          bestTool: "Zero trust network access (ZTNA)",
+          reply: "“What exact application and actions does the supplier need, and for how long? Let's make access named, approved, time-limited, and scoped to that service.”",
+          lesson: "ZTNA can provide identity-aware access to specific applications rather than broad network access. It still needs strong authentication, least privilege, monitoring, and a defined end date.",
+          choices: [
+            { tool: "Virtual private network (VPN)", short: "Connect a remote device to a private network.", fit: "support", why: "A VPN can provide remote access, but a traditional broad network tunnel may expose more systems than this supplier needs. Restricting access to the single application is the key requirement." },
+            { tool: "Zero trust network access (ZTNA)", short: "Grant scoped, identity-aware access to applications.", fit: "strong", why: "ZTNA is a good fit for providing a named supplier access to a specific application without granting general access to the internal network." },
+            { tool: "Privileged access management (PAM)", short: "Control and audit privileged accounts and sessions.", fit: "support", why: "PAM can help if the maintenance requires elevated privileges. It does not, by itself, scope the supplier's network connectivity to only one application." }
+          ]
+        }
+      ];
+
+      const toolGuide = [
+        ["Multi-factor authentication (MFA)", "Identity", "Adds another proof to a sign-in, such as a security key or authenticator approval."],
+        ["Identity and access management (IAM)", "Identity", "Manages identities, app access, provisioning, deprovisioning, and access reviews."],
+        ["Privileged access management (PAM)", "Identity", "Controls and audits high-risk administrator accounts, credentials, and sessions."],
+        ["Data loss prevention (DLP)", "Data", "Detects or restricts sensitive information as it is copied, sent, uploaded, or shared."],
+        ["Full-disk encryption", "Data", "Encrypts information stored on a device, protecting it if the disk or device is lost."],
+        ["Endpoint detection and response (EDR)", "Endpoint", "Monitors endpoint behavior and supports investigation and device containment."],
+        ["Mobile device management (MDM)", "Endpoint", "Enforces settings and supports management, lock, or wipe of enrolled devices."],
+        ["Security information and event management (SIEM)", "Visibility", "Collects and correlates logs to help analysts investigate activity across systems."],
+        ["Secure email gateway", "Email", "Filters or flags phishing, malicious attachments, unsafe links, and spoofed messages."],
+        ["Vulnerability management", "Exposure", "Finds, prioritizes, tracks, and verifies remediation of known weaknesses in assets."],
+        ["Secrets scanning and management", "Application", "Detects exposed keys in code and helps store, deliver, and rotate application secrets."],
+        ["Static application security testing (SAST)", "Application", "Scans application source code for certain security flaws during development."],
+        ["Web application firewall (WAF)", "Application", "Inspects and filters requests to web applications; can offer temporary protection for some flaws."],
+        ["Backup and recovery controls", "Resilience", "Protects recovery copies and tests whether services and data can be restored."],
+        ["Network segmentation", "Network", "Separates network zones and limits which systems can communicate."],
+        ["Cloud access security broker (CASB)", "Cloud", "Discovers and governs cloud service use, configuration, and sharing."],
+        ["Virtual private network (VPN)", "Remote access", "Creates a protected connection to a private network for remote users or devices."],
+        ["Zero trust network access (ZTNA)", "Remote access", "Provides identity-aware access to specific applications rather than a broad network."]
+      ];
+
+      const introScreen = document.getElementById("introScreen");
+      const gameScreen = document.getElementById("gameScreen");
+      const endScreen = document.getElementById("endScreen");
+      const choicesEl = document.getElementById("choices");
+      const feedback = document.getElementById("feedback");
+      const guideDialog = document.getElementById("guideDialog");
+      const STORAGE_KEY = "securityConversationBestScore";
+      let state = { deck: [], index: 0, score: 0, results: [], answered: false, roundCount: 5 };
+      let bestScore = 0;
+
+      function safeLoadBest() {
+        try { bestScore = Number(localStorage.getItem(STORAGE_KEY)) || 0; } catch (error) { bestScore = 0; }
+        updateBestLabel();
+      }
+      function updateBestLabel() {
+        document.getElementById("bestScoreLabel").innerHTML = bestScore > 0 ? "Personal best: <strong>" + bestScore + "%</strong>" : "No personal best yet";
+      }
+      function shuffle(items) {
+        const copy = items.slice();
+        for (let i = copy.length - 1; i > 0; i -= 1) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const temp = copy[i]; copy[i] = copy[j]; copy[j] = temp;
+        }
+        return copy;
+      }
+      function startGame(roundCount) {
+        state = {
+          deck: shuffle(scenarios).slice(0, roundCount).map(function (scenario) {
+            return Object.assign({}, scenario, { choices: shuffle(scenario.choices) });
+          }),
+          index: 0, score: 0, results: [], answered: false, roundCount: roundCount
+        };
+        introScreen.hidden = true;
+        endScreen.hidden = true;
+        gameScreen.hidden = false;
+        renderRound();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      function setProgress() {
+        const done = state.index;
+        const total = state.deck.length;
+        const pct = Math.round((done / total) * 100);
+        document.getElementById("progressText").textContent = "Conversation " + Math.min(done + 1, total) + " of " + total;
+        document.getElementById("progressPercent").textContent = pct + "% complete";
+        document.getElementById("progressFill").style.width = pct + "%";
+        document.getElementById("progressTrack").setAttribute("aria-valuenow", String(pct));
+        document.getElementById("roundLabel").textContent = "ROUND " + String(done + 1).padStart(2, "0") + " / " + String(total).padStart(2, "0");
+      }
+      function iconForTool(tool) {
+        const letters = tool.replace(/\([^)]*\)/g, "").trim().split(/\s+/).filter(Boolean).slice(0, 2).map(function (part) { return part[0]; }).join("");
+        return letters.toUpperCase() || "IT";
+      }
+      function renderRound() {
+        const scenario = state.deck[state.index];
+        state.answered = false;
+        feedback.hidden = true;
+        document.getElementById("scenarioCategory").textContent = scenario.category;
+        document.getElementById("scenarioTitle").textContent = scenario.title;
+        document.getElementById("scenarioSetting").textContent = scenario.setting;
+        document.getElementById("scenarioContext").textContent = scenario.context;
+        document.getElementById("speakerAvatar").textContent = scenario.speaker.slice(0, 1);
+        document.getElementById("speakerName").textContent = scenario.speaker;
+        document.getElementById("speakerRole").textContent = scenario.role;
+        document.getElementById("scenarioQuote").textContent = scenario.quote;
+        document.getElementById("liveScore").textContent = String(state.score);
+        document.getElementById("scoreNote").textContent = state.results.length === 0 ? "Choose tools that address the problem at hand." : state.results.length + " conversation" + (state.results.length === 1 ? "" : "s") + " answered so far.";
+        setProgress();
+        choicesEl.innerHTML = "";
+        scenario.choices.forEach(function (choice, index) {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "tool-choice";
+          button.setAttribute("data-choice", String(index));
+          button.setAttribute("aria-label", (index + 1) + ". " + choice.tool + ". " + choice.short);
+          button.innerHTML = '<span class="tool-icon" aria-hidden="true">' + iconForTool(choice.tool) + '</span><span><strong>' + choice.tool + '</strong><small>' + choice.short + '</small></span><span class="choice-key" aria-hidden="true">' + (index + 1) + '</span>';
+          button.addEventListener("click", function () { chooseTool(index); });
+          choicesEl.appendChild(button);
+        });
+      }
+      function chooseTool(choiceIndex) {
+        if (state.answered) return;
+        const scenario = state.deck[state.index];
+        const choice = scenario.choices[choiceIndex];
+        if (!choice) return;
+        state.answered = true;
+        const points = choice.fit === "strong" ? 100 : (choice.fit === "support" ? 55 : 15);
+        state.score += points;
+        state.results.push({ scenario: scenario, choice: choice, points: points });
+        Array.from(choicesEl.querySelectorAll(".tool-choice")).forEach(function (button, index) {
+          button.disabled = true;
+          const current = scenario.choices[index];
+          if (index === choiceIndex) button.classList.add("selected");
+          if (current.tool === scenario.bestTool) button.classList.add("best-answer");
+        });
+        const fitNames = {
+          strong: ["Strong first fit", "Best match"],
+          support: ["Useful supporting layer", "Could help"],
+          poor: ["Different layer", "Not first fit"]
+        };
+        feedback.className = "feedback " + choice.fit;
+        document.getElementById("feedbackTitle").textContent = fitNames[choice.fit][0];
+        document.getElementById("fitPill").textContent = "+" + points + " points · " + fitNames[choice.fit][1];
+        document.getElementById("feedbackCopy").textContent = choice.why;
+        document.getElementById("bestFit").textContent = choice.tool === scenario.bestTool ? "You picked the strongest first tool for this situation." : "Best first fit here: " + scenario.bestTool + ".";
+        document.getElementById("replyCopy").textContent = scenario.reply;
+        document.getElementById("lessonCopy").textContent = scenario.lesson;
+        document.getElementById("liveScore").textContent = String(state.score);
+        document.getElementById("scoreNote").textContent = state.results.length + " of " + state.deck.length + " conversations answered.";
+        document.getElementById("continueButton").innerHTML = state.index === state.deck.length - 1 ? "See my debrief <span aria-hidden=\"true\">→</span>" : "Next conversation <span aria-hidden=\"true\">→</span>";
+        feedback.hidden = false;
+        window.setTimeout(function () { document.getElementById("continueButton").focus({ preventScroll: true }); }, 60);
+      }
+      function continueGame() {
+        if (!state.answered) return;
+        if (state.index < state.deck.length - 1) {
+          state.index += 1;
+          renderRound();
+          document.getElementById("gameTitle").focus({ preventScroll: true });
+        } else {
+          showDebrief();
+        }
+      }
+      function showDebrief() {
+        const percent = Math.round(state.score / state.deck.length);
+        let headline = "A solid start.";
+        let detail = "Use the review below to spot the tool families you want to practice next.";
+        if (percent >= 90) { headline = "Trusted security partner."; detail = "You matched the reported issue with a useful first control and kept the conversation practical."; }
+        else if (percent >= 72) { headline = "Strong instincts."; detail = "You recognized most of the problem types. Review the cases where a supporting tool was mistaken for the first fit."; }
+        else if (percent >= 48) { headline = "Building your toolkit."; detail = "Several tools can help in the same situation. The review will show which one addresses the main gap most directly."; }
+        else { headline = "Keep asking what problem the tool solves."; detail = "Start by naming the asset or activity at risk: identity, data, device, application, network, or recovery."; }
+        document.getElementById("endTitle").textContent = headline;
+        document.getElementById("endCopy").textContent = detail + " This is a learning exercise, not a substitute for incident response or a full risk assessment.";
+        document.getElementById("finalScore").textContent = String(percent);
+        const list = document.getElementById("resultList");
+        list.innerHTML = "";
+        state.results.forEach(function (result, index) {
+          const item = document.createElement("div");
+          item.className = "result-item";
+          const outcome = result.choice.tool === result.scenario.bestTool ? "Best first fit" : "Best first fit: " + result.scenario.bestTool;
+          item.innerHTML = '<span class="result-number">' + String(index + 1).padStart(2, "0") + '</span><span><strong>' + result.scenario.title + '</strong><small>Your choice: ' + result.choice.tool + ' · ' + outcome + '</small></span><span class="result-points">+' + result.points + '</span>';
+          list.appendChild(item);
+        });
+        if (percent > bestScore) {
+          bestScore = percent;
+          try { localStorage.setItem(STORAGE_KEY, String(bestScore)); } catch (error) {}
+          updateBestLabel();
+        }
+        gameScreen.hidden = true;
+        endScreen.hidden = false;
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      function showHome() {
+        gameScreen.hidden = true;
+        endScreen.hidden = true;
+        introScreen.hidden = false;
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      function renderGuide(query) {
+        const normalized = (query || "").trim().toLowerCase();
+        const list = document.getElementById("guideList");
+        const filtered = toolGuide.filter(function (item) { return (item[0] + " " + item[1] + " " + item[2]).toLowerCase().includes(normalized); });
+        list.innerHTML = "";
+        if (!filtered.length) {
+          const empty = document.createElement("p");
+          empty.className = "guide-empty";
+          empty.textContent = "No tools match that search.";
+          list.appendChild(empty);
+          return;
+        }
+        filtered.forEach(function (tool) {
+          const card = document.createElement("article");
+          card.className = "guide-item";
+          card.innerHTML = "<strong>" + tool[0] + "</strong><small>" + tool[1] + "</small><p>" + tool[2] + "</p>";
+          list.appendChild(card);
+        });
+      }
+
+      document.querySelectorAll("[data-rounds]").forEach(function (button) {
+        button.addEventListener("click", function () { startGame(Number(button.getAttribute("data-rounds"))); });
+      });
+      document.getElementById("continueButton").addEventListener("click", continueGame);
+      document.getElementById("playAgain").addEventListener("click", function () { startGame(state.roundCount || 10); });
+      document.getElementById("backHome").addEventListener("click", showHome);
+      document.getElementById("openGuide").addEventListener("click", function () {
+        renderGuide("");
+        guideDialog.showModal();
+        document.getElementById("guideSearch").focus();
+      });
+      document.getElementById("closeGuide").addEventListener("click", function () { guideDialog.close(); });
+      document.getElementById("guideSearch").addEventListener("input", function (event) { renderGuide(event.target.value); });
+      guideDialog.addEventListener("click", function (event) { if (event.target === guideDialog) guideDialog.close(); });
+      document.addEventListener("keydown", function (event) {
+        if (gameScreen.hidden || state.answered || !/^[123]$/.test(event.key)) return;
+        const active = document.activeElement;
+        if (active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA")) return;
+        chooseTool(Number(event.key) - 1);
+      });
+      safeLoadBest();
+    }());
+  </script>
+</body>
+</html>
