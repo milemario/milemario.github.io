@@ -1,858 +1,287 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#071b2d">
-  <meta name="description" content="Practice choosing the right cybersecurity control in realistic workplace conversations.">
-  <title>Security in Conversation · A Cybersecurity Game</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
-    :root {
-      color-scheme: dark;
-      --bg-dark: #0d0f12;
-      --panel-bg: #16191e;
-      --panel-raised: #1d2229;
-      --border-hard: #3a414b;
-      --text-main: #e5e9f0;
-      --text-muted: #a6adb8;
-      --text-dim: #77808c;
-      --accent-amber: #eab308;
-      --accent-green: #9aa98e;
-      --ink: #111315;
-    }
-    * { box-sizing: border-box; }
-    html { min-height:100%; background:var(--bg-dark); scroll-behavior:smooth; }
-    body {
-      min-width:320px; min-height:100vh; margin:0; color:var(--text-main);
-      background:var(--bg-dark); font-family:"Space Grotesk",Arial,sans-serif; line-height:1.55;
-    }
-    body::before {
-      content:""; position:fixed; inset:0; pointer-events:none; z-index:5; opacity:.035;
-      background:repeating-linear-gradient(0deg,rgba(255,255,255,.35) 0,rgba(255,255,255,.35) 1px,transparent 1px,transparent 4px);
-    }
-    button,a,input { font:inherit; }
-    button { color:inherit; }
-    a { color:inherit; }
-    button:focus-visible,a:focus-visible,input:focus-visible { outline:2px solid var(--accent-amber); outline-offset:3px; }
-    [hidden] { display:none !important; }
-    .shell { width:min(1180px,calc(100% - 40px)); margin:0 auto; }
-    .topbar { min-height:74px; display:flex; align-items:center; justify-content:space-between; gap:16px; border-bottom:1px solid var(--border-hard); }
-    .brand { display:inline-flex; align-items:center; gap:12px; text-decoration:none; }
-    .brand-mark { width:38px; height:38px; display:grid; place-items:center; border:1px solid var(--text-main); color:var(--accent-amber); background:var(--panel-bg); font:700 .8rem "IBM Plex Mono",monospace; }
-    .brand strong,.brand small { display:block; }
-    .brand strong { font-size:.94rem; letter-spacing:-.02em; }
-    .brand small { margin-top:1px; color:var(--text-muted); font:500 .65rem "IBM Plex Mono",monospace; letter-spacing:.08em; text-transform:uppercase; }
-    .top-actions { display:flex; align-items:center; gap:8px; }
-    .quiet-button { min-height:37px; display:inline-flex; align-items:center; gap:7px; padding:7px 10px; border:1px solid var(--border-hard); border-radius:0; color:var(--text-muted); background:var(--panel-bg); text-decoration:none; cursor:pointer; transition:background .08s ease,color .08s ease,transform .08s ease; font:500 .72rem "IBM Plex Mono",monospace; }
-    .quiet-button:hover { color:var(--bg-dark); background:var(--text-main); transform:translate(-1px,-1px); box-shadow:3px 3px 0 var(--accent-amber); }
-    main { padding:34px 0 58px; }
-    .eyebrow { margin:0 0 12px; color:var(--accent-amber); font:700 .7rem "IBM Plex Mono",monospace; letter-spacing:.12em; text-transform:uppercase; }
-    .hero { display:grid; grid-template-columns:minmax(0,1.18fr) minmax(260px,.82fr); align-items:center; gap:36px; padding:22px 0 36px; }
-    h1 { max-width:760px; margin:0; font-size:clamp(2.65rem,6.5vw,5.1rem); line-height:.99; letter-spacing:-.065em; }
-    .hero-copy { max-width:680px; margin:20px 0 0; color:var(--text-muted); font-size:clamp(1rem,1.8vw,1.12rem); line-height:1.7; }
-    .hero-copy strong { color:var(--text-main); font-weight:700; }
-    .hero-visual { min-height:275px; display:flex; flex-direction:column; justify-content:space-between; padding:23px; border:2px solid var(--border-hard); border-radius:0; background:var(--panel-bg); box-shadow:7px 7px 0 #000; }
-    .field-label,.field-footer { color:var(--text-dim); font:700 .68rem "IBM Plex Mono",monospace; letter-spacing:.1em; text-transform:uppercase; }
-    .field-title { max-width:330px; margin:auto 0; font-size:clamp(1.55rem,3vw,2.15rem); line-height:1.14; letter-spacing:-.04em; }
-    .field-title span { color:var(--accent-amber); }
-    .field-rule { width:100%; height:1px; background:var(--border-hard); }
-    .start-card { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-top:24px; }
-    .start-button { min-height:48px; display:inline-flex; align-items:center; justify-content:center; gap:9px; padding:11px 15px; border:1px solid var(--accent-amber); border-radius:0; color:#111315; background:var(--accent-amber); font-weight:700; cursor:pointer; box-shadow:4px 4px 0 #000; transition:transform .08s ease,background .08s ease; }
-    .start-button:hover { transform:translate(-2px,-2px); box-shadow:6px 6px 0 #000; }
-    .start-button small { font:500 .68rem "IBM Plex Mono",monospace; }
-    .start-button.secondary { color:var(--text-main); border-color:var(--text-main); background:var(--panel-bg); box-shadow:4px 4px 0 #000; }
-    .best-score { color:var(--text-dim); font:500 .73rem "IBM Plex Mono",monospace; }
-    .best-score strong { color:var(--accent-amber); }
-    .how-panel { margin-top:24px; padding:15px 16px; border:1px solid var(--border-hard); border-radius:0; background:transparent; }
-    .how-panel strong { display:block; margin-bottom:4px; color:var(--text-main); font:700 .73rem "IBM Plex Mono",monospace; letter-spacing:.08em; text-transform:uppercase; }
-    .how-panel p { margin:0; max-width:700px; color:var(--text-muted); font-size:.82rem; }
-    .game-heading { display:flex; justify-content:space-between; align-items:end; gap:20px; margin:0 0 13px; }
-    .game-heading h2 { margin:0; font-size:clamp(1.35rem,3vw,1.8rem); letter-spacing:-.04em; }
-    .round-label { color:var(--accent-amber); font:700 .72rem "IBM Plex Mono",monospace; letter-spacing:.08em; white-space:nowrap; }
-    .progress-wrap { margin:0 0 15px; }
-    .progress-meta { display:flex; justify-content:space-between; gap:12px; margin-bottom:5px; color:var(--text-muted); font:500 .66rem "IBM Plex Mono",monospace; }
-    .progress-track { height:3px; overflow:hidden; background:var(--border-hard); }
-    .progress-fill { width:0; height:100%; background:var(--accent-amber); transition:width .2s linear; }
-    .game-layout { display:block; }
-    .case-panel,.coach-panel,.end-panel { border:0; border-radius:0; background:transparent; box-shadow:none; overflow:visible; }
-    .game-viewport { position:relative; isolation:isolate; width:100%; max-width:1100px; aspect-ratio:16/9; margin:16px auto 20px; overflow:hidden; border:2px solid var(--border-hard); background:#777e72; box-shadow:8px 8px 0 #000; }
-    .scene-art { position:absolute; inset:0; z-index:-2; overflow:hidden; background:#777e72; }
-    .scene-art svg { display:block; width:100%; height:100%; }
-    .grit-overlay { position:absolute; inset:0; z-index:1; pointer-events:none; opacity:.15; background:repeating-linear-gradient(0deg,rgba(0,0,0,.22) 0,rgba(0,0,0,.22) 1px,transparent 1px,transparent 3px); }
-    .scene-topline { position:absolute; z-index:2; top:16px; left:16px; right:16px; display:flex; justify-content:space-between; align-items:start; gap:14px; }
-    .scene-topline > div { max-width:70%; padding:10px 12px; border:1px solid rgba(229,233,240,.75); background:rgba(13,15,18,.9); box-shadow:4px 4px 0 #000; }
-    .case-category { display:block; color:var(--accent-amber); font:700 .65rem "IBM Plex Mono",monospace; letter-spacing:.1em; text-transform:uppercase; }
-    .scene-topline h3 { margin:4px 0 0; font-size:clamp(.95rem,2vw,1.25rem); line-height:1.2; }
-    .setting { max-width:190px; padding:8px 9px; border:1px solid rgba(229,233,240,.65); color:var(--text-main); background:rgba(13,15,18,.9); font:500 .65rem "IBM Plex Mono",monospace; text-align:right; }
-    .dialogue-hud { position:absolute; z-index:3; left:20px; right:20px; bottom:20px; display:grid; grid-template-columns:1.4fr 1fr; gap:17px; padding:16px; border:2px solid var(--text-main); border-radius:0; background:rgba(22,25,30,.96); box-shadow:6px 6px 0 #000; }
-    .dialogue-copy { min-width:0; display:flex; flex-direction:column; justify-content:flex-end; }
-    .scenario-context { margin:0 0 8px; color:var(--text-muted); font-size:.74rem; line-height:1.45; }
-    .speaker-row { display:flex; align-items:center; gap:9px; margin:0 0 7px; }
-    .speaker-badge { display:inline-block; padding:3px 7px; color:#111315; background:var(--accent-amber); font:700 .68rem "IBM Plex Mono",monospace; letter-spacing:.05em; text-transform:uppercase; }
-    .speaker-name { color:var(--text-main); font:700 .77rem "IBM Plex Mono",monospace; text-transform:uppercase; }
-    .speaker-role { margin-left:7px; color:var(--text-dim); font:500 .68rem "IBM Plex Mono",monospace; }
-    .quote { margin:0; padding:0 0 0 12px; border:0; border-left:2px solid var(--accent-amber); border-radius:0; color:var(--text-main); background:transparent; font-size:clamp(.92rem,1.45vw,1.04rem); line-height:1.48; }
-    .quote::before { content:none; }
-    .question { margin:12px 0 3px; color:var(--accent-amber); font:700 .72rem "IBM Plex Mono",monospace; text-transform:uppercase; }
-    .choice-hint { margin:0; color:var(--text-dim); font:500 .65rem "IBM Plex Mono",monospace; }
-    .choices-stack { display:flex; flex-direction:column; justify-content:center; gap:7px; padding-left:15px; border-left:1px solid var(--border-hard); }
-    .tool-choice { width:100%; min-height:48px; display:grid; grid-template-columns:43px minmax(0,1fr); align-items:center; gap:9px; padding:8px 9px; border:1px solid var(--border-hard); border-radius:0; color:var(--text-main); background:var(--bg-dark); text-align:left; cursor:pointer; transition:transform .08s ease,background .08s ease,color .08s ease; }
-    .tool-choice:hover:not(:disabled) { transform:translate(-2px,-2px); color:#111315; background:var(--text-main); box-shadow:3px 3px 0 var(--accent-amber); }
-    .tool-choice:disabled { cursor:default; opacity:.72; }
-    .tool-choice.selected { border-color:var(--accent-amber); }
-    .tool-choice.best-answer { background:#263026; }
-    .choice-letter { color:var(--accent-amber); font:700 .65rem "IBM Plex Mono",monospace; }
-    .tool-choice strong { display:block; font:700 .72rem "IBM Plex Mono",monospace; line-height:1.25; }
-    .tool-choice small { display:block; margin-top:2px; color:var(--text-muted); font-size:.7rem; line-height:1.3; }
-    .tool-choice:hover:not(:disabled) small { color:#25282d; }
-    .abbr-token { color:var(--accent-amber); border-bottom:1px dashed currentColor; font-family:"IBM Plex Mono",monospace; text-decoration:none; cursor:help; }
-    .tool-choice:hover:not(:disabled) .abbr-token { color:#111315; }
-    .feedback { position:absolute; z-index:4; left:20px; right:20px; bottom:20px; max-height:76%; display:grid; grid-template-columns:1.1fr .9fr; gap:10px 15px; overflow:auto; padding:16px; border:2px solid var(--text-main); border-radius:0; color:var(--text-main); background:rgba(22,25,30,.97); box-shadow:6px 6px 0 #000; }
-    .feedback-top { grid-column:1/-1; display:flex; align-items:center; justify-content:space-between; gap:12px; padding-bottom:8px; border-bottom:1px solid var(--border-hard); }
-    .feedback-title { margin:0; font-size:1rem; }
-    .fit-pill { padding:4px 7px; border:1px solid var(--border-hard); color:var(--accent-amber); font:700 .62rem "IBM Plex Mono",monospace; text-transform:uppercase; }
-    .feedback-copy { grid-column:1; margin:0; color:var(--text-muted); font-size:.8rem; }
-    .best-fit { grid-column:1/-1; margin:0; color:var(--accent-amber); font:700 .69rem "IBM Plex Mono",monospace; }
-    .reply-box,.lesson-box { padding:10px; border:1px solid var(--border-hard); border-radius:0; background:#111315; }
-    .reply-box small,.lesson-box small { display:block; margin-bottom:4px; color:var(--accent-amber); font:700 .62rem "IBM Plex Mono",monospace; letter-spacing:.06em; text-transform:uppercase; }
-    .reply-box p,.lesson-box p { margin:0; color:var(--text-main); font-size:.76rem; line-height:1.45; }
-    .lesson-box p { color:var(--text-muted); }
-    .continue-row { grid-column:1/-1; display:flex; justify-content:flex-end; }
-    .continue-button { min-height:38px; display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border:1px solid var(--accent-amber); border-radius:0; color:#111315; background:var(--accent-amber); font:700 .7rem "IBM Plex Mono",monospace; cursor:pointer; }
-    .continue-button:hover { transform:translate(-1px,-1px); box-shadow:3px 3px 0 #000; }
-    .game-viewport[data-answered="true"] .dialogue-hud { display:none; }
-    .coach-panel { display:grid; grid-template-columns:1fr 1fr 1.4fr; align-items:center; gap:14px; width:100%; margin-top:22px; padding:12px 0; border-top:1px solid var(--border-hard); border-bottom:1px solid var(--border-hard); }
-    .score-label,.coach-title { color:var(--text-dim); font:700 .65rem "IBM Plex Mono",monospace; letter-spacing:.08em; text-transform:uppercase; }
-    .score-number { display:flex; align-items:baseline; gap:5px; margin:0; }
-    .score-number strong { color:var(--accent-amber); font:700 1.55rem "IBM Plex Mono",monospace; }
-    .score-number span,.score-note { color:var(--text-muted); font:500 .65rem "IBM Plex Mono",monospace; }
-    .score-note { margin:0; }
-    .side-divider { display:none; }
-    .coach-title { margin:0 0 5px; }
-    .coach-copy { margin:0; color:var(--text-muted); font-size:.75rem; }
-    .tool-pills { display:flex; flex-wrap:wrap; gap:5px; margin-top:6px; }
-    .tool-pill { padding:3px 6px; border:1px solid var(--border-hard); color:var(--text-muted); font:500 .58rem "IBM Plex Mono",monospace; }
-    .keyboard-note { color:var(--text-dim); font:500 .62rem "IBM Plex Mono",monospace; }
-    .end-panel { padding:20px 0; }
-    .end-top { display:grid; grid-template-columns:1fr auto; align-items:center; gap:22px; padding:20px; border:2px solid var(--border-hard); background:var(--panel-bg); box-shadow:6px 6px 0 #000; }
-    .end-top h2 { margin:0; font-size:clamp(1.8rem,4vw,3rem); line-height:1; letter-spacing:-.055em; }
-    .end-top p { max-width:680px; margin:11px 0 0; color:var(--text-muted); }
-    .final-score { width:112px; height:112px; display:grid; place-content:center; border:2px solid var(--accent-amber); border-radius:0; background:#111315; text-align:center; }
-    .final-score strong { color:var(--accent-amber); font:700 2.25rem "IBM Plex Mono",monospace; line-height:1; }
-    .final-score span { margin-top:5px; color:var(--text-dim); font:700 .58rem "IBM Plex Mono",monospace; letter-spacing:.08em; text-transform:uppercase; }
-    .result-heading { margin:22px 0 10px; font:700 .75rem "IBM Plex Mono",monospace; letter-spacing:.08em; text-transform:uppercase; }
-    .result-list { display:grid; gap:7px; }
-    .result-item { display:grid; grid-template-columns:30px minmax(0,1fr) auto; align-items:center; gap:10px; padding:10px; border:1px solid var(--border-hard); border-radius:0; background:var(--panel-bg); }
-    .result-number,.result-points { color:var(--accent-amber); font:700 .68rem "IBM Plex Mono",monospace; }
-    .result-item strong { display:block; font-size:.8rem; }
-    .result-item small { display:block; margin-top:2px; color:var(--text-muted); font-size:.7rem; }
-    .end-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
-    footer { padding:0 0 24px; color:var(--text-dim); text-align:center; font:500 .63rem "IBM Plex Mono",monospace; }
-    dialog { width:min(760px,calc(100% - 26px)); max-height:min(82vh,780px); padding:0; border:2px solid var(--text-main); border-radius:0; color:var(--text-main); background:var(--panel-bg); box-shadow:8px 8px 0 #000; }
-    dialog::backdrop { background:rgba(0,0,0,.8); }
-    .dialog-head { position:sticky; top:0; z-index:2; display:flex; justify-content:space-between; align-items:start; gap:14px; padding:17px 18px; border-bottom:1px solid var(--border-hard); background:var(--panel-bg); }
-    .dialog-head h2 { margin:0; font-size:1.18rem; }
-    .dialog-head p { margin:3px 0 0; color:var(--text-muted); font-size:.76rem; }
-    .close-button { width:34px; height:34px; border:1px solid var(--border-hard); border-radius:0; background:#111315; color:var(--text-main); cursor:pointer; font:500 1.1rem "IBM Plex Mono",monospace; }
-    .guide-search { width:calc(100% - 36px); margin:14px 18px 0; padding:10px; border:1px solid var(--border-hard); border-radius:0; background:#0d0f12; color:var(--text-main); }
-    .guide-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; padding:13px 18px 18px; }
-    .guide-item { padding:11px; border:1px solid var(--border-hard); border-radius:0; background:#111315; }
-    .guide-item strong { display:block; font-size:.8rem; }
-    .guide-item small { display:block; margin:3px 0 5px; color:var(--accent-amber); font:700 .6rem "IBM Plex Mono",monospace; letter-spacing:.07em; text-transform:uppercase; }
-    .guide-item p { margin:0; color:var(--text-muted); font-size:.72rem; line-height:1.45; }
-    .guide-empty { grid-column:1/-1; color:var(--text-muted); font-size:.8rem; }
-    @media (max-width:820px) {
-      .shell { width:min(100% - 28px,1180px); }
-      .hero { grid-template-columns:1fr minmax(220px,.7fr); gap:20px; }
-      .game-viewport { aspect-ratio:16/10; }
-      .dialogue-hud { left:14px; right:14px; bottom:14px; gap:12px; padding:12px; }
-      .tool-choice { min-height:43px; padding:7px; }
-      .coach-panel { grid-template-columns:1fr 1fr; }
-      .keyboard-note { grid-column:1/-1; }
-    }
-    @media (max-width:620px) {
-      .shell { width:calc(100% - 22px); }
-      .topbar { min-height:64px; }
-      .brand-mark { width:34px; height:34px; }
-      .brand strong { font-size:.8rem; }
-      .brand small { font-size:.56rem; }
-      .top-actions .quiet-button span:last-child { display:none; }
-      main { padding-top:24px; }
-      .hero { grid-template-columns:1fr; gap:19px; padding-top:10px; }
-      .hero-visual { min-height:175px; padding:16px; }
-      .start-card { gap:8px; }
-      .start-button { min-height:44px; padding:9px 10px; font-size:.82rem; }
-      .best-score { flex-basis:100%; }
-      .game-heading { align-items:start; flex-direction:column; gap:4px; }
-      .game-heading h2 { font-size:1.35rem; }
-      .game-viewport { min-height:calc(100svh - 210px); aspect-ratio:auto; }
-      .scene-topline { top:10px; left:10px; right:10px; gap:7px; }
-      .scene-topline > div { max-width:75%; padding:7px 8px; }
-      .scene-topline h3 { font-size:.88rem; }
-      .setting { max-width:110px; padding:6px; font-size:.55rem; }
-      .dialogue-hud { display:block; left:10px; right:10px; bottom:10px; max-height:70%; overflow:auto; padding:11px; }
-      .scenario-context { margin-bottom:5px; font-size:.67rem; }
-      .speaker-row { margin-bottom:5px; }
-      .speaker-badge { padding:2px 5px; font-size:.58rem; }
-      .speaker-name { font-size:.64rem; }
-      .speaker-role { font-size:.58rem; }
-      .quote { padding-left:8px; font-size:.82rem; line-height:1.4; }
-      .question { margin-top:9px; font-size:.62rem; }
-      .choice-hint { font-size:.58rem; }
-      .choices-stack { gap:5px; margin-top:8px; padding:0; border:0; }
-      .tool-choice { min-height:40px; grid-template-columns:37px minmax(0,1fr); }
-      .tool-choice strong { font-size:.64rem; }
-      .tool-choice small { font-size:.62rem; }
-      .choice-letter { font-size:.57rem; }
-      .feedback { left:10px; right:10px; bottom:10px; max-height:78%; display:block; padding:11px; }
-      .feedback-top { margin-bottom:8px; }
-      .feedback-copy,.best-fit,.reply-box,.lesson-box { margin-top:8px; }
-      .reply-box,.lesson-box { padding:8px; }
-      .reply-box p,.lesson-box p,.feedback-copy { font-size:.7rem; }
-      .fit-pill { font-size:.53rem; }
-      .coach-panel { grid-template-columns:1fr; gap:8px; margin-top:15px; }
-      .tool-pills { margin-top:5px; }
-      .coach-panel .keyboard-note { grid-column:auto; }
-      .end-top { grid-template-columns:1fr; gap:15px; padding:15px; }
-      .final-score { width:84px; height:84px; }
-      .final-score strong { font-size:1.7rem; }
-      .guide-list { grid-template-columns:1fr; }
-      .result-item { grid-template-columns:24px minmax(0,1fr) auto; gap:7px; }
-    }
-    @media (prefers-reduced-motion:reduce) {
-      *,*::before,*::after { scroll-behavior:auto !important; transition:none !important; animation:none !important; }
-    }
-      .feedback[hidden] { display:none !important; }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#1b1a17">
+<meta name="description" content="A retro browser RPG about solving practical cybersecurity problems.">
+<title>Sec-Quest · Security Guild RPG</title>
+<style>
+:root{color-scheme:light;--stone:#1b1a17;--navy:#1a1e24;--paper:#e8dcb8;--paper2:#f0e8d2;--paper3:#c8b892;--ink:#23190f;--gold:#9e7b3b;--gold2:#d3b46b;--red:#7a1c1c;--green:#1e4d2b;--muted:#655c4a;--line:#9d8b68}
+*{box-sizing:border-box}html{min-height:100%;background:var(--stone)}body{min-width:320px;min-height:100vh;margin:0;padding:14px;background:var(--stone);color:var(--ink);font:15px/1.45 Georgia,"Times New Roman",serif}button,input{font:inherit}button{color:inherit}button:focus-visible,input:focus-visible{outline:3px solid #b03026;outline-offset:2px}[hidden]{display:none!important}.page{width:min(1240px,100%);margin:auto}
+.topbar{display:grid;grid-template-columns:minmax(220px,1fr) minmax(230px,360px) auto;align-items:center;gap:16px;margin-bottom:12px;padding:12px 14px;border:4px ridge var(--gold);color:var(--paper);background:var(--navy);box-shadow:4px 4px #000}
+.brand{display:flex;align-items:center;gap:11px;min-width:0}.seal{flex:0 0 46px;height:46px;display:grid;place-items:center;border:3px ridge var(--gold2);color:var(--gold2);background:#111315;font:bold 11px Verdana,Tahoma,sans-serif;letter-spacing:.08em;text-align:center}.brand h1{margin:0;font-size:clamp(1.1rem,2vw,1.55rem);line-height:1}.brand p{margin:4px 0 0;color:#c6b995;font:10px Verdana,Tahoma,sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.ledger{min-width:0;padding-left:14px;border-left:1px solid #65605a}.ledger-head{display:flex;justify-content:space-between;gap:8px;color:#d8cba9;font:bold 10px Verdana,Tahoma,sans-serif;letter-spacing:.07em;text-transform:uppercase}.ledger-head strong{color:var(--gold2);white-space:nowrap}.bar{height:10px;margin-top:6px;border:1px solid #74694d;background:#0c0d0d}.bar i{display:block;width:0;height:100%;background:var(--gold2)}
+.actions{display:flex;justify-content:flex-end;gap:7px}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:35px;padding:7px 9px;border:2px outset var(--gold);color:var(--ink);background:var(--paper3);font:bold 10px Verdana,Tahoma,sans-serif;letter-spacing:.04em;text-transform:uppercase;cursor:pointer}.btn:hover:not(:disabled){color:var(--red);background:var(--paper2)}.btn:active:not(:disabled){border-style:inset}.btn:disabled{opacity:.5;cursor:not-allowed}.btn.primary{border-color:#d0ad59;background:#d8bd78}.btn.dark{border-color:#77705f;color:var(--paper);background:#232831}
+.layout{display:grid;grid-template-columns:220px minmax(0,1fr) 220px;gap:12px;align-items:start}.panel{min-width:0;padding:12px;border:4px ridge var(--gold);background:var(--paper);box-shadow:3px 3px #000}.panel-title{margin:0 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line);font:bold 11px Verdana,Tahoma,sans-serif;letter-spacing:.1em;text-transform:uppercase}
+.small{color:var(--muted);font:bold 9px Verdana,Tahoma,sans-serif;letter-spacing:.06em;text-transform:uppercase}.char-name{margin:0 0 2px;font-size:18px}.level{margin:0 0 9px;color:var(--muted);font:10px Verdana,Tahoma,sans-serif}.xp{height:7px;border:1px solid var(--line);background:#b9a77f}.xp i{display:block;width:0;height:100%;background:#668052}.xp-caption{display:flex;justify-content:space-between;margin-top:3px;color:var(--muted);font:9px Verdana,Tahoma,sans-serif}.purse{margin:10px 0;padding:7px;border:2px ridge var(--gold);background:#d9c99f}.purse span{display:block;color:var(--muted);font:bold 9px Verdana,Tahoma,sans-serif;text-transform:uppercase}.purse strong{display:block;margin-top:2px;font:bold 17px Georgia,serif}.stats{display:grid;gap:3px;margin:6px 0}.stat{display:grid;grid-template-columns:1fr 28px 25px;gap:4px;align-items:center;padding:4px 0;border-bottom:1px dotted #aa9872}.stat dt{font:bold 10px Verdana,Tahoma,sans-serif}.stat dd{margin:0;text-align:right;font:bold 11px "Courier New",monospace}.plus{width:23px;height:22px;padding:0;border:1px outset var(--gold);background:#dfd0a9;font:bold 14px Verdana,sans-serif;cursor:pointer}.plus:disabled{visibility:hidden}.points{min-height:20px;color:var(--green);font:bold 9px Verdana,Tahoma,sans-serif}.decoder{margin-top:8px;padding:7px;border:1px solid var(--line);background:#ded0aa}.decoder strong{display:block;font:bold 9px Verdana,Tahoma,sans-serif;text-transform:uppercase}.decoder p{margin:4px 0 0;color:var(--muted);font:9px/1.35 Verdana,Tahoma,sans-serif}
+.scene{padding:12px 14px}.scene-head{display:flex;justify-content:space-between;gap:8px;margin-bottom:8px;color:var(--muted);font:bold 9px Verdana,Tahoma,sans-serif;letter-spacing:.08em;text-transform:uppercase}.zone{padding:4px 7px;border:1px solid var(--gold);color:var(--ink);background:#d9c89d}.scene-num{text-align:right}
+.portrait{width:min(250px,100%);aspect-ratio:1;margin:0 auto 6px;overflow:hidden;border:5px ridge var(--gold);background:#20262b;box-shadow:2px 2px #000}.portrait svg{width:100%;height:100%;display:block}.caption{min-height:39px;margin-bottom:9px;text-align:center}.caption strong{display:block;font-size:17px;line-height:1.1}.caption span{display:block;margin-top:3px;color:var(--muted);font:9px Verdana,Tahoma,sans-serif;letter-spacing:.06em;text-transform:uppercase}
+.opponent{margin-bottom:9px;padding:7px 9px;border:2px ridge #8e7951;background:#d6c69c}.opp-head{display:flex;justify-content:space-between;gap:8px;font:bold 9px Verdana,Tahoma,sans-serif;text-transform:uppercase}.opp-head span:last-child{text-align:right}.hp{height:9px;margin-top:5px;border:1px solid #584a36;background:#b2a37e}.hp i{display:block;height:100%;background:var(--red)}.hp.player i{background:var(--green)}.turn{display:flex;justify-content:space-between;gap:6px;margin-top:4px;color:var(--muted);font:9px Verdana,Tahoma,sans-serif}.timer{margin-top:6px;color:var(--red);font:bold 10px Verdana,Tahoma,sans-serif}
+.dialog{padding:11px;border:3px ridge #867148;color:var(--paper);background:var(--navy);box-shadow:inset 0 0 0 1px #101318}.kicker{margin:0 0 5px;color:var(--gold2);font:bold 9px Verdana,Tahoma,sans-serif;letter-spacing:.1em;text-transform:uppercase}.dialog h2{margin:0 0 7px;color:#f2e7c8;font-size:19px;line-height:1.2}.dialog p{margin:0;color:#e6dcc3;font-size:13px;line-height:1.5}.dialog .note{margin-top:8px;color:#c5b99c;font-size:11px}.callout,.mission{margin-top:9px;padding:9px;border-left:3px solid var(--gold2);color:#e6dcc3;background:#222832;font-size:11px}.mission{border:1px solid #706346}.mission b{display:block;margin-bottom:4px;color:var(--gold2);font:bold 9px Verdana,Tahoma,sans-serif;letter-spacing:.08em;text-transform:uppercase}.choices{display:grid;gap:6px;margin-top:10px}.choice{width:100%;display:grid;grid-template-columns:26px 1fr;gap:7px;align-items:start;padding:7px;border:2px outset var(--gold);color:var(--ink);background:var(--paper3);text-align:left;cursor:pointer}.choice:hover:not(:disabled){background:var(--paper2);color:var(--red)}.choice:disabled{opacity:.55;cursor:not-allowed}.choice.crossed{text-decoration:line-through;color:#706958;background:#bbb39e}.key{padding:3px 2px;border:1px solid #897548;color:#654b1d;text-align:center;font:bold 9px "Courier New",monospace}.choice strong{display:block;overflow-wrap:anywhere;font:bold 11px/1.3 Verdana,Tahoma,sans-serif}.choice small{display:block;margin-top:3px;color:#4e473a;font:10px/1.35 Verdana,Tahoma,sans-serif}.hint{margin-top:7px!important;color:#c3b99f!important;font:9px Verdana,Tahoma,sans-serif!important}
+.feedback{margin-top:9px;padding:9px;border:2px ridge #a58a50;color:var(--ink);background:#dfd0a7}.feedback b{color:var(--red);font:bold 9px Verdana,Tahoma,sans-serif;letter-spacing:.07em;text-transform:uppercase}.feedback p{margin-top:5px;color:#463c2d;font-size:11px}.numbers{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}.numbers span{padding:4px 5px;border:1px solid var(--line);background:#cdbb8d;font:bold 9px Verdana,Tahoma,sans-serif}.row{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}.report-list{display:grid;gap:4px;margin:9px 0 0;padding:0;list-style:none}.report-list li{display:flex;justify-content:space-between;gap:8px;padding:6px 7px;border:1px solid #756748;color:#efe4c8;background:#222832;font:10px Verdana,Tahoma,sans-serif}.report-list strong{color:var(--gold2)}
+.map-summary{margin:0 0 9px;color:var(--muted);font:9px/1.35 Verdana,Tahoma,sans-serif}.map-group{margin-top:9px}.map-group h3{margin:0 0 5px;padding-bottom:4px;border-bottom:1px solid #aa9872;font:bold 9px Verdana,Tahoma,sans-serif;letter-spacing:.08em;text-transform:uppercase}.map-list{display:grid;gap:4px}.map-button{width:100%;display:grid;grid-template-columns:1fr auto;gap:4px;align-items:center;padding:6px;border:1px solid #9f8a60;color:var(--ink);background:#d8c79c;text-align:left;cursor:pointer}.map-button:hover:not(:disabled){background:var(--paper2);color:var(--red)}.map-button:disabled{opacity:.55;cursor:not-allowed}.map-button.current{outline:2px solid var(--red);outline-offset:-2px}.map-name{font:bold 9px Verdana,Tahoma,sans-serif}.map-status{color:#62553e;font:8px "Courier New",monospace;text-align:right}.map-button.boss{background:#cbb988}.map-button.unlocked{border-color:#773333}.map-tools{display:grid;gap:5px;margin-top:10px;padding-top:8px;border-top:1px solid #aa9872}.map-tools .btn{width:100%}.bank-note{margin:5px 0 0;color:var(--muted);font:8px/1.35 Verdana,Tahoma,sans-serif}
+footer{padding:11px 4px 4px;color:#c2b89f;font:9px Verdana,Tahoma,sans-serif;text-align:center}#toast{position:fixed;right:16px;bottom:16px;z-index:5;max-width:min(350px,calc(100vw - 32px));padding:9px 11px;border:2px ridge var(--gold);color:var(--paper);background:var(--navy);box-shadow:4px 4px #000;font:11px Verdana,Tahoma,sans-serif}
+dialog{width:min(820px,calc(100% - 24px));max-height:86vh;padding:0;border:4px ridge var(--gold);color:var(--ink);background:var(--paper);box-shadow:8px 8px #000}dialog::backdrop{background:rgba(0,0,0,.78)}.dialog-head{position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;gap:10px;padding:11px;border-bottom:2px ridge var(--gold);background:#d9c99f}.dialog-head h2{margin:0;font-size:20px}.dialog-head p{margin:3px 0 0;color:var(--muted);font:10px Verdana,Tahoma,sans-serif}.search{display:block;width:calc(100% - 22px);margin:11px;padding:8px;border:2px inset var(--gold);color:var(--ink);background:var(--paper2)}.guide-meta{padding:0 11px;color:var(--muted);font:9px Verdana,Tahoma,sans-serif}.guide{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;padding:9px 11px 13px}.entry{min-width:0;padding:7px;border:1px solid #a28d60;background:#dfd0a7}.entry strong{display:block;overflow-wrap:anywhere;font:bold 10px/1.35 Verdana,Tahoma,sans-serif}.entry small{display:block;margin-top:3px;color:#6b5425;font:bold 8px Verdana,Tahoma,sans-serif;letter-spacing:.06em;text-transform:uppercase}.entry p{margin:4px 0 0;color:#514735;font:10px/1.4 Verdana,Tahoma,sans-serif}
+@media(max-width:900px){body{padding:9px}.topbar{grid-template-columns:1fr minmax(200px,300px)}.actions{grid-column:1/-1;justify-content:flex-start}.layout{grid-template-columns:185px minmax(0,1fr)}.map-panel{grid-column:1/-1}.map-content{display:grid;grid-template-columns:1fr 1fr;gap:11px}.map-tools{grid-column:1/-1;grid-template-columns:1fr 1fr}.bank-note{grid-column:1/-1}}
+@media(max-width:620px){body{padding:5px}.topbar{grid-template-columns:1fr;gap:9px;padding:8px}.ledger{padding:7px 0 0;border-left:0;border-top:1px solid #65605a}.actions{grid-column:auto;justify-content:flex-start}.layout{grid-template-columns:1fr}.panel{padding:9px}.map-panel{grid-column:auto}.map-content{display:block}.map-tools{display:grid;grid-template-columns:1fr 1fr}.map-tools .btn:first-child{grid-column:1/-1}.scene-panel{grid-row:1}.character-panel{grid-row:2}.map-panel{grid-row:3}.portrait{width:min(220px,70vw)}.guide{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important}}
+</style>
 </head>
 <body>
-  <div class="shell">
-    <header class="topbar">
-      <a class="brand" href="/" aria-label="Mário Mile course activities home">
-        <span class="brand-mark" aria-hidden="true">SC</span>
-        <span><strong>Security in Conversation</strong><small>Cybersecurity decision game</small></span>
-      </a>
-      <div class="top-actions">
-        <button class="quiet-button" id="openGuide" type="button" aria-haspopup="dialog"><span aria-hidden="true">▦</span><span>Tool guide</span></button>
-        <a class="quiet-button" href="https://github.com/milemario/milemario.github.io/tree/main/security-conversations" target="_blank" rel="noopener noreferrer" aria-label="View the game source on GitHub"><span aria-hidden="true">↗</span><span>Source</span></a>
-      </div>
-    </header>
-
-    <main>
-      <section id="introScreen" class="hero" aria-labelledby="heroTitle">
-        <div>
-          <p class="eyebrow">A practical cybersecurity conversation game</p>
-          <h1 id="heroTitle">Choose the tool.<br>Start the conversation.</h1>
-          <p class="hero-copy">A colleague tells you about a security problem. You have three tools to choose from. Pick the <strong>best first fit</strong>, then see what it can do, what it cannot do, and what you could say next.</p>
-          <div class="start-card">
-            <button class="start-button" type="button" data-rounds="5">Quick chat <span aria-hidden="true">→</span><small>5 cases</small></button>
-            <button class="start-button secondary" type="button" data-rounds="10">Full shift <span aria-hidden="true">→</span><small>10 cases</small></button>
-            <span class="best-score" id="bestScoreLabel"></span>
-          </div>
-          <div class="how-panel">
-            <strong>How to play</strong>
-            <p>Choose one control for each situation. Some other choices may help too, but the game asks which tool addresses the main issue first. In real incidents, contain immediate harm and involve your security team.</p>
-          </div>
-        </div>
-        <div class="hero-visual" aria-label="Game briefing">
-          <span class="field-label">FIELD NOTE / 01</span>
-          <div class="field-title">Listen.<br>Locate the gap.<br><span>Recommend a first control.</span></div>
-          <div class="field-rule"></div>
-          <span class="field-footer">LIVE CASES &nbsp; / &nbsp; TOOL GUIDE INCLUDED</span>
-        </div>
-      </section>
-
-      <section id="gameScreen" hidden aria-labelledby="gameTitle">
-        <div class="game-heading">
-          <div><p class="eyebrow">Live conversation</p><h2 id="gameTitle" tabindex="-1">What would you recommend?</h2></div>
-          <span class="round-label" id="roundLabel"></span>
-        </div>
-        <div class="progress-wrap">
-          <div class="progress-meta"><span id="progressText">Conversation 1 of 5</span><span id="progressPercent">0% complete</span></div>
-          <div class="progress-track" id="progressTrack" role="progressbar" aria-label="Game progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-fill" id="progressFill"></div></div>
-        </div>
-        <div class="game-layout">
-          <article class="case-panel game-viewport" id="gameViewport" data-answered="false">
-            <div class="scene-art" id="sceneArt" aria-hidden="true"></div>
-            <div class="grit-overlay" aria-hidden="true"></div>
-            <div class="scene-topline">
-              <div><span class="case-category" id="scenarioCategory"></span><h3 id="scenarioTitle"></h3></div>
-              <span class="setting" id="scenarioSetting"></span>
-            </div>
-            <div class="dialogue-hud" id="dialogueHud">
-              <div class="dialogue-copy">
-                <p class="scenario-context" id="scenarioContext"></p>
-                <div class="speaker-row">
-                  <span class="speaker-badge" id="speakerAvatar" aria-hidden="true"></span>
-                  <span><span class="speaker-name" id="speakerName"></span><span class="speaker-role" id="speakerRole"></span></span>
-                </div>
-                <blockquote class="quote" id="scenarioQuote"></blockquote>
-                <p class="question">Which security tool would you bring into the conversation first?</p>
-                <p class="choice-hint">Choose one. Press 1, 2 or 3.</p>
-              </div>
-              <div class="choices-stack" id="choices" role="group" aria-label="Choose a security tool"></div>
-            </div>
-            <section class="feedback" id="feedback" aria-live="polite" hidden>
-              <div class="feedback-top"><h4 class="feedback-title" id="feedbackTitle"></h4><span class="fit-pill" id="fitPill"></span></div>
-              <p class="feedback-copy" id="feedbackCopy"></p>
-              <p class="best-fit" id="bestFit"></p>
-              <div class="reply-box"><small>A useful thing to say next</small><p id="replyCopy"></p></div>
-              <div class="lesson-box"><small>The useful distinction</small><p id="lessonCopy"></p></div>
-              <div class="continue-row"><button class="continue-button" id="continueButton" type="button">Next conversation <span aria-hidden="true">→</span></button></div>
-            </section>
-          </article>
-          <aside class="coach-panel" aria-label="Game status and tool categories">
-            <div class="score-block">
-              <div class="score-label">Tool fit score</div>
-              <div class="score-number"><strong id="liveScore">0</strong><span>points</span></div>
-              <p class="score-note" id="scoreNote">Choose tools that address the problem at hand.</p>
-            </div>
-            <div class="side-divider"></div>
-            <div>
-              <h3 class="coach-title">Think in layers</h3>
-              <p class="coach-copy">Is the issue about identity, data, devices, activity visibility, applications, or recovery? Naming the problem helps you choose a useful starting point.</p>
-            </div>
-            <div>
-              <h3 class="coach-title">Tool families in this game</h3>
-              <div class="tool-pills"><span class="tool-pill">Identity</span><span class="tool-pill">Data</span><span class="tool-pill">Endpoint</span><span class="tool-pill">Visibility</span><span class="tool-pill">Application</span><span class="tool-pill">Resilience</span><span class="tool-pill">Network</span></div>
-            </div>
-            <div class="keyboard-note">You can open the tool guide at any time to review the choices.</div>
-          </aside>
-        </div>
-      </section>
-
-      <section id="endScreen" class="end-panel" hidden aria-labelledby="endTitle">
-        <p class="eyebrow">Shift debrief</p>
-        <div class="end-top">
-          <div><h2 id="endTitle">Good conversations start with good questions.</h2><p id="endCopy"></p></div>
-          <div class="final-score"><strong id="finalScore">0</strong><span>fit score</span></div>
-        </div>
-        <h3 class="result-heading">Your decisions</h3>
-        <div class="result-list" id="resultList"></div>
-        <div class="end-actions">
-          <button class="start-button" type="button" id="playAgain">Play another shift <span aria-hidden="true">↻</span></button>
-          <button class="start-button secondary" type="button" id="backHome">Back to start</button>
-        </div>
-      </section>
-    </main>
-
-    <footer>Educational simulation · Tool choice is a starting point; real response depends on context.</footer>
-  </div>
-
-  <dialog id="guideDialog" aria-labelledby="guideTitle">
-    <div class="dialog-head">
-      <div><h2 id="guideTitle">Cybersecurity tool guide</h2><p>Short definitions to help you compare the tools.</p></div>
-      <button class="close-button" id="closeGuide" type="button" aria-label="Close tool guide">×</button>
-    </div>
-    <input class="guide-search" id="guideSearch" type="search" placeholder="Search tools or categories" aria-label="Search the tool guide">
-    <div class="guide-list" id="guideList"></div>
-  </dialog>
-
-  <script>
-    (function () {
-      "use strict";
-      const scenarios = [
-        {
-          category: "Identity & access", title: "The password keeps getting reused", setting: "A hallway conversation",
-          context: "A payroll manager wants to know what would reduce account takeovers across staff accounts.",
-          speaker: "Nora", role: "Payroll manager", quote: "We keep seeing sign-ins with passwords that were leaked somewhere else. Payroll still only asks for a password. Can we add another check?",
-          bestTool: "Multi-factor authentication (MFA)",
-          reply: "“How many accounts are in scope, and can we start with payroll and administrator accounts? We should also plan how people recover access safely.”",
-          lesson: "MFA asks for an additional proof beyond a password. It makes stolen or reused passwords harder to use by themselves. Strong, phishing-resistant methods are a better target for high-risk accounts.",
-          choices: [
-            { tool: "Multi-factor authentication (MFA)", short: "Require a second sign-in proof beyond the password.", fit: "strong", why: "This directly addresses password-only access. MFA can reduce the value of a stolen or reused password, especially when the organization chooses phishing-resistant methods for sensitive accounts." },
-            { tool: "Security information and event management (SIEM)", short: "Collect and correlate logs from systems.", fit: "poor", why: "A SIEM can help detect unusual sign-ins, but it does not add another proof at login. It is useful monitoring around the control, not the first control to close password-only access." },
-            { tool: "Endpoint detection and response (EDR)", short: "Detect and respond to suspicious activity on devices.", fit: "support", why: "EDR can help investigate compromised devices, but the stated gap is password-only authentication. It does not add a second sign-in check." }
-          ]
-        },
-        {
-          category: "Data protection", title: "Customer files are leaving managed storage", setting: "A remote-work check-in",
-          context: "A team lead is worried about sensitive information being copied into personal cloud accounts.",
-          speaker: "Ádám", role: "Customer support lead", quote: "Some people download customer spreadsheets and move them into personal cloud drives so they can keep working at home. We need to spot that and stop sensitive files leaving.",
-          bestTool: "Data loss prevention (DLP)",
-          reply: "“Which data should be protected, and which approved services should people use? We can start by monitoring, then tune rules before blocking normal work.”",
-          lesson: "DLP applies content-aware rules to sensitive data as it moves through endpoints, email, web, or storage. Start with data classification and careful tuning so protection does not block legitimate work.",
-          choices: [
-            { tool: "Cloud access security broker (CASB)", short: "Discover and govern use of cloud services.", fit: "support", why: "A CASB can reveal cloud app use and help control unmanaged services. It may be part of the solution, while content-aware DLP rules are the more direct fit for identifying and controlling sensitive files." },
-            { tool: "Data loss prevention (DLP)", short: "Detect or restrict sensitive data movement.", fit: "strong", why: "This is the closest fit: DLP can identify sensitive content and apply policy when it is uploaded, emailed, copied, or shared. It needs clear data rules and testing to avoid disrupting approved workflows." },
-            { tool: "Endpoint detection and response (EDR)", short: "Investigate suspicious activity on work devices.", fit: "poor", why: "EDR can investigate device behavior, but the main need is to govern sensitive data leaving through cloud services. DLP is designed for that data movement problem." }
-          ]
-        },
-        {
-          category: "Endpoint security", title: "A laptop is acting strangely", setting: "A service desk escalation",
-          context: "The service desk has noticed behavior that could indicate an active compromise.",
-          speaker: "Leila", role: "Service desk analyst", quote: "A laptop opened an unknown attachment, launched a script, and then tried to change a lot of files on a shared drive. Can we see what it is doing and contain it?",
-          bestTool: "Endpoint detection and response (EDR)",
-          reply: "“Let’s isolate the device through the response process and preserve the alert details. Who else saw the same attachment, and when did the activity begin?”",
-          lesson: "EDR monitors endpoint behavior and can support investigation and containment. It is one part of incident response: preserve evidence, assess scope, and involve the incident response team.",
-          choices: [
-            { tool: "Endpoint detection and response (EDR)", short: "Investigate endpoint activity and isolate devices.", fit: "strong", why: "The suspicious behavior is happening on a laptop. EDR can show process activity, help investigate what ran, and support isolating the device while responders assess the scope." },
-            { tool: "Multi-factor authentication (MFA)", short: "Add another proof when a user signs in.", fit: "poor", why: "MFA can reduce account takeover risk, but the reported behavior is a suspicious process on an endpoint. It does not show or contain the laptop's file activity." },
-            { tool: "Security information and event management (SIEM)", short: "Bring security logs together for investigation.", fit: "support", why: "A SIEM may help correlate the endpoint alert with account or network events. The immediate need is endpoint-level visibility and containment, where EDR is the closer tool." }
-          ]
-        },
-        {
-          category: "Detection & visibility", title: "The logs are in separate places", setting: "A security team meeting",
-          context: "Analysts are trying to investigate a pattern that crosses several systems.",
-          speaker: "Péter", role: "Security analyst", quote: "We have sign-in logs, email alerts, firewall events, and endpoint alerts, but everyone searches them separately. It takes hours to work out whether they are connected.",
-          bestTool: "Security information and event management (SIEM)",
-          reply: "“Which log sources matter most for our first few investigations? Let’s agree on the use cases and retention before connecting everything.”",
-          lesson: "A SIEM centralizes and correlates security events so analysts can investigate activity across systems. Good source selection, useful detection rules, and people to review the alerts matter as much as the platform.",
-          choices: [
-            { tool: "Vulnerability management", short: "Find and prioritize known weaknesses in assets.", fit: "poor", why: "Vulnerability management helps identify and prioritize weaknesses. It does not bring sign-in, email, firewall, and endpoint events together for one investigation." },
-            { tool: "Security information and event management (SIEM)", short: "Search and correlate security events across systems.", fit: "strong", why: "This is the problem SIEM is built for: bringing security logs into a shared view and helping analysts connect events across systems and timelines." },
-            { tool: "Endpoint detection and response (EDR)", short: "Focus investigation and response on endpoints.", fit: "support", why: "EDR adds useful detail about devices, but it will not by itself unify the broader email, identity, firewall, and cloud logs described here." }
-          ]
-        },
-        {
-          category: "Identity & access", title: "Old access survives job changes", setting: "A new-starter review",
-          context: "A department manager is concerned that access is not being removed when people change roles.",
-          speaker: "Eszter", role: "People operations partner", quote: "When someone moves teams or a contractor finishes, their old app accounts sometimes stay active. We don't have a reliable owner for reviewing access.",
-          bestTool: "Identity and access management (IAM)",
-          reply: "“Which systems should change when a person joins, moves, or leaves? Let's identify the account owners and agree who approves each access review.”",
-          lesson: "IAM can centralize identity lifecycle, provisioning, deprovisioning, and access reviews. MFA protects authentication; it does not decide whether a person should still have access to an application.",
-          choices: [
-            { tool: "Data loss prevention (DLP)", short: "Control movement of sensitive information.", fit: "poor", why: "DLP can limit some ways sensitive data leaves, but it does not remove old accounts or coordinate access changes when a person changes role." },
-            { tool: "Multi-factor authentication (MFA)", short: "Strengthen how people prove their identity.", fit: "support", why: "MFA can make sign-ins safer, but these employees may still be allowed into the wrong applications. The core issue is lifecycle and authorization, which IAM can govern." },
-            { tool: "Identity and access management (IAM)", short: "Manage identities, app access, and access reviews.", fit: "strong", why: "IAM is the best starting point for joiner, mover, and leaver processes and recurring access reviews. It helps assign ownership and remove access when it is no longer needed." }
-          ]
-        },
-        {
-          category: "Privileged access", title: "Everyone knows the admin password", setting: "A platform engineering stand-up",
-          context: "Engineers need administrator access, but the current process is difficult to audit.",
-          speaker: "Bence", role: "Infrastructure engineer", quote: "Five of us use the same administrator password to manage production. If a setting changes, we can't tell who did it, and the password is in an old team document.",
-          bestTool: "Privileged access management (PAM)",
-          reply: "“Which accounts have production privileges, and can we replace the shared password with named, time-limited access first?”",
-          lesson: "PAM helps control and audit privileged accounts and sessions, often through named access, approval, credential vaulting, and time limits. SIEM can record events, but it does not remove the shared credential problem.",
-          choices: [
-            { tool: "Security information and event management (SIEM)", short: "Collect logs and alert on selected behavior.", fit: "poor", why: "A SIEM can help analyze logs after actions occur, but it will not replace the shared password or make each administrator use named access." },
-            { tool: "Privileged access management (PAM)", short: "Control, grant, and audit elevated access.", fit: "strong", why: "PAM directly addresses shared privileged credentials. It can provide named, approved, time-limited access and a better audit trail for administrative sessions." },
-            { tool: "Identity and access management (IAM)", short: "Manage identities and general application access.", fit: "support", why: "IAM can help with named identities and provisioning. PAM adds controls designed for high-risk administrator accounts and their privileged sessions." }
-          ]
-        },
-        {
-          category: "Email security", title: "The vendor invoice looks almost right", setting: "A finance team coffee break",
-          context: "Staff have reported a series of suspicious messages that imitate a supplier.",
-          speaker: "Júlia", role: "Finance controller", quote: "We keep getting invoices from addresses that differ from our supplier by one letter. One message had a link to a payment page and another had an attachment.",
-          bestTool: "Secure email gateway",
-          reply: "“Can we report the examples to the security team and verify payment changes through a known contact channel? We should check whether anyone clicked or replied.”",
-          lesson: "A secure email gateway can filter or flag malicious and impersonation messages before delivery. Staff reporting and out-of-band verification of payment changes remain important, because no filter catches every message.",
-          choices: [
-            { tool: "Secure email gateway", short: "Filter phishing, malicious links, and spoofed mail.", fit: "strong", why: "The issue is malicious or impersonation email reaching staff. Email security controls can inspect senders, links, attachments, and spoofing signals before messages are delivered." },
-            { tool: "Multi-factor authentication (MFA)", short: "Reduce risk from stolen passwords.", fit: "support", why: "MFA helps protect accounts if a password is stolen, but it will not filter a fake invoice or stop someone from replying to a convincing message." },
-            { tool: "Endpoint detection and response (EDR)", short: "Detect suspicious behavior on managed devices.", fit: "support", why: "EDR can help if a malicious attachment runs on a device, but email filtering is the earlier and more direct control for the reported problem." }
-          ]
-        },
-        {
-          category: "Vulnerability management", title: "Nobody knows what is exposed", setting: "A change advisory call",
-          context: "A team has learned that an internet-facing system is running old software.",
-          speaker: "Márk", role: "Application owner", quote: "We found an old server after a security notice came out. We don't know what else is exposed or which fixes should come first.",
-          bestTool: "Vulnerability management",
-          reply: "“Let's confirm the asset inventory and exposure first, then prioritize by exploitability, business impact, and available fixes.”",
-          lesson: "Vulnerability management combines asset visibility, scanning, prioritization, remediation, and retesting. A scanner finding is a starting point; owners still need to decide and verify the fix.",
-          choices: [
-            { tool: "Web application firewall (WAF)", short: "Filter traffic to web applications.", fit: "support", why: "A WAF can sometimes reduce exposure to specific web attacks, but it will not tell the team what assets exist or manage a broader patching and retesting process." },
-            { tool: "Vulnerability management", short: "Discover, prioritize, fix, and retest weaknesses.", fit: "strong", why: "This is the direct fit for finding exposed assets, assessing known weaknesses, prioritizing remediation, and checking that fixes worked." },
-            { tool: "Security information and event management (SIEM)", short: "Correlate activity and security logs.", fit: "poor", why: "A SIEM can help notice suspicious activity, but it does not create the asset inventory or remediation workflow the team is missing." }
-          ]
-        },
-        {
-          category: "Secrets management", title: "An API key reached a public repository", setting: "A developer asks for help",
-          context: "The team wants to catch credentials before code is merged into a shared repository.",
-          speaker: "Noémi", role: "Software developer", quote: "Someone committed a cloud API key last week. We revoked it, but it had been visible for a while. Is there a way to catch this before it happens again?",
-          bestTool: "Secrets scanning and management",
-          reply: "“For that exposed key, revoke and rotate it, then check its use. After that, let's scan commits and move active secrets into a managed store.”",
-          lesson: "Secrets scanning can detect credentials in code before or after commit. A secrets manager helps deliver and rotate secrets safely. If a key is exposed, revoke it and investigate its use; scanning alone does not undo exposure.",
-          choices: [
-            { tool: "Secrets scanning and management", short: "Detect exposed credentials and store active secrets safely.", fit: "strong", why: "Secrets scanning can catch keys before merge, while a secrets manager reduces the need to keep active credentials in source code. Any already exposed key still needs revocation and investigation." },
-            { tool: "Endpoint detection and response (EDR)", short: "Monitor suspicious behavior on devices.", fit: "poor", why: "EDR helps investigate endpoint activity, but it will not scan a code repository for committed keys or provide a safe place for application secrets." },
-            { tool: "Identity and access management (IAM)", short: "Control user identities and access permissions.", fit: "support", why: "IAM and least privilege can reduce what a compromised key can reach. They are useful supporting controls, but they will not catch the key in source code." }
-          ]
-        },
-        {
-          category: "Resilience & recovery", title: "The backups share the same admin account", setting: "A business continuity review",
-          context: "The organization can restore data, but the backup system may be reachable by an attacker.",
-          speaker: "Tamás", role: "IT operations manager", quote: "We can restore files after ransomware, but the backups are online and use the same administrator account as the servers. Could an attacker delete those too?",
-          bestTool: "Backup and recovery controls",
-          reply: "“Let's confirm which copies are isolated or immutable, who can delete them, and when we last tested a full recovery.”",
-          lesson: "Isolated or immutable backups can improve recovery options if production systems or administrator accounts are compromised. Recovery plans need protected credentials and regular restore tests.",
-          choices: [
-            { tool: "Backup and recovery controls", short: "Protect restore points and test recovery.", fit: "strong", why: "This directly addresses the risk that an attacker could alter or delete recovery copies. Isolated or immutable backups and tested restore procedures improve resilience." },
-            { tool: "Endpoint detection and response (EDR)", short: "Detect and contain suspicious endpoint activity.", fit: "support", why: "EDR can help detect and contain ransomware before it spreads, but it does not protect the backup copies from deletion by a compromised administrator." },
-            { tool: "Security information and event management (SIEM)", short: "Collect alerts and logs for investigation.", fit: "poor", why: "A SIEM might alert on unusual backup administration, but it does not provide isolated, immutable restore points or prove that recovery works." }
-          ]
-        },
-        {
-          category: "Device management", title: "A lost tablet still has work email", setting: "A quick call with HR",
-          context: "A staff member has lost a mobile device that was never enrolled in company management.",
-          speaker: "Zsófi", role: "HR business partner", quote: "A tablet with work email was left on a train. It has no required screen lock, and IT can't erase it remotely because it isn't managed.",
-          bestTool: "Mobile device management (MDM)",
-          reply: "“Let's report the loss and secure the account now. For future devices, which company data should require managed enrollment and a screen lock?”",
-          lesson: "MDM can enforce device settings, require encryption and screen locks, and support remote lock or wipe. It works best with clear enrollment rules and identity controls for access.",
-          choices: [
-            { tool: "Mobile device management (MDM)", short: "Enforce settings and manage or erase enrolled devices.", fit: "strong", why: "MDM is the best fit for requiring a screen lock, managing device configuration, and supporting remote lock or wipe. For this lost device, the team should also follow its account and incident response process." },
-            { tool: "Full-disk encryption", short: "Protect data stored on a device if it is lost.", fit: "support", why: "Encryption can protect locally stored data, but it does not give IT the ability to enforce settings or remotely manage this unmanaged tablet. It is an important device control alongside MDM." },
-            { tool: "Multi-factor authentication (MFA)", short: "Add a second proof at sign-in.", fit: "support", why: "MFA can reduce the risk of someone using a stolen password, but it does not secure cached mail or let IT manage the lost device." }
-          ]
-        },
-        {
-          category: "Application security", title: "The website returns database errors", setting: "A product team stand-up",
-          context: "The developers need time to fix a suspected input-handling bug in a public application.",
-          speaker: "András", role: "Product manager", quote: "A researcher found that crafted inputs to our public website can trigger database error messages. The code fix may take a few days. What can reduce exposure while they work?",
-          bestTool: "Web application firewall (WAF)",
-          reply: "“Let's validate the report with the application security team and prioritize a code fix. A temporary WAF rule may help while we test it carefully.”",
-          lesson: "A WAF can filter web requests and sometimes provide temporary protection for a known issue. It is not a substitute for fixing and retesting vulnerable application code.",
-          choices: [
-            { tool: "Security information and event management (SIEM)", short: "Collect and alert on relevant application logs.", fit: "poor", why: "A SIEM can help monitor for attempts, but it does not filter the malicious request. The team needs a protective layer while the underlying code is fixed." },
-            { tool: "Web application firewall (WAF)", short: "Inspect and filter requests to a web application.", fit: "strong", why: "A carefully tested WAF rule can provide a short-term layer against the reported input pattern while developers fix the code. It should be treated as temporary protection, not the final repair." },
-            { tool: "Static application security testing (SAST)", short: "Scan source code for security issues.", fit: "support", why: "SAST can help find certain coding flaws during development, but it does not filter requests to the live application while the fix is being prepared." }
-          ]
-        },
-        {
-          category: "Data protection", title: "The laptop is missing", setting: "A manager calls the help desk",
-          context: "A company laptop containing local files has been lost while traveling.",
-          speaker: "Kata", role: "Sales director", quote: "I left my laptop on a train. It has customer proposals stored locally. The device had a login password, but I don't know whether the drive was encrypted.",
-          bestTool: "Full-disk encryption",
-          reply: "“Let's report the device as lost and follow the incident process. Do we know if full-disk encryption was enabled and whether the laptop was locked?”",
-          lesson: "Full-disk encryption protects stored data when a device is powered off or locked. A login password alone does not protect the disk if someone can remove it or access it outside the normal sign-in flow.",
-          choices: [
-            { tool: "Data loss prevention (DLP)", short: "Control sensitive data as it moves between places.", fit: "poor", why: "DLP can govern copying or sending data, but it does not encrypt files already stored on a lost laptop." },
-            { tool: "Full-disk encryption", short: "Encrypt data stored on a device.", fit: "strong", why: "Full-disk encryption is the most direct control for protecting data on a lost device, particularly when it is powered off or locked. It cannot guarantee safety if the device was already unlocked." },
-            { tool: "Mobile device management (MDM)", short: "Manage settings and remotely lock or wipe enrolled devices.", fit: "support", why: "MDM can help locate, lock, or wipe an enrolled device. Encryption protects the stored data directly and should be required on company laptops, often through device management." }
-          ]
-        },
-        {
-          category: "Network security", title: "Office laptops can reach building controls", setting: "A facilities technology review",
-          context: "The office network and a sensitive building systems network have become too closely connected.",
-          speaker: "Gergő", role: "Facilities IT coordinator", quote: "The office laptops and building control systems sit on the same flat network. If one laptop is compromised, it could reach systems that operate the building.",
-          bestTool: "Network segmentation",
-          reply: "“Which systems need to communicate with building controls? Let's map the required paths and block everything else, then test the operational impact.”",
-          lesson: "Segmentation creates boundaries between network zones and restricts unnecessary traffic. It can limit lateral movement, but rules need careful design so essential building functions keep working.",
-          choices: [
-            { tool: "Network segmentation", short: "Separate systems and restrict traffic between zones.", fit: "strong", why: "The issue is broad connectivity between different trust zones. Segmentation can restrict which systems communicate and reduce the paths an attacker could use to move laterally." },
-            { tool: "Identity and access management (IAM)", short: "Control users' identities and application permissions.", fit: "support", why: "IAM can restrict who administers building systems, but it does not separate the office and building networks or control device-to-device traffic." },
-            { tool: "Endpoint detection and response (EDR)", short: "Detect suspicious behavior on managed devices.", fit: "poor", why: "EDR can detect some suspicious activity on devices, but it does not remove the network path between office laptops and building systems." }
-          ]
-        },
-        {
-          category: "Cloud security", title: "People are using unknown file-sharing apps", setting: "A marketing planning session",
-          context: "Employees have signed up for cloud services without a consistent approval or visibility process.",
-          speaker: "Réka", role: "Marketing operations lead", quote: "Teams are sharing campaign files through several apps with personal accounts. We don't know which services are being used or whether public links are on.",
-          bestTool: "Cloud access security broker (CASB)",
-          reply: "“Which cloud services are approved, and what kind of data is being shared? Let's get visibility first, then set safe sharing rules with the teams.”",
-          lesson: "A CASB can help discover cloud app usage and apply policies to cloud services. DLP can add content-aware protection; an approved workflow and user communication help make controls workable.",
-          choices: [
-            { tool: "Cloud access security broker (CASB)", short: "Discover cloud services and govern their use.", fit: "strong", why: "The team lacks visibility into which cloud services are used and how they are configured. A CASB can help discover and govern cloud app usage and sharing." },
-            { tool: "Multi-factor authentication (MFA)", short: "Strengthen sign-in to accounts.", fit: "poor", why: "MFA can protect accounts, but it will not reveal which services people are using or whether shared files are public." },
-            { tool: "Data loss prevention (DLP)", short: "Detect or restrict sensitive data movement.", fit: "support", why: "DLP can help protect sensitive content in approved and supported services. A CASB is a stronger starting point for discovering and governing the range of cloud apps described." }
-          ]
-        },
-        {
-          category: "Remote access", title: "A vendor needs one internal application", setting: "A third-party access review",
-          context: "A supplier needs remote maintenance access, but a broad network connection would expose more than necessary.",
-          speaker: "Dávid", role: "Vendor relationship manager", quote: "A supplier needs to maintain one internal application next week. Our usual VPN gives them network access beyond that system. Can we narrow it down?",
-          bestTool: "Zero trust network access (ZTNA)",
-          reply: "“What exact application and actions does the supplier need, and for how long? Let's make access named, approved, time-limited, and scoped to that service.”",
-          lesson: "ZTNA can provide identity-aware access to specific applications rather than broad network access. It still needs strong authentication, least privilege, monitoring, and a defined end date.",
-          choices: [
-            { tool: "Virtual private network (VPN)", short: "Connect a remote device to a private network.", fit: "support", why: "A VPN can provide remote access, but a traditional broad network tunnel may expose more systems than this supplier needs. Restricting access to the single application is the key requirement." },
-            { tool: "Zero trust network access (ZTNA)", short: "Grant scoped, identity-aware access to applications.", fit: "strong", why: "ZTNA is a good fit for providing a named supplier access to a specific application without granting general access to the internal network." },
-            { tool: "Privileged access management (PAM)", short: "Control and audit privileged accounts and sessions.", fit: "support", why: "PAM can help if the maintenance requires elevated privileges. It does not, by itself, scope the supplier's network connectivity to only one application." }
-          ]
-        }
-      ];
-
-      const toolGuide = [
-        ["Multi-factor authentication (MFA)", "Identity", "Adds another proof to a sign-in, such as a security key or authenticator approval."],
-        ["Identity and access management (IAM)", "Identity", "Manages identities, app access, provisioning, deprovisioning, and access reviews."],
-        ["Privileged access management (PAM)", "Identity", "Controls and audits high-risk administrator accounts, credentials, and sessions."],
-        ["Data loss prevention (DLP)", "Data", "Detects or restricts sensitive information as it is copied, sent, uploaded, or shared."],
-        ["Full-disk encryption", "Data", "Encrypts information stored on a device, protecting it if the disk or device is lost."],
-        ["Endpoint detection and response (EDR)", "Endpoint", "Monitors endpoint behavior and supports investigation and device containment."],
-        ["Mobile device management (MDM)", "Endpoint", "Enforces settings and supports management, lock, or wipe of enrolled devices."],
-        ["Security information and event management (SIEM)", "Visibility", "Collects and correlates logs to help analysts investigate activity across systems."],
-        ["Secure email gateway", "Email", "Filters or flags phishing, malicious attachments, unsafe links, and spoofed messages."],
-        ["Vulnerability management", "Exposure", "Finds, prioritizes, tracks, and verifies remediation of known weaknesses in assets."],
-        ["Secrets scanning and management", "Application", "Detects exposed keys in code and helps store, deliver, and rotate application secrets."],
-        ["Static application security testing (SAST)", "Application", "Scans application source code for certain security flaws during development."],
-        ["Web application firewall (WAF)", "Application", "Inspects and filters requests to web applications; can offer temporary protection for some flaws."],
-        ["Backup and recovery controls", "Resilience", "Protects recovery copies and tests whether services and data can be restored."],
-        ["Network segmentation", "Network", "Separates network zones and limits which systems can communicate."],
-        ["Cloud access security broker (CASB)", "Cloud", "Discovers and governs cloud service use, configuration, and sharing."],
-        ["Virtual private network (VPN)", "Remote access", "Creates a protected connection to a private network for remote users or devices."],
-        ["Zero trust network access (ZTNA)", "Remote access", "Provides identity-aware access to specific applications rather than a broad network."]
-      ];
-
-      const introScreen = document.getElementById("introScreen");
-      const gameScreen = document.getElementById("gameScreen");
-      const endScreen = document.getElementById("endScreen");
-      const choicesEl = document.getElementById("choices");
-      const feedback = document.getElementById("feedback");
-      const guideDialog = document.getElementById("guideDialog");
-      const STORAGE_KEY = "securityConversationBestScore";
-      let state = { deck: [], index: 0, score: 0, results: [], answered: false, roundCount: 5 };
-      let bestScore = 0;
-
-      function safeLoadBest() {
-        try { bestScore = Number(localStorage.getItem(STORAGE_KEY)) || 0; } catch (error) { bestScore = 0; }
-        updateBestLabel();
-      }
-      function updateBestLabel() {
-        document.getElementById("bestScoreLabel").innerHTML = bestScore > 0 ? "Personal best: <strong>" + bestScore + "%</strong>" : "No personal best yet";
-      }
-      function shuffle(items) {
-        const copy = items.slice();
-        for (let i = copy.length - 1; i > 0; i -= 1) {
-          const j = Math.floor(Math.random() * (i + 1));
-          const temp = copy[i]; copy[i] = copy[j]; copy[j] = temp;
-        }
-        return copy;
-      }
-      function startGame(roundCount) {
-        state = {
-          deck: shuffle(scenarios).slice(0, roundCount).map(function (scenario) {
-            return Object.assign({}, scenario, { choices: shuffle(scenario.choices) });
-          }),
-          index: 0, score: 0, results: [], answered: false, roundCount: roundCount
-        };
-        introScreen.hidden = true;
-        endScreen.hidden = true;
-        gameScreen.hidden = false;
-        renderRound();
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-      function setProgress() {
-        const done = state.index;
-        const total = state.deck.length;
-        const completed = done + (state.answered ? 1 : 0);
-        const pct = Math.round((completed / total) * 100);
-        document.getElementById("progressText").textContent = "Conversation " + Math.min(done + 1, total) + " of " + total + (state.answered ? " · answered" : "");
-        document.getElementById("progressPercent").textContent = pct + "% complete";
-        document.getElementById("progressFill").style.width = pct + "%";
-        document.getElementById("progressTrack").setAttribute("aria-valuenow", String(pct));
-        document.getElementById("roundLabel").textContent = "ROUND " + String(done + 1).padStart(2, "0") + " / " + String(total).padStart(2, "0");
-      }
-      const abbreviationDefinitions = {
-        MFA:"Multi-factor authentication", DLP:"Data loss prevention", EDR:"Endpoint detection and response",
-        SIEM:"Security information and event management", IAM:"Identity and access management",
-        PAM:"Privileged access management", MDM:"Mobile device management", SAST:"Static application security testing",
-        WAF:"Web application firewall", CASB:"Cloud access security broker",
-        VPN:"Virtual private network", ZTNA:"Zero trust network access"
-      };
-      function markAbbreviations(value) {
-        return value.replace(/\b(MFA|DLP|EDR|SIEM|IAM|PAM|MDM|SAST|WAF|CASB|VPN|ZTNA)\b/g, function (term) {
-          return '<abbr class="abbr-token" title="' + abbreviationDefinitions[term] + '">' + term + '</abbr>';
-        });
-      }
-
-      function iconForTool(tool) {
-        const letters = tool.replace(/\([^)]*\)/g, "").trim().split(/\s+/).filter(Boolean).slice(0, 2).map(function (part) { return part[0]; }).join("");
-        return letters.toUpperCase() || "IT";
-      }
-      function renderIllustration(scenario) {
-        const sceneArt = document.getElementById("sceneArt");
-        const caseIndex = scenarios.findIndex(function (item) { return item.title === scenario.title; });
-        const looks = [
-          { skin:"#ba8065", hair:"#292522", shirt:"#58665b", hairPath:"M472 251 C460 164 496 122 550 125 C609 126 642 168 628 253 L614 222 C590 204 574 186 562 165 C545 196 517 211 485 216 Z" },
-          { skin:"#d1a17b", hair:"#423329", shirt:"#586b79", hairPath:"M476 246 C464 164 504 128 554 131 C615 132 642 174 625 257 C611 226 594 213 579 207 L574 167 C548 195 519 208 483 214 Z" },
-          { skin:"#9e6f56", hair:"#282725", shirt:"#76705d", hairPath:"M475 252 C461 178 484 127 548 126 C618 125 643 175 628 253 L610 236 C602 205 594 183 578 170 C559 201 524 215 486 220 Z" },
-          { skin:"#d0a184", hair:"#6b5540", shirt:"#5d7166", hairPath:"M472 254 C463 169 500 127 550 128 C611 128 641 171 627 253 C617 223 602 205 587 196 C571 213 548 223 521 226 C503 226 488 222 477 215 Z" },
-          { skin:"#b27c62", hair:"#302a26", shirt:"#74645e", hairPath:"M472 254 C463 165 496 124 550 125 C614 125 644 171 628 255 L620 292 C608 265 602 234 602 211 C580 223 550 231 521 228 C499 228 483 222 476 211 Z" },
-          { skin:"#c89575", hair:"#4a392e", shirt:"#64705a", hairPath:"M474 251 C461 169 499 128 549 128 C610 128 643 171 627 250 C612 222 597 206 583 199 C571 213 553 220 535 218 C514 218 496 211 483 198 Z" }
-        ];
-        const look = looks[(caseIndex < 0 ? 0 : caseIndex) % looks.length];
-        const glasses = (caseIndex % 3 === 1)
-          ? '<g fill="none" stroke="#111315" stroke-width="5"><rect x="497" y="231" width="41" height="27" rx="2"/><rect x="560" y="231" width="41" height="27" rx="2"/><path d="M538 242h22"/></g>'
-          : "";
-        sceneArt.innerHTML =
-          '<svg viewBox="0 0 1100 620" role="img" aria-label="Flat graphic novel illustration of a colleague across a desk">' +
-            '<rect width="1100" height="620" fill="#777e72"/>' +
-            '<rect x="0" y="0" width="1100" height="620" fill="#aa9a7f" opacity=".14"/>' +
-            '<rect x="69" y="66" width="292" height="225" fill="#b9bda9" stroke="#111315" stroke-width="8"/>' +
-            '<path d="M214 70v217M73 180h284" stroke="#596257" stroke-width="7"/>' +
-            '<path d="M84 98h111M84 121h111M84 144h111" stroke="#d8d2bd" stroke-width="8"/>' +
-            '<rect x="810" y="83" width="194" height="151" fill="#b8b09a" stroke="#111315" stroke-width="7"/>' +
-            '<path d="M837 202l39-60 27 35 28-48 45 73" fill="#718071" stroke="#111315" stroke-width="5"/>' +
-            '<rect x="857" y="344" width="110" height="7" fill="#343733"/><rect x="878" y="351" width="67" height="12" fill="#4c5048"/>' +
-            '<path d="M52 356c20-64 29-89 41-99 11 15 12 35 9 56 24-45 39-56 56-61 2 22-8 45-21 64 30-30 53-36 70-35-8 23-30 45-61 65" fill="#56675a" stroke="#111315" stroke-width="6" stroke-linejoin="round"/>' +
-            '<path d="M80 415h113M91 430h96" stroke="#111315" stroke-width="6"/>' +
-            '<path d="M407 524c8-91 44-143 105-166h78c61 23 97 75 105 166z" fill="' + look.shirt + '" stroke="#111315" stroke-width="8" stroke-linejoin="round"/>' +
-            '<path d="M518 350v-48h65v50l-33 34z" fill="' + look.skin + '" stroke="#111315" stroke-width="7" stroke-linejoin="round"/>' +
-            '<ellipse cx="550" cy="233" rx="78" ry="95" fill="' + look.skin + '" stroke="#111315" stroke-width="8"/>' +
-            '<path d="' + look.hairPath + '" fill="' + look.hair + '" stroke="#111315" stroke-width="8" stroke-linejoin="round"/>' +
-            '<path d="M512 267h13M576 267h13" stroke="#111315" stroke-width="5" stroke-linecap="round"/>' +
-            '<path d="M550 268l-8 24 13 2" fill="none" stroke="#704b3c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>' +
-            '<path d="M533 314c11 9 25 9 36 0" fill="none" stroke="#111315" stroke-width="4" stroke-linecap="round"/>' +
-            glasses +
-            '<path d="M481 385l69 44 69-44M550 429v85" fill="none" stroke="#111315" stroke-width="7" stroke-linejoin="round"/>' +
-            '<path d="M0 494h1100v126H0z" fill="#665546" stroke="#111315" stroke-width="8"/>' +
-            '<path d="M0 510h1100" stroke="#a38b6d" stroke-width="5"/>' +
-            '<path d="M321 517l132-6 58 80-144 4z" fill="#d1c4a8" stroke="#111315" stroke-width="6"/>' +
-            '<path d="M341 526l111-5M359 543l104-5M378 560l97-5" stroke="#77756b" stroke-width="3"/>' +
-            '<path d="M834 513h112l-5 79H840z" fill="#263032" stroke="#111315" stroke-width="7"/>' +
-            '<path d="M850 526h79v48h-79z" fill="#606f68" stroke="#111315" stroke-width="4"/>' +
-            '<path d="M119 512h59l-7 57h-45z" fill="#c7b99f" stroke="#111315" stroke-width="6"/>' +
-            '<path d="M112 512h73l-8-17h-57z" fill="#8f6b45" stroke="#111315" stroke-width="6"/>' +
-            '<path d="M139 485h25" stroke="#111315" stroke-width="5" stroke-linecap="round"/>' +
-          '</svg>';
-      }
-
-      function renderRound() {
-        const scenario = state.deck[state.index];
-        state.answered = false;
-        document.getElementById("gameViewport").dataset.answered = "false";
-        feedback.hidden = true;
-        renderIllustration(scenario);
-        document.getElementById("scenarioCategory").textContent = scenario.category;
-        document.getElementById("scenarioTitle").textContent = scenario.title;
-        document.getElementById("scenarioSetting").textContent = scenario.setting;
-        document.getElementById("scenarioContext").textContent = scenario.context;
-        document.getElementById("speakerAvatar").textContent = scenario.speaker.slice(0, 1);
-        document.getElementById("speakerName").textContent = scenario.speaker;
-        document.getElementById("speakerRole").textContent = scenario.role;
-        document.getElementById("scenarioQuote").innerHTML = markAbbreviations(scenario.quote);
-        document.getElementById("liveScore").textContent = String(state.score);
-        document.getElementById("scoreNote").textContent = state.results.length === 0 ? "Choose tools that address the problem at hand." : state.results.length + " conversation" + (state.results.length === 1 ? "" : "s") + " answered so far.";
-        setProgress();
-        choicesEl.innerHTML = "";
-        scenario.choices.forEach(function (choice, index) {
-          const button = document.createElement("button");
-          button.type = "button";
-          button.className = "tool-choice";
-          button.setAttribute("data-choice", String(index));
-          button.setAttribute("aria-label", (index + 1) + ". " + choice.tool + ". " + choice.short);
-          button.innerHTML = '<span class="choice-letter">[0' + (index + 1) + ']</span><span><strong>' + markAbbreviations(choice.tool) + '</strong><small>' + choice.short + '</small></span>';
-          button.addEventListener("click", function () { chooseTool(index); });
-          choicesEl.appendChild(button);
-        });
-      }
-      function chooseTool(choiceIndex) {
-        if (state.answered) return;
-        const scenario = state.deck[state.index];
-        const choice = scenario.choices[choiceIndex];
-        if (!choice) return;
-        state.answered = true;
-        document.getElementById("gameViewport").dataset.answered = "true";
-        setProgress();
-        const points = choice.fit === "strong" ? 100 : (choice.fit === "support" ? 55 : 15);
-        state.score += points;
-        state.results.push({ scenario: scenario, choice: choice, points: points });
-        Array.from(choicesEl.querySelectorAll(".tool-choice")).forEach(function (button, index) {
-          button.disabled = true;
-          const current = scenario.choices[index];
-          if (index === choiceIndex) button.classList.add("selected");
-          if (current.tool === scenario.bestTool) button.classList.add("best-answer");
-        });
-        const fitNames = {
-          strong: ["Strong first fit", "Best match"],
-          support: ["Useful supporting layer", "Could help"],
-          poor: ["Different layer", "Not first fit"]
-        };
-        feedback.className = "feedback " + choice.fit;
-        document.getElementById("feedbackTitle").textContent = fitNames[choice.fit][0];
-        document.getElementById("fitPill").textContent = "+" + points + " points · " + fitNames[choice.fit][1];
-        document.getElementById("feedbackCopy").textContent = choice.why;
-        document.getElementById("bestFit").textContent = choice.tool === scenario.bestTool ? "You picked the strongest first tool for this situation." : "Best first fit here: " + scenario.bestTool + ".";
-        document.getElementById("replyCopy").textContent = scenario.reply;
-        document.getElementById("lessonCopy").textContent = scenario.lesson;
-        document.getElementById("liveScore").textContent = String(state.score);
-        document.getElementById("scoreNote").textContent = state.results.length + " of " + state.deck.length + " conversations answered.";
-        document.getElementById("continueButton").innerHTML = state.index === state.deck.length - 1 ? "See my debrief <span aria-hidden=\"true\">→</span>" : "Next conversation <span aria-hidden=\"true\">→</span>";
-        feedback.hidden = false;
-        window.setTimeout(function () {
-          const nextButton = document.getElementById("continueButton");
-          nextButton.focus();
-          nextButton.scrollIntoView({ behavior: "smooth", block: "nearest" });
-        }, 60);
-      }
-      function continueGame() {
-        if (!state.answered) return;
-        if (state.index < state.deck.length - 1) {
-          state.index += 1;
-          renderRound();
-          document.getElementById("gameTitle").focus({ preventScroll: true });
-        } else {
-          showDebrief();
-        }
-      }
-      function showDebrief() {
-        const percent = Math.round(state.score / state.deck.length);
-        let headline = "A solid start.";
-        let detail = "Use the review below to spot the tool families you want to practice next.";
-        if (percent >= 90) { headline = "Trusted security partner."; detail = "You matched the reported issue with a useful first control and kept the conversation practical."; }
-        else if (percent >= 72) { headline = "Strong instincts."; detail = "You recognized most of the problem types. Review the cases where a supporting tool was mistaken for the first fit."; }
-        else if (percent >= 48) { headline = "Building your toolkit."; detail = "Several tools can help in the same situation. The review will show which one addresses the main gap most directly."; }
-        else { headline = "Keep asking what problem the tool solves."; detail = "Start by naming the asset or activity at risk: identity, data, device, application, network, or recovery."; }
-        document.getElementById("endTitle").textContent = headline;
-        document.getElementById("endCopy").textContent = detail + " This is a learning exercise, not a substitute for incident response or a full risk assessment.";
-        document.getElementById("finalScore").textContent = String(percent);
-        const list = document.getElementById("resultList");
-        list.innerHTML = "";
-        state.results.forEach(function (result, index) {
-          const item = document.createElement("div");
-          item.className = "result-item";
-          const outcome = result.choice.tool === result.scenario.bestTool ? "Best first fit" : "Best first fit: " + result.scenario.bestTool;
-          item.innerHTML = '<span class="result-number">' + String(index + 1).padStart(2, "0") + '</span><span><strong>' + result.scenario.title + '</strong><small>Your choice: ' + result.choice.tool + ' · ' + outcome + '</small></span><span class="result-points">+' + result.points + '</span>';
-          list.appendChild(item);
-        });
-        if (percent > bestScore) {
-          bestScore = percent;
-          try { localStorage.setItem(STORAGE_KEY, String(bestScore)); } catch (error) {}
-          updateBestLabel();
-        }
-        gameScreen.hidden = true;
-        endScreen.hidden = false;
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-      function showHome() {
-        gameScreen.hidden = true;
-        endScreen.hidden = true;
-        introScreen.hidden = false;
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-      function renderGuide(query) {
-        const normalized = (query || "").trim().toLowerCase();
-        const list = document.getElementById("guideList");
-        const filtered = toolGuide.filter(function (item) { return (item[0] + " " + item[1] + " " + item[2]).toLowerCase().includes(normalized); });
-        list.innerHTML = "";
-        if (!filtered.length) {
-          const empty = document.createElement("p");
-          empty.className = "guide-empty";
-          empty.textContent = "No tools match that search.";
-          list.appendChild(empty);
-          return;
-        }
-        filtered.forEach(function (tool) {
-          const card = document.createElement("article");
-          card.className = "guide-item";
-          card.innerHTML = "<strong>" + markAbbreviations(tool[0]) + "</strong><small>" + tool[1] + "</small><p>" + tool[2] + "</p>";
-          list.appendChild(card);
-        });
-      }
-
-      document.querySelectorAll("[data-rounds]").forEach(function (button) {
-        button.addEventListener("click", function () { startGame(Number(button.getAttribute("data-rounds"))); });
-      });
-      document.getElementById("continueButton").addEventListener("click", continueGame);
-      document.getElementById("playAgain").addEventListener("click", function () { startGame(state.roundCount || 10); });
-      document.getElementById("backHome").addEventListener("click", showHome);
-      document.getElementById("openGuide").addEventListener("click", function () {
-        renderGuide("");
-        guideDialog.showModal();
-        document.getElementById("guideSearch").focus();
-      });
-      document.getElementById("closeGuide").addEventListener("click", function () { guideDialog.close(); });
-      document.getElementById("guideSearch").addEventListener("input", function (event) { renderGuide(event.target.value); });
-      guideDialog.addEventListener("click", function (event) { if (event.target === guideDialog) guideDialog.close(); });
-      document.addEventListener("keydown", function (event) {
-        if (guideDialog.open || gameScreen.hidden || state.answered || !/^[123]$/.test(event.key)) return;
-        const active = document.activeElement;
-        if (active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA")) return;
-        chooseTool(Number(event.key) - 1);
-      });
-      safeLoadBest();
-    }());
-  </script>
+<div class="page">
+<header class="topbar">
+  <div class="brand"><div class="seal" aria-hidden="true">SEC<br>QUEST</div><div><h1>Sec-Quest</h1><p>Field cases · Security guild ledger</p></div></div>
+  <div class="ledger" aria-label="Security debt retired"><div class="ledger-head"><span>Antiballaszt · C-Suite Bank</span><strong id="debtValue">0 / 1,000,000 Ag</strong></div><div class="bar"><i id="debtFill"></i></div></div>
+  <div class="actions"><button class="btn dark" id="openGuide" type="button">[ Abbreviation ledger ]</button><button class="btn dark" id="resetSave" type="button">[ New character ]</button></div>
+</header>
+<div class="layout">
+<aside class="panel" aria-labelledby="characterTitle">
+  <h2 class="panel-title" id="characterTitle">Character sheet</h2><h3 class="char-name">Junior Analyst</h3><p class="level">Probationary hire · Level <strong id="level">3</strong></p>
+  <div class="xp" role="progressbar" aria-label="Experience to next level"><i id="xpFill"></i></div><div class="xp-caption"><span id="xpText">0 / 300 XP</span><span id="pointsText">0 points</span></div>
+  <div class="purse"><span>Unbanked silver</span><strong id="wallet">142,500 Ag</strong></div><p class="small">Attributes · spend level points</p><dl class="stats" id="stats"></dl><div class="points" id="pointsNote" aria-live="polite"></div>
+  <div class="decoder"><strong id="decoderTitle">INT Decoder · Tier 3</strong><p id="decoderText">Full names are decoded. More INT reveals tactical notes.</p></div>
+</aside>
+<main class="panel scene" aria-live="polite">
+  <div class="scene-head"><span class="zone" id="zone">Guild Hall · Kezdő-negyed</span><span id="sceneNum" class="scene-num">Contract 001</span></div>
+  <div class="portrait" id="portrait"></div><div class="caption"><strong id="speaker">The Guild Registrar</strong><span id="role">C-Suite Bank · Kezdő-negyed</span></div>
+  <div id="opponent" class="opponent" hidden></div><section class="dialog" id="content"></section>
+</main>
+<aside class="panel map-panel" aria-labelledby="mapTitle">
+  <h2 class="panel-title" id="mapTitle">Places & contacts</h2><p class="map-summary" id="mapSummary">Start a patrol to open six field cases. Bank silver before risking it in the Sötét-negyed.</p>
+  <div class="map-content">
+    <section class="map-group"><h3>Districts · daily skirmishes</h3><div class="map-list" id="minorList"></div></section>
+    <section class="map-group"><h3>Palace · gatekeeper audits</h3><div class="map-list" id="bossList"></div></section>
+    <div class="map-tools"><button class="btn primary" id="bankButton" type="button">[ Deposit silver ]</button><button class="btn" id="restButton" type="button">[ Rest at Kocsma ]</button></div>
+  </div><p class="bank-note">Deposits retire security debt and cannot be withdrawn. A full purse is a tempting target.</p>
+</aside>
+</div>
+<footer>Campaign progress is saved in this browser. Learning game only: real incidents require your organization's response process.</footer>
+</div>
+<dialog id="guideDialog" aria-labelledby="guideTitle"><div class="dialog-head"><div><h2 id="guideTitle">Abbreviation Ledger</h2><p>Raise Intelligencia to reveal more of each entry.</p></div><button class="btn" id="closeGuide" type="button">[ Close ]</button></div><input class="search" id="guideSearch" type="search" placeholder="Search acronym, category, or definition"><p class="guide-meta" id="guideMeta"></p><div class="guide" id="guideList"></div></dialog>
+<div id="toast" role="status" aria-live="polite" hidden></div>
+<script>
+(function(){
+"use strict";
+const MASTER=[{"abbr":"SIEM","category":"SecOps","full":"Security Information and Event Management","shortDesc":"Centralized log radar","longDesc":"Aggregates and correlates event logs across the entire network to detect anomalies and compliance incidents."},{"abbr":"SOAR","category":"SecOps","full":"Security Orchestration, Automation, and Response","shortDesc":"Automated incident playbooks","longDesc":"Executes automated response workflows (like isolating a host or blocking an IP) when the SIEM triggers an alert."},{"abbr":"SOC","category":"SecOps","full":"Security Operations Center","shortDesc":"24/7 cyber watchtower","longDesc":"The defensive team and facility responsible for continuously monitoring, analyzing, and responding to cyber threats."},{"abbr":"EDR","category":"SecOps","full":"Endpoint Detection and Response","shortDesc":"Laptop/server flight recorder","longDesc":"Monitors end-user devices and servers in real time to detect suspicious processes and isolate infected machines."},{"abbr":"XDR","category":"SecOps","full":"Extended Detection and Response","shortDesc":"Cross-layer threat detection","longDesc":"Unifies telemetry from endpoints, networks, cloud workloads, and email into a single correlated detection platform."},{"abbr":"MDR","category":"SecOps","full":"Managed Detection and Response","shortDesc":"Outsourced 24/7 threat hunters","longDesc":"An external security service that monitors your environment around the clock and actively responds to intrusions."},{"abbr":"NDR","category":"SecOps","full":"Network Detection and Response","shortDesc":"East-west traffic analyzer","longDesc":"Inspects raw network traffic and lateral movement inside the perimeter to spot attackers who bypassed endpoint agents."},{"abbr":"ITDR","category":"SecOps","full":"Identity Threat Detection and Response","shortDesc":"Identity & AD bodyguard","longDesc":"Monitors identity infrastructure (like Active Directory and SSO) for credential theft, privilege escalation, and token abuse."},{"abbr":"EPP","category":"SecOps","full":"Endpoint Protection Platform","shortDesc":"Preventative device shield","longDesc":"Blocks known malware, fileless attacks, and malicious signatures on endpoints before they can execute."},{"abbr":"DLP","category":"SecOps","full":"Data Loss Prevention","shortDesc":"Sensitive data border guard","longDesc":"Detects and blocks unauthorized exfiltration of confidential data or PII via email, USB drives, or cloud uploads."},{"abbr":"IDS","category":"SecOps","full":"Intrusion Detection System","shortDesc":"Passive network burglar alarm","longDesc":"Monitors network traffic for suspicious signatures or policy violations and sends alerts without blocking traffic inline."},{"abbr":"IPS","category":"SecOps","full":"Intrusion Prevention System","shortDesc":"Inline traffic blocker","longDesc":"Sits directly inline on the network to actively drop malicious packets and reset suspicious connections in real time."},{"abbr":"WAF","category":"SecOps","full":"Web Application Firewall","shortDesc":"HTTP/API traffic shield","longDesc":"Filters and blocks malicious web traffic (such as SQLi, XSS, and bot floods) before it reaches your web servers."},{"abbr":"NGFW","category":"SecOps","full":"Next-Generation Firewall","shortDesc":"App-aware deep firewall","longDesc":"Combines traditional port/protocol filtering with deep packet inspection, IPS, and application-layer awareness."},{"abbr":"FIM","category":"SecOps","full":"File Integrity Monitoring","shortDesc":"Config & OS tamper detector","longDesc":"Hashes critical operating system and configuration files to alert immediately if an attacker modifies them."},{"abbr":"UEBA","category":"SecOps","full":"User and Entity Behavior Analytics","shortDesc":"Insider & anomaly profiler","longDesc":"Uses baseline behavioral models to spot when a legitimate user account or service starts acting abnormally."},{"abbr":"RASP","category":"SecOps","full":"Runtime Application Self-Protection","shortDesc":"In-memory app bodyguard","longDesc":"Embeds directly inside the application runtime to detect and block exploit attempts from the inside out."},{"abbr":"EASM","category":"SecOps","full":"External Attack Surface Management","shortDesc":"Internet-facing asset scanner","longDesc":"Continuously scans the public internet to discover forgotten subdomains, shadow IT, and exposed ports belonging to your company."},{"abbr":"CAASM","category":"SecOps","full":"Cyber Asset Attack Surface Management","shortDesc":"Unified asset inventory via APIs","longDesc":"Connects to existing security and IT tools via APIs to show all internal and external assets and where coverage gaps exist."},{"abbr":"CTEM","category":"SecOps","full":"Continuous Threat Exposure Management","shortDesc":"Iterative risk reduction cycle","longDesc":"A continuous program that scopes, discovers, prioritizes, and validates which exposures an attacker can realistically exploit."},{"abbr":"MSSP","category":"SecOps","full":"Managed Security Service Provider","shortDesc":"Outsourced firewall & SOC vendor","longDesc":"A third-party vendor that manages firewalls, SIEM monitoring, and day-to-day security operations for client organizations."},{"abbr":"PCAP","category":"SecOps","full":"Packet Capture","shortDesc":"Raw network wire recording","longDesc":"A complete byte-for-byte recording of network traffic packets used for deep forensic analysis in tools like Wireshark."},{"abbr":"YARA","category":"SecOps","full":"Yet Another Recursive Acronym","shortDesc":"Malware file pattern matcher","longDesc":"A rule-based tool used by malware researchers to identify and classify malware samples based on binary or text patterns."},{"abbr":"SIGMA","category":"SecOps","full":"Generic Signature Format for SIEM Systems","shortDesc":"Universal SIEM detection rule","longDesc":"An open, vendor-agnostic rule format that lets analysts write a log detection once and compile it for any SIEM."},{"abbr":"APT","category":"Threat Intel","full":"Advanced Persistent Threat","shortDesc":"Stealthy nation-state syndicate","longDesc":"A well-resourced, highly sophisticated adversary group that conducts long-term, stealthy espionage or sabotage campaigns."},{"abbr":"IoC","category":"Threat Intel","full":"Indicator of Compromise","shortDesc":"Forensic crime-scene clue","longDesc":"Technical evidence left behind after a breach—such as a malicious file hash, C2 IP address, or bad domain name."},{"abbr":"IoA","category":"Threat Intel","full":"Indicator of Attack","shortDesc":"Live attacker behavior signal","longDesc":"Focuses on the real-time sequence of actions an attacker takes (like credential dumping) rather than static file hashes."},{"abbr":"TTP","category":"Threat Intel","full":"Tactics, Techniques, and Procedures","shortDesc":"Attacker modus operandi","longDesc":"Describes how an adversary operates—from high-level goals (Tactics) to specific methods (Techniques) and exact steps (Procedures)."},{"abbr":"CTI","category":"Threat Intel","full":"Cyber Threat Intelligence","shortDesc":"Actionable adversary dossier","longDesc":"Evidence-based knowledge about threat actors, their motives, and their TTPs used to prepare defenses proactively."},{"abbr":"OSINT","category":"Threat Intel","full":"Open-Source Intelligence","shortDesc":"Publicly available recon data","longDesc":"Intelligence gathered legally from public sources like social media, DNS records, GitHub repos, and job postings."},{"abbr":"DFIR","category":"Threat Intel","full":"Digital Forensics and Incident Response","shortDesc":"Breach containment & autopsy","longDesc":"The discipline of containing active cyberattacks while preserving and analyzing digital evidence to find root causes."},{"abbr":"CSIRT","category":"Threat Intel","full":"Computer Security Incident Response Team","shortDesc":"Official cyber firefighting squad","longDesc":"A designated team that receives incident reports, coordinates containment, and communicates with authorities like NIS2 bodies."},{"abbr":"PSIRT","category":"Threat Intel","full":"Product Security Incident Response Team","shortDesc":"Vendor vulnerability squad","longDesc":"A specialized team within a software/hardware vendor that manages the disclosure, patching, and advisories for product CVEs."},{"abbr":"C2","category":"Threat Intel","full":"Command and Control","shortDesc":"Attacker's remote puppet server","longDesc":"The external server infrastructure an attacker uses to send commands to compromised machines inside your network."},{"abbr":"DGA","category":"Threat Intel","full":"Domain Generation Algorithm","shortDesc":"Rotating C2 domain generator","longDesc":"An algorithm used by malware to pseudo-randomly generate thousands of new domain names daily so defenders cannot block a single C2."},{"abbr":"BEC","category":"Threat Intel","full":"Business Email Compromise","shortDesc":"Executive invoice/wire fraud","longDesc":"A targeted phishing or account-takeover attack where criminals impersonate executives or vendors to trick staff into wiring money."},{"abbr":"RAT","category":"Threat Intel","full":"Remote Access Trojan","shortDesc":"Hidden backdoor remote control","longDesc":"Malware that secretly gives an attacker full interactive remote control over a victim's computer, including screen and webcam access."},{"abbr":"LOLBins","category":"Threat Intel","full":"Living off the Land Binaries","shortDesc":"Weaponized built-in OS tools","longDesc":"Legitimate pre-installed system binaries (like PowerShell, CertUtil, or WMI) abused by attackers to blend in with normal admin traffic."},{"abbr":"DDoS","category":"Threat Intel","full":"Distributed Denial of Service","shortDesc":"Botnet traffic flood","longDesc":"Overwhelms a target server, service, or network with a massive flood of traffic from thousands of compromised devices."},{"abbr":"AitM","category":"Threat Intel","full":"Adversary-in-the-Middle","shortDesc":"Session-cookie hijacking proxy","longDesc":"Places a reverse proxy between the user and the real login page to steal both passwords and post-MFA session cookies."},{"abbr":"STIX","category":"Threat Intel","full":"Structured Threat Information Expression","shortDesc":"Standard JSON format for CTI","longDesc":"A standardized serialization format used to describe cyber threat actors, TTPs, and IoCs in a machine-readable graph."},{"abbr":"TAXII","category":"Threat Intel","full":"Trusted Automated Exchange of Indicator Information","shortDesc":"Transport protocol for STIX feeds","longDesc":"The application protocol used to automatically exchange STIX threat intelligence bundles over HTTPS."},{"abbr":"MISP","category":"Threat Intel","full":"Malware Information Sharing Platform","shortDesc":"Open-source CTI sharing hub","longDesc":"A widely used open-source platform for collecting, storing, and sharing indicators of compromise across organizations and CERTs."},{"abbr":"TLP","category":"Threat Intel","full":"Traffic Light Protocol","shortDesc":"Intel sharing confidentiality tags","longDesc":"Uses four color designations (RED, AMBER, GREEN, CLEAR) to define who you are allowed to share sensitive threat reports with."},{"abbr":"SAST","category":"AppSec","full":"Static Application Security Testing","shortDesc":"Source code flaw scanner","longDesc":"Analyzes proprietary source code or bytecode at rest (white-box) to spot coding vulnerabilities before the app is even run."},{"abbr":"DAST","category":"AppSec","full":"Dynamic Application Security Testing","shortDesc":"Running web app attacker","longDesc":"Tests a running application from the outside (black-box) by sending malicious requests to find runtime flaws like XSS or SQLi."},{"abbr":"IAST","category":"AppSec","full":"Interactive Application Security Testing","shortDesc":"Sensor-assisted runtime tester","longDesc":"Places instrumentation agents inside the running app during QA testing to combine code-level visibility with live HTTP traffic."},{"abbr":"SCA","category":"AppSec","full":"Software Composition Analysis","shortDesc":"Open-source dependency checker","longDesc":"Scans package manifests (npm, Maven, pip) to identify third-party open-source libraries with known CVEs or license risks."},{"abbr":"ASPM","category":"AppSec","full":"Application Security Posture Management","shortDesc":"AppSec pipeline control plane","longDesc":"Correlates findings from SAST, DAST, SCA, and cloud production context to prioritize the bugs that are actually reachable."},{"abbr":"SBOM","category":"AppSec","full":"Software Bill of Materials","shortDesc":"Ingredient list for software","longDesc":"A formal, machine-readable inventory of every open-source and commercial component, library, and version inside an application."},{"abbr":"SSDLC","category":"AppSec","full":"Secure Software Development Life Cycle","shortDesc":"Security baked into every sprint","longDesc":"Integrates threat modeling, secure coding, automated scanning, and pentesting into every phase of software creation."},{"abbr":"SLSA","category":"AppSec","full":"Supply-chain Levels for Software Artifacts","shortDesc":"Build-pipeline tamper framework","longDesc":"A security framework that ensures software build pipelines and artifacts cannot be tampered with from source to deployment."},{"abbr":"PTaaS","category":"AppSec","full":"Penetration Testing as a Service","shortDesc":"Continuous on-demand pentesting","longDesc":"Delivers human-led penetration testing through a real-time SaaS platform integrated directly into developer ticketing workflows."},{"abbr":"BAS","category":"AppSec","full":"Breach and Attack Simulation","shortDesc":"Automated purple-team crash test","longDesc":"Continuously runs safe, automated simulated attacks against production controls to verify that SIEM and EDR rules actually fire."},{"abbr":"VDP","category":"AppSec","full":"Vulnerability Disclosure Program","shortDesc":"Safe harbor inbox for hackers","longDesc":"An official legal channel (often via security.txt) allowing external researchers to report security bugs without fear of prosecution."},{"abbr":"BBP","category":"AppSec","full":"Bug Bounty Program","shortDesc":"Cash rewards for valid exploits","longDesc":"Pays independent security researchers financial bounties for discovering and reporting verifiable security vulnerabilities."},{"abbr":"CVE","category":"AppSec","full":"Common Vulnerabilities and Exposures","shortDesc":"Public vulnerability ID catalog","longDesc":"The globally standardized dictionary of publicly disclosed software and hardware security flaws (e.g., CVE-2024-1234)."},{"abbr":"CWE","category":"AppSec","full":"Common Weakness Enumeration","shortDesc":"Root-cause bug category taxonomy","longDesc":"A universal dictionary categorizing the underlying types of software weaknesses (e.g., CWE-89 for SQL Injection)."},{"abbr":"CVSS","category":"AppSec","full":"Common Vulnerability Scoring System","shortDesc":"0-to-10 bug severity scale","longDesc":"Calculates a numerical severity score (0.0 to 10.0) for a vulnerability based on its technical exploitability and impact."},{"abbr":"EPSS","category":"AppSec","full":"Exploit Prediction Scoring System","shortDesc":"30-day real-world exploit odds","longDesc":"A data-driven model estimating the probability (0% to 100%) that a given CVE will actually be exploited in the wild within 30 days."},{"abbr":"KEV","category":"AppSec","full":"Known Exploited Vulnerabilities","shortDesc":"Actively weaponized CVE list","longDesc":"CISA's authoritative catalog of CVEs that are confirmed to be actively exploited by attackers right now—patch these first."},{"abbr":"OWASP","category":"AppSec","full":"Open Worldwide Application Security Project","shortDesc":"Global AppSec community & Top 10","longDesc":"A nonprofit foundation producing free guidelines, testing tools, and the famous OWASP Top 10 lists for web, API, and LLM risks."},{"abbr":"STRIDE","category":"AppSec","full":"Spoofing, Tampering, Repudiation, Information Disclosure, DoS, Elevation of Privilege","shortDesc":"Six-category threat modeling mnemonic","longDesc":"A structured threat-modeling framework used during architecture design to systematically brainstorm how a system can be attacked."},{"abbr":"XSS","category":"AppSec","full":"Cross-Site Scripting","shortDesc":"Malicious JS injected into browsers","longDesc":"Allows an attacker to inject malicious client-side scripts into web pages viewed by other users to steal cookies or hijack sessions."},{"abbr":"CSRF","category":"AppSec","full":"Cross-Site Request Forgery","shortDesc":"Tricking logged-in browsers into actions","longDesc":"Forces an authenticated user's browser to send an unwanted state-changing request to a web app where they are currently logged in."},{"abbr":"SSRF","category":"AppSec","full":"Server-Side Request Forgery","shortDesc":"Tricking server into internal HTTP calls","longDesc":"Coerces a backend server into making HTTP requests to internal-only resources, such as cloud instance metadata endpoints."},{"abbr":"SQLi","category":"AppSec","full":"SQL Injection","shortDesc":"Unsanitized input hijacking DB queries","longDesc":"Inserts malicious SQL statements into user input fields to dump, alter, or delete records directly from the backend database."},{"abbr":"RCE","category":"AppSec","full":"Remote Code Execution","shortDesc":"Running arbitrary commands on target","longDesc":"A critical vulnerability class allowing an attacker to execute arbitrary operating system commands on a target server remotely."},{"abbr":"IDOR","category":"AppSec","full":"Insecure Direct Object Reference","shortDesc":"Guessing IDs to read others' records","longDesc":"Occurs when an application lets a user access another user's data simply by changing an ID parameter in the URL or request."},{"abbr":"BOLA","category":"AppSec","full":"Broken Object Level Authorization","shortDesc":"API endpoint missing ownership check","longDesc":"OWASP API Security #1 risk: an API fails to verify that the authenticated caller actually owns the specific object ID requested."},{"abbr":"BFLA","category":"AppSec","full":"Broken Function Level Authorization","shortDesc":"Regular user calling admin API endpoints","longDesc":"Occurs when an API fails to check user roles properly, allowing standard users to invoke privileged administrative endpoints."},{"abbr":"XXE","category":"AppSec","full":"XML External Entity","shortDesc":"Weaponized XML parser file read","longDesc":"Exploits weakly configured XML parsers to read local server files, probe internal networks, or trigger denial of service."},{"abbr":"ASLR","category":"AppSec","full":"Address Space Layout Randomization","shortDesc":"Shuffling memory locations against exploits","longDesc":"An OS defense that randomly arranges key data areas in memory so buffer overflow exploits cannot predict where code resides."},{"abbr":"CORS","category":"AppSec","full":"Cross-Origin Resource Sharing","shortDesc":"Browser cross-domain permission header","longDesc":"An HTTP-header mechanism that tells browsers which external domains are permitted to read responses from your API."},{"abbr":"CSP","category":"AppSec","full":"Content Security Policy","shortDesc":"Browser allowlist against XSS scripts","longDesc":"An HTTP response header that restricts where scripts, images, and styles can be loaded from, neutralizing most XSS attacks."},{"abbr":"HSTS","category":"AppSec","full":"HTTP Strict Transport Security","shortDesc":"Forces HTTPS-only browser connections","longDesc":"A security header that instructs browsers to never connect to your domain over unencrypted HTTP, preventing SSL-stripping."},{"abbr":"IAM","category":"IAM","full":"Identity and Access Management","shortDesc":"Right person, right access, right time","longDesc":"The framework of policies and technologies ensuring that users and services have appropriate, verified access to resources."},{"abbr":"CIAM","category":"IAM","full":"Customer Identity and Access Management","shortDesc":"External customer login & privacy hub","longDesc":"Manages registration, authentication, and self-service privacy consent for millions of external end-user customers."},{"abbr":"PAM","category":"IAM","full":"Privileged Access Management","shortDesc":"Vault & session recorder for admins","longDesc":"Secures, rotates, and audits superuser/root credentials and records privileged administrative sessions."},{"abbr":"IGA","category":"IAM","full":"Identity Governance and Administration","shortDesc":"Joiner-mover-leaver & access reviews","longDesc":"Automates user provisioning, entitlement certifications, segregation of duties (SoD), and orphan account cleanup for audits."},{"abbr":"MFA","category":"IAM","full":"Multi-Factor Authentication","shortDesc":"Two or more proof types to log in","longDesc":"Requires users to verify their identity using at least two distinct factors: something they know, have, or are."},{"abbr":"SSO","category":"IAM","full":"Single Sign-On","shortDesc":"One central login for all enterprise apps","longDesc":"Allows users to authenticate once with a central Identity Provider (IdP) and access multiple connected applications seamlessly."},{"abbr":"RBAC","category":"IAM","full":"Role-Based Access Control","shortDesc":"Permissions grouped by job title","longDesc":"Assigns system permissions to specific organizational roles (e.g., 'SOC Tier 1' or 'Billing') rather than individual users."},{"abbr":"ABAC","category":"IAM","full":"Attribute-Based Access Control","shortDesc":"Context-aware dynamic access rules","longDesc":"Grants or denies access dynamically based on attributes of the user, resource, device posture, location, and time of day."},{"abbr":"PoLP","category":"IAM","full":"Principle of Least Privilege","shortDesc":"Minimum permissions needed to work","longDesc":"Mandates that every user, program, or microservice is granted only the bare minimum privileges required to perform its task."},{"abbr":"JIT","category":"IAM","full":"Just-In-Time Access","shortDesc":"Temporary time-boxed admin rights","longDesc":"Grants elevated privileges only when needed for a specific ticket and automatically revokes them when the timer expires."},{"abbr":"ZSP","category":"IAM","full":"Zero Standing Privileges","shortDesc":"No permanent admin accounts exist","longDesc":"Eliminates permanent always-on admin rights entirely, requiring every privileged action to go through ephemeral JIT elevation."},{"abbr":"SAML","category":"IAM","full":"Security Assertion Markup Language","shortDesc":"XML-based enterprise SSO standard","longDesc":"An XML-based open standard for exchanging authentication and authorization data between an Identity Provider and a Service Provider."},{"abbr":"OIDC","category":"IAM","full":"OpenID Connect","shortDesc":"Modern JSON/JWT identity layer on OAuth","longDesc":"A lightweight, REST/JSON identity layer built on top of OAuth 2.0 that lets apps verify user identity and fetch profile claims."},{"abbr":"SCIM","category":"IAM","full":"System for Cross-domain Identity Management","shortDesc":"Automated user provisioning API","longDesc":"An open standard API that automatically syncs user creation, updates, and deprovisioning between your IdP and SaaS apps."},{"abbr":"FIDO","category":"IAM","full":"Fast Identity Online (FIDO2 / WebAuthn)","shortDesc":"Phishing-resistant passkeys & YubiKeys","longDesc":"Uses public-key cryptography bound to the exact domain origin, making hardware keys and passkeys immune to AitM phishing."},{"abbr":"ZTNA","category":"Cloud & Network","full":"Zero Trust Network Access","shortDesc":"Identity-aware VPN replacement","longDesc":"Grants continuous, least-privilege access to specific private applications rather than placing users onto the whole corporate LAN."},{"abbr":"SASE","category":"Cloud & Network","full":"Secure Access Service Edge","shortDesc":"Unified SD-WAN and cloud security edge","longDesc":"Converges wide-area networking (SD-WAN) with cloud-delivered security services (SSE: ZTNA, SWG, CASB, FWaaS) at the edge."},{"abbr":"SSE","category":"Cloud & Network","full":"Security Service Edge","shortDesc":"Security half of SASE (ZTNA+SWG+CASB)","longDesc":"Bundles ZTNA, Secure Web Gateway (SWG), and CASB into a single cloud platform without requiring SD-WAN hardware."},{"abbr":"CASB","category":"Cloud & Network","full":"Cloud Access Security Broker","shortDesc":"SaaS usage & shadow IT policy enforcer","longDesc":"Sits between users and cloud providers to uncover shadow IT, enforce DLP policies, and prevent data leaks in SaaS apps."},{"abbr":"SWG","category":"Cloud & Network","full":"Secure Web Gateway","shortDesc":"Corporate outbound web traffic filter","longDesc":"Inspects outbound employee internet traffic to block malicious URLs, enforce acceptable-use policies, and scan downloads."},{"abbr":"CSPM","category":"Cloud & Network","full":"Cloud Security Posture Management","shortDesc":"Cloud misconfiguration & open-S3 finder","longDesc":"Continuously audits AWS, Azure, and GCP environments against benchmarks to catch misconfigurations like public storage buckets."},{"abbr":"CNAPP","category":"Cloud & Network","full":"Cloud-Native Application Protection Platform","shortDesc":"Unified code-to-cloud security suite","longDesc":"Combines CSPM, CWPP, CIEM, and IaC scanning into one platform to secure cloud-native workloads across their entire lifecycle."},{"abbr":"CWPP","category":"Cloud & Network","full":"Cloud Workload Protection Platform","shortDesc":"Runtime security for VMs, containers & serverless","longDesc":"Protects cloud workloads (VMs, Kubernetes containers, and serverless functions) against runtime exploits and vulnerability risks."},{"abbr":"CIEM","category":"Cloud & Network","full":"Cloud Infrastructure Entitlement Management","shortDesc":"Cloud IAM permission & blast-radius tamer","longDesc":"Analyzes complex cloud IAM policies across multi-cloud environments to strip away unused permissions and enforce least privilege."},{"abbr":"DSPM","category":"Cloud & Network","full":"Data Security Posture Management","shortDesc":"Finds shadow sensitive data in cloud DBs","longDesc":"Automatically discovers where sensitive data (PII, PHI, secrets) lives across cloud data stores and maps who can access it."},{"abbr":"SSPM","category":"Cloud & Network","full":"SaaS Security Posture Management","shortDesc":"Audits risky settings in M365, Salesforce, Slack","longDesc":"Continuously monitors enterprise SaaS applications for risky tenant settings, over-privileged OAuth apps, and guest sharing."},{"abbr":"DMARC","category":"Cloud & Network","full":"Domain-based Message Authentication, Reporting, and Conformance","shortDesc":"Anti-spoofing email policy & reporting","longDesc":"Uses SPF and DKIM to let domain owners instruct receiving mail servers to quarantine or reject spoofed phishing emails."},{"abbr":"DNSSEC","category":"Cloud & Network","full":"Domain Name System Security Extensions","shortDesc":"Cryptographically signed DNS records","longDesc":"Adds cryptographic signatures to DNS records so resolvers can verify responses haven't been poisoned or spoofed in transit."},{"abbr":"PKI","category":"Cryptography","full":"Public Key Infrastructure","shortDesc":"Digital certificate issuance & trust system","longDesc":"The complete framework of Certificate Authorities, policies, and hardware used to issue, validate, and revoke digital certificates."},{"abbr":"mTLS","category":"Cryptography","full":"Mutual Transport Layer Security","shortDesc":"Two-way certificate auth for microservices","longDesc":"Requires both the client and the server to present valid X.509 certificates during the TLS handshake for zero-trust service auth."},{"abbr":"OCSP","category":"Cryptography","full":"Online Certificate Status Protocol","shortDesc":"Real-time certificate revocation check","longDesc":"Allows browsers and clients to query a Certificate Authority in real time to verify that a TLS certificate hasn't been revoked."},{"abbr":"HSM","category":"Cryptography","full":"Hardware Security Module","shortDesc":"Tamper-proof physical crypto vault","longDesc":"A dedicated, hardened physical computing device that safeguards and performs cryptographic operations so private keys never leave."},{"abbr":"TPM","category":"Cryptography","full":"Trusted Platform Module","shortDesc":"Motherboard chip for boot & disk keys","longDesc":"A microchip built onto a computer's motherboard that stores disk-encryption keys (BitLocker) and verifies hardware boot integrity."},{"abbr":"KMS","category":"Cryptography","full":"Key Management Service","shortDesc":"Centralized encryption key lifecycle manager","longDesc":"A cloud or enterprise service for generating, rotating, auditing, and controlling access to cryptographic keys."},{"abbr":"BYOK","category":"Cryptography","full":"Bring Your Own Key","shortDesc":"Customer-generated keys in cloud KMS","longDesc":"Allows an organization to generate its own master encryption keys on-premises (in an HSM) and import them into a cloud provider."},{"abbr":"PQC","category":"Cryptography","full":"Post-Quantum Cryptography","shortDesc":"Quantum-resistant encryption algorithms","longDesc":"Next-generation cryptographic algorithms (like ML-KEM / Kyber) designed to resist attacks from both classical and quantum computers."},{"abbr":"ZKP","category":"Cryptography","full":"Zero-Knowledge Proof","shortDesc":"Prove a secret is true without revealing it","longDesc":"A cryptographic method allowing one party to prove to another that a statement or credential is valid without revealing the underlying data."},{"abbr":"FHE","category":"Cryptography","full":"Fully Homomorphic Encryption","shortDesc":"Compute directly on encrypted data","longDesc":"Allows untrusted cloud servers to run calculations and analytics directly on ciphertext without ever decrypting the sensitive data."},{"abbr":"PFS","category":"Cryptography","full":"Perfect Forward Secrecy","shortDesc":"Ephemeral session keys protect past traffic","longDesc":"Ensures that even if a server's long-term private key is stolen in the future, past recorded TLS sessions cannot be decrypted."},{"abbr":"GRC","category":"GRC","full":"Governance, Risk, and Compliance","shortDesc":"Policy, risk register & audit alignment","longDesc":"The organizational strategy aligning IT and security operations with business objectives, enterprise risk appetite, and laws."},{"abbr":"ISMS","category":"GRC","full":"Information Security Management System","shortDesc":"ISO 27001 policy & control framework","longDesc":"A systematic set of policies, procedures, and technical controls for managing an organization's information security risks."},{"abbr":"BCP","category":"GRC","full":"Business Continuity Plan","shortDesc":"How the business keeps operating during crisis","longDesc":"Documents how critical business functions will continue operating during and after a major cyberattack or physical disaster."},{"abbr":"DRP","category":"GRC","full":"Disaster Recovery Plan","shortDesc":"Technical blueprint to restore IT systems","longDesc":"The step-by-step technical runbook for restoring servers, databases, and networks from backups after a catastrophic outage."},{"abbr":"BIA","category":"GRC","full":"Business Impact Analysis","shortDesc":"Calculates cost of downtime per system","longDesc":"Identifies critical business processes and quantifies the financial and operational damage caused if those systems go offline."},{"abbr":"RTO","category":"GRC","full":"Recovery Time Objective","shortDesc":"Max acceptable downtime duration","longDesc":"The maximum targeted duration of time within which a system or business process must be restored after a disruption."},{"abbr":"RPO","category":"GRC","full":"Recovery Point Objective","shortDesc":"Max acceptable age of lost data","longDesc":"The maximum targeted period in which data might be lost due to an incident—dictating how frequently backups must run."},{"abbr":"MTTD","category":"GRC","full":"Mean Time To Detect","shortDesc":"Average time to spot an intruder","longDesc":"A key SOC metric measuring the average time elapsed between when an attack begins and when defenders first detect it."},{"abbr":"MTTR","category":"GRC","full":"Mean Time To Respond / Remediate","shortDesc":"Average time to contain and fix a breach","longDesc":"Measures how quickly the security team can neutralize an active threat and restore affected systems to normal operation."},{"abbr":"SLE","category":"GRC","full":"Single Loss Expectancy","shortDesc":"Financial cost of one single incident","longDesc":"The expected monetary loss every single time a specific risk event occurs (Asset Value multiplied by Exposure Factor)."},{"abbr":"ARO","category":"GRC","full":"Annualized Rate of Occurrence","shortDesc":"Estimated times per year a threat strikes","longDesc":"The estimated frequency with which a specific threat or incident is expected to occur within a single one-year period."},{"abbr":"ALE","category":"GRC","full":"Annualized Loss Expectancy","shortDesc":"Expected yearly financial loss (SLE x ARO)","longDesc":"The total expected monetary loss for an asset over a year, calculated as SLE multiplied by ARO—used to justify security spend."},{"abbr":"ROSI","category":"GRC","full":"Return on Security Investment","shortDesc":"Cost-benefit ratio of a security control","longDesc":"Proves to the CFO that a security tool saves more money in prevented ALE than the tool costs to buy and operate."},{"abbr":"FAIR","category":"GRC","full":"Factor Analysis of Information Risk","shortDesc":"Quantitative cyber risk financial model","longDesc":"The international standard methodology for quantifying cyber risk in concrete financial terms (dollars/euros) rather than red/yellow/green heatmaps."},{"abbr":"TPRM","category":"GRC","full":"Third-Party Risk Management","shortDesc":"Supply-chain & vendor security vetting","longDesc":"The process of assessing, monitoring, and mitigating the cybersecurity risks introduced by external suppliers, SaaS vendors, and partners."},{"abbr":"PII","category":"GRC","full":"Personally Identifiable Information","shortDesc":"Data that identifies an individual human","longDesc":"Any data (names, national ID numbers, emails, biometrics) that can be used to distinguish or trace an individual's identity."},{"abbr":"DPIA","category":"GRC","full":"Data Protection Impact Assessment","shortDesc":"Mandatory GDPR privacy risk review","longDesc":"A formal GDPR-mandated audit conducted before launching any high-risk project or AI system that processes personal data."},{"abbr":"RoPA","category":"GRC","full":"Record of Processing Activities","shortDesc":"GDPR Article 30 data-flow inventory","longDesc":"A mandatory living register required by GDPR Article 30 documenting what personal data your company holds, why, and where it flows."},{"abbr":"NIS2","category":"GRC","full":"Network and Information Security Directive 2","shortDesc":"Strict EU cyber law with executive liability","longDesc":"EU cybersecurity directive mandating 24-hour incident early warnings, supply-chain security, and personal liability for management."},{"abbr":"DORA","category":"GRC","full":"Digital Operational Resilience Act","shortDesc":"EU financial sector cyber resilience law","longDesc":"Binding EU regulation requiring banks, insurers, and their critical ICT vendors to withstand, respond to, and recover from cyber disruptions."},{"abbr":"ICS","category":"OT & AI","full":"Industrial Control System","shortDesc":"Computers controlling physical factories/grids","longDesc":"The overarching term for control systems (SCADA, PLCs) that manage physical industrial processes like power grids and water plants."},{"abbr":"SCADA","category":"OT & AI","full":"Supervisory Control and Data Acquisition","shortDesc":"Central control room for industrial sites","longDesc":"Software and hardware architecture that monitors and controls geographically dispersed industrial assets and PLCs."},{"abbr":"LLM","category":"OT & AI","full":"Large Language Model","shortDesc":"Generative AI model prone to prompt injection","longDesc":"Deep-learning foundation models that require specialized guardrails against prompt injection, data poisoning, and sensitive data leakage."},{"abbr":"RAG","category":"OT & AI","full":"Retrieval-Augmented Generation","shortDesc":"Connecting LLMs to internal company docs","longDesc":"Feeds private enterprise documents into an LLM prompt at query time—creating major leakage risks if document ACLs aren't enforced."},{"abbr":"AI TRiSM","category":"OT & AI","full":"AI Trust, Risk, and Security Management","shortDesc":"Governance & security wrapper for AI models","longDesc":"Framework ensuring AI models are explainable, protected against adversarial attacks, compliant with privacy laws, and monitored for drift."}];
+const EXTRA=[
+{abbr:"GDPR",category:"GRC & Privacy",full:"General Data Protection Regulation",shortDesc:"EU data protection law",longDesc:"The European Union regulation that governs personal data processing and grants rights to people whose data is handled."},
+{abbr:"SOC 2",category:"GRC",full:"System and Organization Controls 2",shortDesc:"Independent report on service controls",longDesc:"An independent attestation report describing controls a service organization uses to protect customer data against security, availability, confidentiality, processing integrity, and privacy criteria."},
+{abbr:"DPA",category:"GRC & Privacy",full:"Data Processing Agreement",shortDesc:"Contract for a controller and processor",longDesc:"A contract that sets out how a processor handles personal data for a controller, including security measures and assistance with data subject rights."},
+{abbr:"ISO/IEC 27001",category:"GRC",full:"Information Security Management Systems Requirements",shortDesc:"Certifiable ISMS requirements standard",longDesc:"An international standard for establishing, operating, maintaining, and improving an information security management system."},
+{abbr:"CPE",category:"Application Security",full:"Common Platform Enumeration",shortDesc:"Machine-readable product naming scheme",longDesc:"A structured naming scheme for identifying operating systems, applications, and hardware in vulnerability and asset records."}
+];
+const TERMS=Object.create(null);MASTER.concat(EXTRA).forEach(x=>TERMS[x.abbr]=x);
+const q=(line,a,b,c)=>({line:line,options:[{term:a[0],detail:a[1],fit:"strong",why:a[2]},{term:b[0],detail:b[1],fit:"support",why:b[2]},{term:c[0],detail:c[1],fit:"poor",why:c[2]}]});
+const MINORS=[
+{id:"bence",name:"Bence",role:"Panicked junior developer",district:"Kezdő-negyed",kind:"AppSec",hp:120,reward:45000,xp:42,weak:"Application security",portrait:["#d6a27d","#34251f","#526b60","#aa7049","short","code","worried"],prompts:[
+q("Our checkout patch sends a URL value straight into a database query. The release is tomorrow. What should I run first?",["SAST","Scan the changed source before merge.","It can find risky input handling while the developer can still fix the code."],["DAST","Test the running application.","Useful confirmation, but it may not show the vulnerable code path."],["EDR","Watch the developer laptop.","Endpoint monitoring does not inspect source-code data flow."]),
+q("A customer changed an account number in the URL and saw someone else's invoice.",["DAST","Test authorization boundaries in the running app.","Runtime testing can expose this kind of broken object access."],["SAST","Review source and security patterns.","Source analysis can help find a missing authorization check."],["DLP","Watch for sensitive data leaving.","DLP will not repair the access-control flaw."]),
+q("Our payment service uses an unfamiliar library. We lack an inventory of components and known risks.",["SCA","Inventory dependencies and flag known vulnerabilities.","Software composition analysis checks third-party libraries."],["WAF","Filter malicious requests at the edge.","A WAF does not identify risky build dependencies."],["MFA","Require another sign-in factor.","Authentication does not assess software components."])
+]},
+{id:"mate",name:"Máté",role:"Tired SOC analyst",district:"Kezdő-negyed",kind:"SecOps",hp:180,reward:55000,xp:50,weak:"Security operations",portrait:["#bf8b6b","#4b3328","#50677b","#a17a48","swept","mug","tired"],prompts:[
+q("Three laptops show strange PowerShell activity and one employee reports a missing file. I need to investigate and contain the machine.",["EDR","Review process activity and isolate the endpoint.","Endpoint detection traces suspicious behavior and can contain the device."],["SIEM","Correlate endpoint and identity events.","Useful for connecting this alert to activity elsewhere."],["DLP","Block sensitive data transfers.","DLP may limit exfiltration but will not investigate the device."]),
+q("Firewall, email, cloud, and endpoint alerts live in four consoles. Nobody can tell if they are one incident.",["SIEM","Collect and correlate security events centrally.","A SIEM connects events across systems to support investigation."],["SOAR","Automate approved response playbooks.","Automation needs alert context and does not replace correlation."],["MDM","Apply mobile device policy.","Device management does not correlate organization-wide alerts."]),
+q("Our small team cannot watch alerts around the clock. We need people to investigate and respond.",["MDR","Use a managed detection and response team.","MDR adds analysts to monitor and investigate threats."],["SOAR","Automate repeatable triage steps.","Automation can stretch a team but does not provide human coverage."],["WAF","Block malicious web requests.","A WAF does not cover general security operations."])
+]},
+{id:"zoli",name:"Zoli",role:"Red-team pickpocket · Zsebes",district:"Sötét-negyed",kind:"Identity & Threat Intel",hp:240,reward:65000,xp:58,weak:"Identity and phishing resistance",portrait:["#b97d60","#242323","#33353a","#8e3227","hood","badge","sly"],prompts:[
+q("A convincing login page captured a colleague's password and one-time code. We want sign-in that resists this trick.",["FIDO","Use a passkey or security key bound to the real site.","FIDO2/WebAuthn credentials are bound to the legitimate origin."],["MFA","Keep a second factor on the account.","MFA helps, but one-time codes can be relayed by an AitM page."],["SIEM","Alert on unusual sign-ins.","Detection can find abuse later; it does not make sign-in phishing-resistant."]),
+q("A supplier invoice came from a lookalike domain. Finance nearly paid it; similar messages keep arriving.",["DMARC","Enforce domain anti-spoofing with SPF and DKIM.","DMARC helps receivers reject or quarantine messages spoofing your domain."],["OSINT","Research the domain and its public history.","OSINT can help investigate the sender and its infrastructure."],["EDR","Monitor employee workstations.","Endpoint monitoring does not stop a forged sender domain."]),
+q("A contractor still has broad administrator rights long after the project ended.",["PAM","Control and audit privileged accounts.","PAM can approve, monitor, and remove elevated access."],["PoLP","Grant only the minimum permissions required.","Least privilege is the principle; PAM helps enforce it."],["NDR","Inspect network traffic.","NDR will not remove standing access."])
+]},
+{id:"nora",name:"Nóra",role:"Threat hunter · Szerencse-Ásó",district:"Sötét-negyed",kind:"Threat Intel",hp:320,reward:75000,xp:68,weak:"Threat intelligence & detection",portrait:["#d1a17f","#6b4d35","#64705a","#9a3e31","braid","shovel","focused"],prompts:[
+q("A suspicious executable was recovered. I need a repeatable way to find files sharing its distinctive byte patterns.",["YARA","Write a rule that matches malware patterns.","YARA matches files using combinations of strings and binary features."],["SIGMA","Write a portable event-log rule.","Sigma is suited to log detections, not file patterns."],["CASB","Govern cloud-service use.","A CASB does not scan local malware samples."]),
+q("We have a detection idea and need it to work across SIEM products.",["SIGMA","Write a portable rule for security event logs.","Sigma rules can be translated into supported SIEM query languages."],["YARA","Match files by content and pattern.","YARA is for file and malware matching, not general log rules."],["SCA","Inventory software dependencies.","SCA does not create portable SOC detections."]),
+q("Partners have indicators of a campaign. We need structured threat data that can move between systems.",["STIX","Structure threat data and exchange it using TAXII.","STIX models threat intelligence; TAXII transports it."],["MISP","Collect and share threat indicators.","MISP is a sharing platform that complements structured exchange."],["RTO","Set a recovery-time target.","Recovery objectives do not exchange threat intelligence."])
+]},
+{id:"varga",name:"Dr. Varga",role:"Cryptographer · Mágustorony",district:"Mágustorony",kind:"Cryptography",hp:450,reward:90000,xp:82,weak:"Cryptography & key protection",portrait:["#c99474","#b8b6a8","#5a4d68","#c29a55","beard","key","wise"],prompts:[
+q("Cloud records are encrypted, but administrators can export the long-lived private key. Isolate key operations.",["HSM","Protect keys in a hardened hardware module.","An HSM protects key material and performs crypto operations in a tamper-resistant boundary."],["KMS","Manage key creation, rotation, and access.","A KMS manages lifecycle; a hardware boundary may better fit this threat."],["SAST","Analyze application source code.","Static analysis does not protect an exportable key."]),
+q("Internal services use TLS, but any workload can impersonate another inside the cluster.",["mTLS","Require both sides to authenticate with certificates.","Mutual TLS authenticates client and server on each connection."],["VPN","Create a protected remote tunnel.","A VPN does not authenticate each workload to another."],["DLP","Monitor sensitive data leaving.","DLP does not establish service identity."]),
+q("Encrypted archives must stay confidential for decades. The team is concerned about future quantum attacks.",["PQC","Plan a post-quantum cryptography transition.","PQC algorithms are designed to resist classical and quantum attacks."],["FHE","Compute on encrypted data.","FHE is not a general replacement for quantum-resistant key exchange."],["TPM","Protect device keys and boot integrity.","A TPM does not make an algorithm quantum-resistant."])
+]},
+{id:"kornel",name:"Kornél",role:"Skeptical CFO · Vegyesbolt",district:"Vegyesbolt",kind:"GRC & Finance",hp:550,reward:110000,xp:96,weak:"Business risk and security economics; technical jargon is ignored",immune:true,portrait:["#d7ad88","#4c392e","#755b41","#d2b15f","bald","coins","stern"],prompts:[
+q("You want 200,000 silver for a new service. Show me whether expected loss reduction justifies the spend.",["ROSI","Compare security benefit with the control cost.","ROSI translates risk reduction into a business case."],["ALE","Estimate annual loss before and after.","ALE provides the financial baseline; compare the reduction with cost."],["EDR","Describe endpoint process monitoring.","A useful control, but the CFO asked for a cost-benefit case."]),
+q("A breach cost 800,000 silver last year. The board wants an annual estimate based on how often it may happen.",["ALE","Combine single-loss impact with annual frequency.","ALE estimates yearly expected loss using impact and occurrence rate."],["SLE","Estimate the cost of one occurrence.","SLE is one input; it does not include annual frequency."],["SIEM","Aggregate and correlate logs.","Monitoring is not the requested financial estimate."]),
+q("A payroll supplier will process staff records. Which program assesses its risk before and during onboarding?",["TPRM","Assess and monitor third-party security risk.","TPRM evaluates supplier controls, exposure, and changes."],["DPA","Set data-processing responsibilities in the contract.","A DPA is important, but it is not the full vendor-risk review."],["NDR","Monitor internal network traffic.","NDR does not assess a supplier relationship."])
+]}
+];
+const BOSSES=[
+{id:"klara",name:"Klára",role:"External lead auditor · Királyi Ellenőr",district:"Palace · Audit Chamber",kind:"Compliance Audit",hp:1000,phases:5,xp:150,requires:0,portrait:["#dab194","#2e2522","#35373a","#a83b32","formal","quill","stern"],mechanic:"She asks for evidence, accountability, and recovery plans. A non-compliance answer heals 150 skepticism HP.",prompts:[
+q("The board says security is handled informally. What demonstrates a managed, continually improved program?",["ISMS","Show the information security management system.","An ISMS defines policies, risk process, controls, and continual improvement."],["SOC","Show a service-controls assurance report.","A SOC report can assure customers about a service but is not the whole company program."],["EDR","Show endpoint detection alerts.","A technical product does not demonstrate the complete governance system."]),
+q("A cloud vendor asks how you demonstrate control design and operating evidence to customers.",["SOC 2","Provide an independent controls report.","A SOC 2 report gives customers an independent view of service controls."],["MDR","Describe managed threat monitoring.","MDR supports operations but is not an independent controls attestation."],["NDR","Show network behavior monitoring.","A network tool is not the assurance evidence requested."]),
+q("A regional outage took payroll offline. What plan explains how critical work continues while systems recover?",["BCP","Present the business continuity plan.","BCP covers continuity of critical business functions through disruption."],["DRP","Present the technical restoration runbook.","DRP restores IT; BCP covers broader business operations."],["WAF","Show web-traffic filtering.","A WAF does not establish continuity arrangements."]),
+q("Personal data moves between teams without an up-to-date record. Which artifact inventories the processing?",["RoPA","Maintain the record of processing activities.","RoPA documents personal-data processing, purposes, and flows."],["DPIA","Assess high-risk privacy impact before a project.","A DPIA evaluates an activity, not the ongoing full inventory."],["DLP","Monitor sensitive data transfers.","DLP does not replace the processing record."]),
+q("A service owner says systems return 'as soon as possible.' What makes that promise measurable?",["RTO","Set the maximum acceptable restoration time.","RTO makes restoration expectations measurable and testable."],["RPO","Set the acceptable amount of data loss.","RPO defines data-loss tolerance, not restoration duration."],["EDR","Monitor endpoint threats.","Endpoint detection does not define recovery commitments."])
+]},
+{id:"board",name:"The Board of Directors",role:"Five guild masters · Az Ötök Tanácsa",district:"Palace · Council Hall",kind:"Executive Review",hp:2500,phases:5,xp:220,requires:1,portrait:["#c79a7c","#292725","#494239","#b89454","group","council","stern"],mechanic:"The council changes domain each turn: cloud, AI, governance, operations, then access.",prompts:[
+q("A storage bucket of client files was accidentally made public. We need continuous checks for cloud misconfiguration.",["CSPM","Continuously assess cloud configuration and exposure.","CSPM finds public storage and policy drift."],["CNAPP","Use a broader code-to-cloud security platform.","CNAPP can include posture management, but CSPM is the direct check."],["EDR","Investigate endpoint activity.","Endpoint detection cannot close a public bucket."]),
+q("Cloud workloads span containers and serverless functions. The board wants one view from build through runtime.",["CNAPP","Unify cloud-native protection across the lifecycle.","CNAPP combines cloud security from configuration through runtime."],["CSPM","Find misconfigured cloud services.","CSPM covers posture, not the whole workload lifecycle."],["MFA","Add a second factor for users.","MFA does not provide workload visibility."]),
+q("A team connects internal documents to a generative model. We need governance for model risk, data exposure, and monitoring.",["AI TRiSM","Govern AI trust, risk, privacy, and security.","AI TRiSM addresses the broader model governance program."],["RAG","Retrieve internal content at question time.","RAG describes architecture; it does not govern model risk."],["WAF","Filter web requests at an application edge.","A WAF is not an AI governance program."]),
+q("Executives ask whether proposed controls are worth funding. They want an annual financial view of exposure.",["ROSI","Compare control cost with expected risk reduction.","ROSI frames security investment against avoided loss."],["MTTR","Measure response or remediation time.","MTTR is an operational measure, not an investment case."],["EDR","List endpoint alert features.","A feature list does not answer the financial question."]),
+q("Remote contractors should reach only needed applications, without joining the whole internal network.",["ZTNA","Grant identity-aware access to specific apps.","ZTNA limits access by user and application rather than extending the LAN."],["SASE","Combine networking and cloud-delivered security.","SASE may include ZTNA, but ZTNA is the direct access control."],["DLP","Control sensitive data leaving approved channels.","DLP does not define remote network access."])
+]},
+{id:"regulator",name:"The NIS2 Regulator",role:"High magistrate · Főinkvizítor",district:"Palace · Stone Court",kind:"Final Compliance Trial",hp:5000,phases:10,xp:500,requires:2,timed:true,portrait:["#b98c70","#302c2a","#2e3035","#d0ad59","crown","gavel","cold"],mechanic:"A strict 15-second SLA runs each turn. Gyorsaság extends the clock. Give a defensible, practical answer.",prompts:[
+q("A regulated service reports a serious cyber incident. Which EU rule sets a 24-hour early-warning duty for in-scope entities?",["NIS2","Start the NIS2 response and reporting process.","NIS2 sets cybersecurity and incident-reporting duties for covered entities."],["DORA","Apply the financial-sector resilience framework.","DORA governs financial ICT resilience; this scenario asks about NIS2."],["DPIA","Assess privacy impact.","A DPIA is not the incident-reporting law."]),
+q("A bank's critical cloud provider suffered a disruption. Which regime governs financial-sector operational resilience?",["DORA","Apply the Digital Operational Resilience Act.","DORA governs ICT risk, incidents, testing, and third-party resilience in finance."],["NIS2","Check cybersecurity duties for in-scope entities.","NIS2 may also apply, but DORA is the financial-sector regime."],["SASE","Secure network access at the edge.","An architecture choice is not a regulatory framework."]),
+q("A new service profiles vulnerable people using sensitive data. Before launch, privacy needs a formal risk assessment.",["DPIA","Assess risks before high-risk processing begins.","A DPIA identifies and mitigates data-protection risks before processing."],["GDPR","Apply the EU data-protection regulation.","GDPR is the law; a DPIA is the assessment required here."],["DLP","Monitor data transfers.","DLP does not assess the planned processing's privacy impact."]),
+q("The incident commander needs a national contact point to coordinate cyber response across organizations.",["CSIRT","Engage the incident response team.","A CSIRT coordinates technical response and information exchange."],["SOC","Ask the monitoring center to triage alerts.","A SOC monitors and investigates; national coordination is a CSIRT role."],["TPRM","Review the supplier relationship.","Vendor-risk work will not coordinate a live national incident."]),
+q("Legal says evidence may be needed for an investigation. What discipline collects and examines digital evidence?",["DFIR","Preserve and analyze evidence during response.","Digital forensics and incident response combines evidence handling and investigation."],["SOAR","Automate approved response steps.","SOAR can orchestrate actions; it is not forensic investigation."],["CSPM","Review cloud configuration drift.","Posture management does not preserve incident evidence."]),
+q("Procurement cannot tell which open-source components ship in a product. What should the release include?",["SBOM","Publish a software bill of materials.","An SBOM lists components and versions for vulnerability response."],["SCA","Scan dependencies for known issues.","SCA analyzes dependencies; the SBOM is the inventory requested."],["DLP","Prevent unauthorized data movement.","DLP does not inventory software packages."]),
+q("An outsourced payroll provider has broad access to identity records. Which program assesses its risk?",["TPRM","Assess the supplier before and during the relationship.","TPRM evaluates supplier controls, exposure, and changes."],["PAM","Control privileged accounts.","PAM restricts an access path but is not a supplier-risk review."],["NDR","Monitor network traffic.","NDR will not perform the vendor review."]),
+q("A researcher found a flaw in a public service and needs a safe, published route to disclose it.",["VDP","Publish a vulnerability disclosure program.","A VDP explains how to report vulnerabilities and how they are handled."],["CTF","Run a capture-the-flag exercise.","A CTF is training, not a disclosure channel."],["WAF","Filter malicious requests.","A WAF does not provide a reporting process."]),
+q("A long-lived product uses cryptography that may face future quantum attacks. What transition should be planned?",["PQC","Plan a post-quantum cryptography migration.","PQC is designed to resist classical and quantum attacks."],["HSM","Protect keys in hardware.","An HSM protects keys but does not change the algorithms."],["TLS","Use transport encryption.","TLS alone does not mean the chosen algorithms are post-quantum."]),
+q("Temporary administrators retain permanent rights between maintenance windows. What removes standing privilege?",["ZSP","Use just-in-time elevation with no standing admin rights.","Zero standing privileges removes always-on administrative access."],["PAM","Vault and monitor privileged accounts.","PAM helps, but the goal is to remove persistent standing access."],["RBAC","Assign permissions by role.","Role-based access can still leave permanent privileges in place."])
+]}
+];
+const KEY="secQuestCampaignV1",GOAL=1000000;
+const STAT_INFO=[["STR","Conviction damage +4% per point."],["DEX","Critical rebuttals and stronger partial answers."],["SPD","More time in the final audit."],["END","Maximum credibility / sanity."],["LCK","Chance to cross out one poor answer."],["INT","More abbreviation detail."]];
+const fresh=()=>({version:1,started:false,patrol:false,cleared:[],bosses:[],patrols:0,points:0,complete:false,mode:"hub",current:null,report:null,player:{level:3,xp:0,next:300,skill:0,wallet:142500,bank:0,hp:85,stats:{STR:14,DEX:12,SPD:10,END:85,LCK:18,INT:26}}});
+const maxHP=p=>Math.max(1,Number(p.stats.END)||1);
+function load(){
+ try{
+  const s=JSON.parse(localStorage.getItem(KEY)||"null");if(!s||s.version!==1||!s.player)return fresh();
+  const f=fresh(),p=s.player;f.started=!!s.started;f.patrol=!!s.patrol;f.cleared=Array.isArray(s.cleared)?s.cleared.filter(id=>MINORS.some(x=>x.id===id)):[];f.bosses=Array.isArray(s.bosses)?s.bosses.filter(id=>BOSSES.some(x=>x.id===id)):[];f.patrols=Number(s.patrols)||0;f.points=Number(s.points)||0;f.complete=!!s.complete;f.mode=["hub","fight","feedback","report","ending"].includes(s.mode)?s.mode:"hub";f.current=s.current&&typeof s.current==="object"?s.current:null;f.report=s.report||null;
+  f.player.level=Math.max(1,Number(p.level)||3);f.player.xp=Math.max(0,Number(p.xp)||0);f.player.next=Math.max(100,Number(p.next)||f.player.level*100);f.player.skill=Math.max(0,Number(p.skill)||0);f.player.wallet=Math.max(0,Number(p.wallet)||0);f.player.bank=Math.max(0,Number(p.bank)||0);f.player.stats=Object.assign(f.player.stats,p.stats||{});f.player.hp=Math.max(1,Math.min(maxHP(f.player),Number(p.hp)||maxHP(f.player)));
+  if(!f.current||!["minor","boss"].includes(f.current.type)){f.current=null;if(f.mode==="fight"||f.mode==="feedback")f.mode="hub";}
+  if(f.mode==="fight"&&f.current&&isTimed(f.current))f.current.timeLeft=timerLen(f.player);
+  return f;
+ }catch(e){return fresh();}
+}
+let s=load(),timer=null,toastTimer=null;
+const $=id=>document.getElementById(id),save=()=>{try{localStorage.setItem(KEY,JSON.stringify(s));}catch(e){}};
+const num=n=>Math.round(n).toLocaleString("en-US");
+const esc=x=>String(x==null?"":x).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const minor=id=>MINORS.find(x=>x.id===id),boss=id=>BOSSES.find(x=>x.id===id),person=()=>s.current?(s.current.type==="boss"?boss(s.current.id):minor(s.current.id)):null;
+const isTimed=c=>!!(c&&c.type==="boss"&&boss(c.id)&&boss(c.id).timed);
+const timerLen=p=>15+Math.floor((Number(p.stats.SPD)||0)/5);
+const tier=n=>n>=50?5:n>=35?4:n>=20?3:n>=10?2:1;
+const tierName=["Raw acronym","Topic tag","Written out","Short tactical note","Tactical guide"];
+function term(code){const x=TERMS[code]||{category:"Security",full:code,shortDesc:"Security concept",longDesc:"Security concept"};let v="[ "+code,t=tier(s.player.stats.INT);if(t>=2)v+=" · "+x.category;if(t>=3)v+=" — "+x.full;if(t>=4)v+=" ("+x.shortDesc+")";if(t>=5)v+=": "+x.longDesc;return v+" ]";}
+function detail(x){const t=tier(s.player.stats.INT);return t<=2?"Raise INT to decode this entry.":t===3?x.full:t===4?x.full+" — "+x.shortDesc:x.full+": "+x.longDesc;}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1)),v=a[i];a[i]=a[j];a[j]=v;}return a;}
+function buildTurn(){const p=person();if(!p||!s.current)return;let c=s.current;c.question=p.prompts[c.turn%p.prompts.length];c.options=shuffle(c.question.options);c.crossed=-1;c.lucky=false;let i=c.options.findIndex(x=>x.fit==="poor");if(i>=0&&Math.random()<Math.min(.45,s.player.stats.LCK*.015)){c.crossed=i;c.lucky=true;}c.timeLeft=isTimed(c)?timerLen(s.player):null;save();render();}
+function portraitSvg(who){
+ const a=who&&who.portrait?who.portrait:["#d5a984","#514133","#334338","#c3a352","short","book","calm"];
+ if(a[4]==="group")return '<svg viewBox="0 0 250 250" role="img" aria-label="Five guild masters"><defs><linearGradient id="c" x2="0" y2="1"><stop stop-color="#77715f"/><stop offset="1" stop-color="#242630"/></linearGradient></defs><rect width="250" height="250" fill="#34312a"/><rect x="9" y="9" width="232" height="232" fill="url(#c)" stroke="#171719" stroke-width="4"/><path d="M15 205Q28 132 58 130Q84 137 92 205M78 205Q91 124 125 120Q159 125 172 205M158 205Q168 132 196 130Q225 136 236 205" fill="#37363a" stroke="#171719" stroke-width="5"/><g fill="#c79a7c" stroke="#171719" stroke-width="4"><ellipse cx="58" cy="101" rx="27" ry="35"/><ellipse cx="125" cy="91" rx="31" ry="39"/><ellipse cx="196" cy="101" rx="27" ry="35"/></g><g fill="#312a26"><path d="M30 98Q32 55 60 60Q88 62 84 100L72 82L54 79L38 91Z"/><path d="M94 84Q98 41 126 43Q157 45 157 90L144 68L124 61L103 74Z"/><path d="M168 98Q169 60 196 59Q222 60 224 99L208 80L186 78Z"/></g><path d="M18 208H232" stroke="'+a[3]+'" stroke-width="8"/><text x="125" y="233" text-anchor="middle" fill="#e8dcb8" font-size="10">FIVE GUILD MASTERS</text></svg>';
+ let hair=a[4]==="hood"?'<path d="M45 136Q42 48 125 36Q211 47 205 145L181 120Q173 86 153 72Q121 100 78 98L67 145Z"/>':a[4]==="beard"?'<path d="M55 116Q44 39 125 35Q206 39 195 120L175 95Q153 73 145 67Q116 93 75 93Z"/><path d="M75 151Q124 179 178 149Q179 208 126 222Q82 207 75 151Z"/>':a[4]==="crown"?'<path d="M55 128Q48 48 125 40Q203 47 196 130L176 103Q146 84 144 66Q112 92 75 100Z"/><path d="M82 48L73 19L102 38L124 12L145 38L175 19L168 51Z"/>':a[4]==="bald"?'<path d="M67 91Q70 39 126 40Q180 40 188 91Q164 74 149 76Q111 84 77 102Z"/>':'<path d="M55 125Q46 45 124 39Q202 45 197 128L178 99Q155 82 148 63Q117 91 76 99Z"/>';
+ let prop=a[5]==="mug"?'<path d="M18 185H58V221H22Z" fill="#b78a51" stroke="#171719" stroke-width="5"/><path d="M58 191Q81 188 75 207Q72 218 58 214" fill="none" stroke="#171719" stroke-width="5"/>':a[5]==="badge"?'<path d="M22 177L57 181L51 224L18 219Z" fill="#d4c08f" stroke="#171719" stroke-width="4"/>':a[5]==="shovel"?'<path d="M22 169L75 223" stroke="#342d24" stroke-width="7"/><path d="M64 214Q83 207 85 224Q74 231 61 222Z" fill="#777" stroke="#171719" stroke-width="4"/>':a[5]==="key"?'<circle cx="36" cy="188" r="15" fill="none" stroke="#d5b869" stroke-width="7"/><path d="M48 198L80 226M66 214L73 207" stroke="#d5b869" stroke-width="7"/>':a[5]==="coins"?'<ellipse cx="38" cy="214" rx="25" ry="9" fill="#d7b759" stroke="#191817" stroke-width="4"/><ellipse cx="38" cy="203" rx="21" ry="8" fill="#e2c76d" stroke="#191817" stroke-width="4"/>':a[5]==="quill"?'<path d="M25 222L62 155Q75 146 77 159Q71 182 37 228Z" fill="#e4d8b7" stroke="#171719" stroke-width="4"/>':a[5]==="gavel"?'<path d="M30 190L64 224" stroke="#704c31" stroke-width="9"/><path d="M24 177L45 157L58 170L37 190Z" fill="#a77b42" stroke="#171719" stroke-width="4"/>':'<path d="M18 190H68V225H18Z" fill="#d3c292" stroke="#171719" stroke-width="4"/><path d="M27 200H60M27 210H60" stroke="#766848" stroke-width="3"/>';
+ const face=a[6],brow=face==="worried"?'<path d="M80 99L113 105M140 105L171 98"/>':face==="sly"?'<path d="M80 103L113 96M140 98L172 104"/>':'<path d="M81 99L113 102M140 102L171 99"/>';
+ const mouth=face==="sly"?'<path d="M105 153Q128 166 155 149"/>':face==="worried"?'<path d="M107 158Q126 148 148 159"/>':'<path d="M108 153Q127 164 148 153"/>';
+ const glasses=face==="wise"||face==="stern"?'<g fill="none" stroke="#171719" stroke-width="4"><rect x="82" y="107" width="35" height="24"/><rect x="136" y="107" width="35" height="24"/><path d="M117 115H136"/></g>':"";
+ const collar=a[4]==="formal"||a[4]==="crown"?'<path d="M82 179L101 202L126 189L151 202L172 178L185 232H65Z" fill="#ded5c0" stroke="#171719" stroke-width="5"/>':'<path d="M82 181L125 212L169 181L184 232H66Z" fill="'+a[3]+'" stroke="#171719" stroke-width="5"/>';
+ return '<svg viewBox="0 0 250 250" role="img" aria-label="Portrait of '+esc(who&&who.name||"Guild Registrar")+'"><defs><radialGradient id="lamp"><stop stop-color="#8c7857"/><stop offset="1" stop-color="#292a2a"/></radialGradient></defs><rect width="250" height="250" fill="url(#lamp)"/><path d="M0 185Q55 155 100 175T180 171T250 164V250H0Z" fill="#24272a"/><path d="M40 250Q48 190 86 177L125 209L163 177Q205 190 211 250Z" fill="'+a[2]+'" stroke="#171719" stroke-width="6"/>'+collar+'<path d="M107 164H144V190Q126 209 107 189Z" fill="'+a[0]+'" stroke="#171719" stroke-width="4"/><ellipse cx="125" cy="115" rx="68" ry="79" fill="'+a[0]+'" stroke="#171719" stroke-width="6"/><g fill="'+a[1]+'" stroke="#171719" stroke-width="6">'+hair+'</g><ellipse cx="83" cy="128" rx="9" ry="15" fill="'+a[0]+'" stroke="#171719" stroke-width="4"/><ellipse cx="168" cy="128" rx="9" ry="15" fill="'+a[0]+'" stroke="#171719" stroke-width="4"/><g fill="none" stroke="#30231e" stroke-width="6">'+brow+'</g><ellipse cx="99" cy="119" rx="7" ry="9" fill="#f0e4cf"/><ellipse cx="151" cy="119" rx="7" ry="9" fill="#f0e4cf"/><circle cx="100" cy="120" r="3.5"/><circle cx="150" cy="120" r="3.5"/><path d="M126 119L116 144L132 147" fill="none" stroke="#875d4a" stroke-width="4"/><g fill="none" stroke="#623f35" stroke-width="5" stroke-linecap="round">'+mouth+'</g>'+glasses+prop+'<path d="M10 10H240V240H10Z" fill="none" stroke="#d5b869" stroke-width="3" opacity=".7"/></svg>';
+}
+function renderStats(){
+ const p=s.player; $("level").textContent=p.level; $("wallet").textContent=num(p.wallet)+" Ag"; $("xpText").textContent=num(p.xp)+" / "+num(p.next)+" XP"; $("xpFill").style.width=Math.min(100,Math.round(p.xp/p.next*100))+"%"; $("pointsText").textContent=p.skill+" points"; $("pointsNote").textContent=p.skill?"Spend your unassigned points below.":"Earn XP for two attribute points per level.";
+ const list=$("stats");list.innerHTML="";const can=s.mode==="hub"&&p.skill>0;
+ STAT_INFO.forEach(x=>{const row=document.createElement("div");row.className="stat";const dt=document.createElement("dt");dt.textContent=x[0];dt.title=x[1];const dd=document.createElement("dd");dd.textContent=p.stats[x[0]];const b=document.createElement("button");b.className="plus";b.type="button";b.textContent="+";b.dataset.action="stat";b.dataset.value=x[0];b.setAttribute("aria-label","Raise "+x[0]);b.disabled=!can;row.append(dt,dd,b);list.appendChild(row);});
+ const t=tier(p.stats.INT);$("decoderTitle").textContent="INT Decoder · Tier "+t+" — "+tierName[t-1];$("decoderText").textContent=t===1?"Raw acronyms only; add INT to decode them.":t===2?"Topic tags shown; raise INT for full names.":t===3?"Full names shown; more INT reveals tactical notes.":t===4?"Short notes shown; Tier 5 reveals the full field guide.":"Full tactical descriptions appear with every abbreviation.";
+}
+function renderMap(){
+ const p=s.player,retired=Math.min(GOAL,p.bank);$("debtValue").textContent=num(retired)+" / "+num(GOAL)+" Ag";$("debtFill").style.width=Math.round(retired/GOAL*100)+"%";
+ const can=s.mode==="hub";$("bankButton").disabled=!can||p.wallet<=0;$("bankButton").textContent=p.wallet?"[ Deposit "+num(p.wallet)+" Ag ]":"[ Purse empty ]";$("restButton").disabled=!can||p.hp>=maxHP(p);$("restButton").textContent=p.wallet>=5000?"[ Rest at Kocsma · 5,000 Ag ]":"[ Rest at Kocsma · credit bunk ]";
+ $("minorList").innerHTML="";MINORS.forEach(n=>{const cleared=s.cleared.includes(n.id),b=document.createElement("button");b.type="button";b.className="map-button"+(s.current&&s.current.id===n.id?" current":"");b.dataset.action="minor";b.dataset.value=n.id;b.disabled=!s.patrol||!can||cleared||s.complete;const name=document.createElement("span");name.className="map-name";name.textContent=n.name;const status=document.createElement("span");status.className="map-status";status.textContent=cleared?"CLEARED":s.patrol?"OPEN":"SEALED";b.append(name,status);$("minorList").appendChild(b);});
+ $("bossList").innerHTML="";BOSSES.forEach((n,i)=>{const passed=s.bosses.includes(n.id),unlocked=p.bank>=GOAL&&i===s.bosses.length&&s.bosses.length>=n.requires,b=document.createElement("button");b.type="button";b.className="map-button boss"+(unlocked?" unlocked":"");b.dataset.action="boss";b.dataset.value=n.id;b.disabled=!unlocked||!can||passed||s.complete||s.patrol;const name=document.createElement("span");name.className="map-name";name.textContent=n.name;const status=document.createElement("span");status.className="map-status";status.textContent=passed?"PASSED":unlocked?"ENTER":p.bank<GOAL?"SEALED":"LOCKED";b.append(name,status);$("bossList").appendChild(b);});
+ $("mapSummary").textContent=s.patrol?s.cleared.length+" of 6 cases closed this patrol. Choose a contact.":s.complete?"The security debt is retired. The CISO seal is yours.":p.bank>=GOAL?"The C-Suite cleared the debt. Complete the audits in order.":"Retire "+num(Math.max(0,GOAL-p.bank))+" Ag to open the palace audits.";
+}
+function registrar(){return {name:"The Guild Registrar",role:"C-Suite Bank · Kezdő-negyed",portrait:["#d5a984","#514133","#334338","#c3a352","short","book","calm"]};}
+function setPortrait(p,zone,count){$("portrait").innerHTML=portraitSvg(p);$("speaker").textContent=p&&p.name||"The Guild Registrar";$("role").textContent=p&&p.role||"C-Suite Bank · Kezdő-negyed";$("zone").textContent=zone||"Guild Hall · Kezdő-negyed";$("sceneNum").textContent=count||"Contract 001";}
+function stopTimer(){if(timer!==null){clearInterval(timer);timer=null;}}
+function renderOpponent(){
+ const box=$("opponent");if(!s.current||!["fight","feedback"].includes(s.mode)){box.hidden=true;box.innerHTML="";stopTimer();return;}
+ const p=person(),c=s.current,b=c.type==="boss",ep=Math.max(0,Math.min(100,Math.round(c.hp/c.max*100))),pp=Math.max(0,Math.min(100,Math.round(s.player.hp/maxHP(s.player)*100)));
+ box.hidden=false;box.innerHTML='<div class="opp-head"><span>'+(b?"Skepticism":"Contact confidence")+' · '+num(Math.max(0,c.hp))+' / '+num(c.max)+' HP</span><span>Credibility · '+s.player.hp+' / '+maxHP(s.player)+' HP</span></div><div class="hp"><i style="width:'+ep+'%"></i></div><div class="turn"><span>'+(b?"Phase "+(c.turn+1)+" · "+p.phases+" planned":"Case turn "+(c.turn+1))+'</span><b>'+esc(p.kind)+'</b></div><div class="hp player"><i style="width:'+pp+'%"></i></div>'+(b&&p.timed?'<div class="timer" id="timerValue">SLA clock · '+(c.timeLeft||timerLen(s.player))+' sec</div>':"")+(c.lucky?'<div class="turn">Fortune crossed out one weak answer.</div>':"");
+}
+function renderHub(){
+ $("opponent").hidden=true;stopTimer();const remaining=Math.max(0,GOAL-s.player.bank);
+ setPortrait(registrar(),"Guild Hall · Kezdő-negyed",s.patrol?"Patrol "+String(s.patrols).padStart(2,"0"):"New contract");
+ if(s.complete){$("content").innerHTML="<p class='kicker'>The ledger is closed</p><h2>Junior Analyst no more.</h2><p>You retired the one-million-silver security debt, passed the external audit, won the Board's confidence, and answered the NIS2 regulator. The guild has a new CISO.</p><div class='callout'>Campaign score: "+num(s.points)+" · Final level: "+s.player.level+" · Banked: "+num(s.player.bank)+" Ag</div><p class='note'>Your character and glossary mastery remain saved in this browser.</p>";return;}
+ if(!s.started){$("content").innerHTML="<p class='kicker'>The guild needs a field analyst</p><h2>One million silver in security debt.</h2><p>The C-Suite hired you to handle practical security problems: vulnerable code, compromised devices, suspicious suppliers, and skeptical executives. Choose a useful first control, explain why it fits, and bank the reward.</p><div class='callout'>Close six field cases. Deposit silver at the C-Suite Bank to retire the debt and unlock three escalating audits.</div><p class='note'>Your campaign saves locally. The abbreviation ledger begins at Tier 3, based on your INT score.</p><div class='row'><button class='btn primary' data-action='patrol'>[ Start first patrol ]</button><button class='btn' data-action='guide'>[ Open ledger ]</button></div>";return;}
+ if(s.patrol){
+  const done=s.cleared.length;
+  $("content").innerHTML=done===6?"<p class='kicker'>Patrol report</p><h2>Six tickets closed.</h2><p>You have completed every contact in this patrol. Bank the purse, then launch another round if the security debt remains.</p><div class='callout'>6 of 6 contacts handled · "+num(s.player.wallet)+" Ag unbanked · "+num(remaining)+" Ag remaining.</div><div class='row'><button class='btn primary' data-action='patrol'>[ Start another patrol ]</button><button class='btn' data-action='bank'>[ Deposit purse ]</button></div>":"<p class='kicker'>Field patrol "+String(s.patrols).padStart(2,"0")+"</p><h2>Choose your next contact.</h2><p>Listen to the problem, identify the layer that is failing, then choose a first control from three candidates.</p><div class='callout'>"+done+" of 6 tickets closed · "+num(s.player.wallet)+" Ag in your purse.</div><p class='note'>Choose an open contact from the map. Zoli may take 15% of unbanked silver when you miss.</p><div class='row'><button class='btn' data-action='rest'>[ Rest at Kocsma ]</button><button class='btn' data-action='bank'>[ Deposit purse ]</button></div>";
+ }else $("content").innerHTML="<p class='kicker'>The guild ledger</p><h2>"+(s.report&&s.report.type==="shift"?"The patrol is over.":"Your next contract awaits.")+"</h2><p>Retire silver toward the Antiballaszt. The palace gates open when the C-Suite Bank records one million Ag.</p><div class='callout'>Debt retired: "+num(s.player.bank)+" Ag · Remaining: "+num(remaining)+" Ag · Patrols completed: "+s.patrols+".</div><div class='row'><button class='btn primary' data-action='patrol'>[ Start a patrol ]</button><button class='btn' data-action='bank'>[ Deposit purse ]</button><button class='btn' data-action='guide'>[ Open ledger ]</button></div>";
+}
+function renderFight(){
+ const p=person(),c=s.current;if(!p||!c||!c.question){s.mode="hub";renderHub();return;}
+ setPortrait(p,p.district,c.type==="boss"?"Gatekeeper audit":"Field case · "+p.district);
+ $("content").innerHTML="<p class='kicker'>"+(c.type==="boss"?"Gatekeeper challenge":"Field case · "+esc(p.kind))+"</p><h2>"+esc(p.name)+" has a problem.</h2><p>"+esc(c.question.line)+"</p><div class='mission'><b>"+(c.type==="boss"?"Audit mechanic":"First useful layer")+"</b>"+esc(c.type==="boss"?p.mechanic:"Weak to "+p.weak+".")+"</div><p class='hint'>Choose one first response. Keyboard: 1, 2, or 3.</p><div class='choices' id='choices'></div>";
+ c.options.forEach((o,i)=>{const b=document.createElement("button");b.type="button";b.className="choice"+(i===c.crossed?" crossed":"");b.dataset.action="choose";b.dataset.value=i;b.disabled=i===c.crossed;const k=document.createElement("span");k.className="key";k.textContent="["+(i+1)+"]";const text=document.createElement("span");const strong=document.createElement("strong");strong.textContent=term(o.term);const small=document.createElement("small");small.textContent=o.detail;text.append(strong,small);b.append(k,text);$("choices").appendChild(b);});
+}
+function renderFeedback(){
+ const p=person(),c=s.current,l=c&&c.last;if(!p||!l){s.mode="hub";renderHub();return;}setPortrait(p,p.district,"Case debrief");
+ const label=l.timeout?"SLA breached":l.fit==="strong"?(l.critical?"Critical rebuttal":"Strong first fit"):l.fit==="support"?"Useful supporting layer":"Wrong layer";
+ let html="<p class='kicker'>Case debrief · turn "+(c.turn+1)+"</p><h2>"+label+"</h2><p>You chose <span class='abbr-token'>"+esc(term(l.option.term))+"</span> — "+esc(l.option.detail)+"</p><div class='feedback'><b>Why this landed</b><p>"+esc(l.option.why)+"</p>";
+ if(l.timeout)html+="<p>The audit clock ran out. A timed answer counts as a missed turn.</p>";
+ if(l.immune)html+="<p>Kornél ignores technical jargon. Translate the risk into a business outcome.</p>";
+ if(l.heal)html+="<p>Klára restored "+l.heal+" skepticism HP. Her question needed a compliance or assurance answer.</p>";
+ if(l.stolen)html+="<p>Zoli lifted "+num(l.stolen)+" Ag from your unbanked purse.</p>";
+ html+="<div class='numbers'><span>Damage "+l.damage+"</span><span>Contact HP "+Math.max(0,c.hp)+" / "+c.max+"</span><span>Credibility "+s.player.hp+" / "+maxHP(s.player)+"</span></div></div><div class='row'><button class='btn primary' data-action='continue'>[ "+(c.hp<=0?"Close case":"Next conversation turn")+" ]</button><button class='btn' data-action='guide'>[ Consult ledger ]</button></div>";
+ $("content").innerHTML=html;
+}
+function renderReport(){
+ const r=s.report;if(!r){s.mode="hub";renderHub();return;}
+ if(r.type==="retreat"){const p=r.person==="regulator"?boss(r.person):minor(r.person);setPortrait(p||registrar(),p&&p.district||"Guild Hall","Retreat report");$("content").innerHTML="<p class='kicker'>Retreat to the Kocsma</p><h2>Credibility restored. The case remains open.</h2><p>"+esc(r.message)+"</p><div class='callout'>Lost "+num(r.loss)+" Ag · current credibility "+s.player.hp+" / "+maxHP(s.player)+" HP.</div><div class='row'><button class='btn primary' data-action='back'>[ Return to guild hall ]</button><button class='btn' data-action='guide'>[ Open ledger ]</button></div>";return;}
+ const p=r.person?(r.type==="boss"?boss(r.person):minor(r.person)):null;setPortrait(p||registrar(),p?p.district:"Guild Hall · Kezdő-negyed","Guild report");
+ if(r.type==="minor")$("content").innerHTML="<p class='kicker'>Ticket closed</p><h2>"+esc(p.name)+" accepts the fix.</h2><p>"+esc(r.message)+"</p><ul class='report-list'><li><span>Reward</span><strong>+"+num(r.silver)+" Ag</strong></li><li><span>Experience</span><strong>+"+r.xp+" XP</strong></li><li><span>Patrol progress</span><strong>"+r.progress+" / 6</strong></li></ul><p class='note'>Bank the purse between cases to protect it.</p><div class='row'><button class='btn primary' data-action='back'>[ Choose next contact ]</button></div>";
+ else{$("content").innerHTML="<p class='kicker'>Audit passed</p><h2>"+(r.person==="regulator"?"The guild names a new CISO.":esc(p.name)+" grants passage.")+"</h2><p>"+esc(r.message)+"</p><ul class='report-list'><li><span>Experience</span><strong>+"+r.xp+" XP</strong></li><li><span>Gatekeepers passed</span><strong>"+s.bosses.length+" / 3</strong></li></ul><div class='row'><button class='btn primary' data-action='back'>[ Return to palace ]</button></div>";}
+}
+function renderEnding(){setPortrait(boss("regulator"),"Palace · Stone Court","Campaign complete");$("opponent").hidden=true;$("content").innerHTML="<p class='kicker'>Campaign complete · Antiballaszt retired</p><h2>The C-Suite gives you the CISO seal.</h2><p>You paid down the one-million-silver debt, passed Klára's audit, earned the Board's confidence, and answered the NIS2 regulator under the clock.</p><div class='callout'>Final level "+s.player.level+" · "+num(s.points)+" conviction points · "+num(s.player.bank)+" Ag retired.</div><p class='note'>Your campaign remains saved in this browser.</p>";}
+function render(){
+ renderStats();renderMap();
+ if(s.mode==="fight"){renderOpponent();renderFight();if(isTimed(s.current)&&timer===null)startTimer();}
+ else if(s.mode==="feedback"){renderOpponent();renderFeedback();}
+ else if(s.mode==="report"){renderOpponent();renderReport();}
+ else if(s.mode==="ending"||s.complete){s.mode="ending";renderEnding();}
+ else renderHub();
+ save();
+}
+function toast(text){const box=$("toast");box.textContent=text;box.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>box.hidden=true,2600);}
+function startPatrol(){if(s.complete)return;s.started=true;s.patrol=true;s.cleared=[];s.patrols++;s.report=null;s.mode="hub";render();toast("Patrol "+s.patrols+" opened. Choose a contact from the map.");}
+function startMinor(id){if(!s.patrol||s.mode!=="hub"||s.cleared.includes(id))return;const p=minor(id);if(!p)return;s.current={type:"minor",id:id,hp:p.hp,max:p.hp,turn:0};s.mode="fight";buildTurn();}
+function unlocked(p){const i=BOSSES.findIndex(x=>x.id===p.id);return s.player.bank>=GOAL&&i===s.bosses.length&&s.bosses.length>=p.requires;}
+function startBoss(id){if(s.mode!=="hub"||s.patrol)return;const p=boss(id);if(!p||!unlocked(p)||s.bosses.includes(id))return;s.player.hp=maxHP(s.player);s.current={type:"boss",id:id,hp:p.hp,max:p.hp,turn:0};s.mode="fight";buildTurn();}
+function xp(amount){s.player.xp+=amount;while(s.player.xp>=s.player.next){s.player.xp-=s.player.next;s.player.level++;s.player.skill+=2;s.player.next=s.player.level*100;toast("Level "+s.player.level+" reached. Two attribute points are ready.");}}
+function finishFight(){
+ const c=s.current,p=person(),fit=c.last?c.last.fit:"support";
+ if(c.type==="minor"){const factor=fit==="strong"?1:fit==="support"?.72:.42,reward=Math.round(p.reward*factor),earned=Math.max(10,Math.round(p.xp*factor));s.player.wallet+=reward;xp(earned);s.player.hp=Math.min(maxHP(s.player),s.player.hp+8);s.cleared.push(p.id);const progress=s.cleared.length;if(progress===6)s.patrol=false;s.report={type:"minor",person:p.id,silver:reward,xp:earned,progress:progress,message:"You matched the main gap with a useful first control. The fix is recorded in the guild ledger."};s.current=null;s.mode="report";}
+ else{s.bosses.push(p.id);xp(p.xp);s.player.hp=Math.min(maxHP(s.player),s.player.hp+15);s.report={type:"boss",person:p.id,xp:p.xp,message:"The audit evidence holds. The next gatekeeper is available in the palace."};s.current=null;s.mode=p.id==="regulator"?"ending":"report";if(p.id==="regulator")s.complete=true;}
+ render();
+}
+function retreat(p){const loss=Math.min(s.player.wallet,Math.round(s.player.wallet*(p&&p.id==="zoli"?.15:.1)));s.player.wallet-=loss;s.player.hp=maxHP(s.player);s.report={type:"retreat",person:p?p.id:"",loss:loss,message:"The conversation went badly and credibility reached zero. You recover at the Kocsma and must restart the encounter."};s.current=null;s.mode="report";render();}
+function choose(index,timeout){
+ if(s.mode!=="fight"||!s.current)return;const c=s.current,p=person();let o=c.options[index];
+ if(timeout){index=c.options.findIndex(x=>x.fit==="poor");o=c.options[index]||c.options[0];}if(!o||(!timeout&&index===c.crossed))return;stopTimer();
+ const fit=timeout?"poor":o.fit,b=c.type==="boss",base=70+s.player.stats.STR*2,strength=1+s.player.stats.STR*.04,critChance=Math.min(.6,s.player.stats.DEX*.015),partial=Math.min(.8,.42+s.player.stats.DEX*.015);
+ let damage=0,critical=false,immune=!b&&p.immune&&fit==="poor";
+ if(b){damage=Math.round(p.hp/p.phases*(fit==="strong"?1:fit==="support"?partial:.23));if(fit!=="poor"&&Math.random()<critChance){damage=Math.min(c.hp,Math.round(damage*1.4));critical=true;}}
+ else if(!immune){damage=Math.round(base*strength*(fit==="strong"?1:fit==="support"?partial:.18));if(fit!=="poor"&&Math.random()<critChance){damage=Math.round(damage*1.5);critical=true;}}
+ c.hp=Math.max(0,c.hp-damage);let heal=0;if(b&&p.id==="klara"&&fit==="poor"&&c.hp>0){heal=150;c.hp=Math.min(c.max+300,c.hp+heal);}
+ s.points+=fit==="strong"?100:fit==="support"?55:10;
+ const strike=c.hp>0?(fit==="poor"?(b?26:16):fit==="support"?(b?13:8):(b?6:4)):0;s.player.hp=Math.max(0,s.player.hp-strike);
+ let stolen=0;if(p.id==="zoli"&&fit==="poor"){stolen=Math.round(s.player.wallet*.15);s.player.wallet-=stolen;}
+ c.last={option:o,fit:fit,damage:damage,critical:critical,timeout:!!timeout,heal:heal,stolen:stolen,immune:immune};
+ if(c.hp<=0){finishFight();return;}if(s.player.hp<=0){retreat(p);return;}s.mode="feedback";render();
+}
+function continueTurn(){if(s.mode!=="feedback"||!s.current)return;s.current.turn++;s.mode="fight";buildTurn();}
+function bank(){if(s.mode!=="hub"||!s.player.wallet)return;const n=s.player.wallet;s.player.wallet=0;s.player.bank+=n;render();toast(num(n)+" Ag deposited. "+num(Math.max(0,GOAL-s.player.bank))+" Ag until the palace opens.");}
+function rest(){if(s.mode!=="hub")return;const missing=maxHP(s.player)-s.player.hp;if(missing<=0){toast("Credibility is already full.");return;}const cost=s.player.wallet>=5000?5000:0,heal=Math.min(missing,35);s.player.wallet-=cost;s.player.hp+=heal;render();toast("Rest restored "+heal+" credibility"+(cost?" for 5,000 Ag.":" on the guild's tab."));}
+function spend(stat){if(s.mode!=="hub"||!s.player.skill||!Object.prototype.hasOwnProperty.call(s.player.stats,stat))return;s.player.stats[stat]++;s.player.skill--;if(stat==="END")s.player.hp++;render();toast(stat+" increased to "+s.player.stats[stat]+".");}
+function back(){if(s.mode!=="report")return;s.current=null;s.mode=s.complete?"ending":"hub";render();}
+function renderGuide(query){
+ const q=String(query||"").trim().toLowerCase(),items=Object.keys(TERMS).map(k=>TERMS[k]).sort((a,b)=>a.abbr.localeCompare(b.abbr)),filtered=items.filter(x=>(x.abbr+" "+x.category+" "+x.full+" "+x.shortDesc+" "+x.longDesc).toLowerCase().includes(q)),t=tier(s.player.stats.INT);
+ $("guideMeta").textContent=filtered.length+" entries · INT Tier "+t+" · "+tierName[t-1];const list=$("guideList");list.innerHTML="";
+ if(!filtered.length){const p=document.createElement("p");p.textContent="No entries match that search.";list.appendChild(p);return;}
+ filtered.forEach(x=>{const card=document.createElement("article");card.className="entry";const title=document.createElement("strong");title.textContent=term(x.abbr);const cat=document.createElement("small");cat.textContent=x.category;const desc=document.createElement("p");desc.textContent=detail(x);card.append(title,cat,desc);list.appendChild(card);});
+}
+function openGuide(){if(s.mode==="fight")stopTimer();renderGuide("");$("guideDialog").showModal();$("guideSearch").focus();}
+function startTimer(){stopTimer();if(!isTimed(s.current))return;if(typeof s.current.timeLeft!=="number")s.current.timeLeft=timerLen(s.player);timer=setInterval(()=>{if(!s.current){stopTimer();return;}s.current.timeLeft--;const v=$("timerValue");if(v)v.textContent="SLA clock · "+Math.max(0,s.current.timeLeft)+" sec";if(s.current.timeLeft<=0){stopTimer();choose(-1,true);}},1000);}
+document.addEventListener("click",event=>{const b=event.target.closest("[data-action]");if(!b||b.disabled)return;const a=b.dataset.action,v=b.dataset.value;if(a==="patrol")startPatrol();else if(a==="minor")startMinor(v);else if(a==="boss")startBoss(v);else if(a==="choose")choose(Number(v),false);else if(a==="continue")continueTurn();else if(a==="bank")bank();else if(a==="rest")rest();else if(a==="stat")spend(v);else if(a==="back")back();else if(a==="guide")openGuide();});
+document.addEventListener("keydown",event=>{if($("guideDialog").open||s.mode!=="fight"||! /^[123]$/.test(event.key))return;const active=document.activeElement;if(active&&(active.tagName==="INPUT"||active.tagName==="TEXTAREA"))return;const b=document.querySelector('.choice[data-value="'+(Number(event.key)-1)+'"]');if(b&&!b.disabled)b.click();});
+$("openGuide").addEventListener("click",openGuide);$("closeGuide").addEventListener("click",()=>$("guideDialog").close());$("guideSearch").addEventListener("input",e=>renderGuide(e.target.value));$("guideDialog").addEventListener("click",e=>{if(e.target===$("guideDialog"))$("guideDialog").close();});$("guideDialog").addEventListener("close",()=>{if(s.mode==="fight"&&timer===null)startTimer();});
+$("resetSave").addEventListener("click",()=>{if(!confirm("Start a new Sec-Quest character? This clears the campaign saved in this browser."))return;stopTimer();try{localStorage.removeItem(KEY);}catch(e){}s=fresh();render();toast("New character created.");});
+render();
+}());
+</script>
 </body>
 </html>
