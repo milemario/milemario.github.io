@@ -251,7 +251,7 @@
 
       <section id="gameScreen" hidden aria-labelledby="gameTitle">
         <div class="game-heading">
-          <div><p class="eyebrow">Live conversation</p><h2 id="gameTitle">What would you recommend?</h2></div>
+          <div><p class="eyebrow">Live conversation</p><h2 id="gameTitle" tabindex="-1">What would you recommend?</h2></div>
           <span class="round-label" id="roundLabel"></span>
         </div>
         <div class="progress-wrap">
@@ -608,8 +608,9 @@
       function setProgress() {
         const done = state.index;
         const total = state.deck.length;
-        const pct = Math.round((done / total) * 100);
-        document.getElementById("progressText").textContent = "Conversation " + Math.min(done + 1, total) + " of " + total;
+        const completed = done + (state.answered ? 1 : 0);
+        const pct = Math.round((completed / total) * 100);
+        document.getElementById("progressText").textContent = "Conversation " + Math.min(done + 1, total) + " of " + total + (state.answered ? " · answered" : "");
         document.getElementById("progressPercent").textContent = pct + "% complete";
         document.getElementById("progressFill").style.width = pct + "%";
         document.getElementById("progressTrack").setAttribute("aria-valuenow", String(pct));
@@ -652,6 +653,7 @@
         const choice = scenario.choices[choiceIndex];
         if (!choice) return;
         state.answered = true;
+        setProgress();
         const points = choice.fit === "strong" ? 100 : (choice.fit === "support" ? 55 : 15);
         state.score += points;
         state.results.push({ scenario: scenario, choice: choice, points: points });
@@ -677,7 +679,11 @@
         document.getElementById("scoreNote").textContent = state.results.length + " of " + state.deck.length + " conversations answered.";
         document.getElementById("continueButton").innerHTML = state.index === state.deck.length - 1 ? "See my debrief <span aria-hidden=\"true\">→</span>" : "Next conversation <span aria-hidden=\"true\">→</span>";
         feedback.hidden = false;
-        window.setTimeout(function () { document.getElementById("continueButton").focus({ preventScroll: true }); }, 60);
+        window.setTimeout(function () {
+          const nextButton = document.getElementById("continueButton");
+          nextButton.focus();
+          nextButton.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }, 60);
       }
       function continueGame() {
         if (!state.answered) return;
@@ -759,7 +765,7 @@
       document.getElementById("guideSearch").addEventListener("input", function (event) { renderGuide(event.target.value); });
       guideDialog.addEventListener("click", function (event) { if (event.target === guideDialog) guideDialog.close(); });
       document.addEventListener("keydown", function (event) {
-        if (gameScreen.hidden || state.answered || !/^[123]$/.test(event.key)) return;
+        if (guideDialog.open || gameScreen.hidden || state.answered || !/^[123]$/.test(event.key)) return;
         const active = document.activeElement;
         if (active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA")) return;
         chooseTool(Number(event.key) - 1);
