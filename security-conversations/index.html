@@ -47,6 +47,76 @@ dialog{width:min(820px,calc(100% - 24px));max-height:86vh;padding:0;border:4px r
 .choice strong{font-family:'IBM Plex Mono',monospace}
 .scene{box-shadow:4px 4px #000}
 .portrait{border-color:#d3b46b}
+
+/* Conversation-first UI refinement */
+:root{--stone:#24231f;--navy:#2b302a;--paper:#eee5cf;--paper2:#f7f0df;--paper3:#dfd2b1;--ink:#2b281f;--gold:#927744;--gold2:#cba75c;--red:#91483d;--green:#4f6846;--muted:#746b58;--line:#b6a47b}
+body{background:var(--stone);color:var(--ink)}
+.topbar{border:1px solid #59594d;border-radius:4px;box-shadow:3px 3px 0 #10110f}
+.brand p,.ledger-head,.panel-title,.small,.purse span,.decoder strong,.scene-head,.caption span,.opp-head,.map-group h3,.bank-note,.dialog-head p,.entry small{letter-spacing:.045em;text-transform:none}
+.seal{border:1px solid var(--gold2);border-radius:3px}
+.panel{border:1px solid #a99569;border-radius:4px;background:var(--paper);box-shadow:3px 3px 0 #111}
+.panel-title{font-size:12px;letter-spacing:.04em}
+.small{font-size:10px}
+.purse{border:1px solid #a99569;border-radius:3px;background:#e6d9ba}
+.plus{border:1px solid #a99569;border-radius:3px;background:#f7f0df}
+.points{padding:4px 6px;border-left:2px solid #66805a;border-radius:2px;background:#e2e8d7;line-height:1.35}
+.decoder{border:1px solid #c3b38e;border-radius:3px;background:#e7dcc1}
+.scene{box-shadow:3px 3px 0 #111}
+.zone{border:1px solid #b49a62;border-radius:3px;background:#e7dcc1}
+.portrait{border:1px solid var(--gold);border-radius:4px;box-shadow:3px 3px 0 #111}
+.portrait::after{opacity:.55}
+.caption{min-height:42px}
+.caption strong{font-size:18px}
+.opponent{border:1px solid #b49a62;border-radius:4px;background:#e4d7b8}
+.dialog{padding:15px;border:1px solid #b49a62;border-radius:5px;color:var(--ink);background:var(--paper2);box-shadow:2px 2px 0 #d0c19d}
+.kicker{color:#795f2b;letter-spacing:.04em;text-transform:none}
+.dialog h2{color:#2b281f;font-size:21px}
+.dialog p{color:#494234;font-size:14px;line-height:1.58}
+.dialog .note{color:#6f6652;font-size:12px}
+.callout,.mission{border-left:3px solid var(--gold2);border-radius:3px;color:#494234;background:#e9dfc8;font-size:12px}
+.mission{border:1px solid #c1b18b}
+.mission b{color:#735923;text-transform:none}
+.hint{color:#6f6652!important;font-size:10px!important}
+.choice{padding:9px;border:1px solid #b3a078;border-radius:4px;color:var(--ink);background:#fffaf0;box-shadow:1px 1px 0 #d0c19d;transition:transform .12s ease,box-shadow .12s ease,background .12s ease}
+.choice:hover:not(:disabled){color:var(--ink);background:#f5e9c9;transform:translateY(-1px);box-shadow:2px 2px 0 var(--gold2)}
+.choice strong{font-size:12px}
+.choice small{color:#625945;font:11px/1.4 'Space Grotesk',sans-serif}
+.key{border:1px solid #b8a67e;border-radius:3px;color:#67532e;background:#f0e6ce}
+.btn{min-height:37px;padding:8px 11px;border:1px solid #a99569;border-radius:3px;background:#e3d5b3;font:600 12px 'Space Grotesk',sans-serif;letter-spacing:0;text-transform:none;box-shadow:1px 1px 0 #c8b995}
+.btn:hover:not(:disabled){color:#2b281f;background:#f4e8c8;box-shadow:2px 2px 0 var(--gold2)}
+.btn:active:not(:disabled){transform:translate(1px,1px);box-shadow:none}
+.btn.primary{border-color:#9b7b3e;background:#ddc27e}
+.btn.dark{border-color:#5b6253;color:#f0e8d7;background:#343a32}
+.btn.dark:hover:not(:disabled){color:#fff8e8;background:#454d40}
+.feedback{border:1px solid #b49a62;border-radius:4px;background:#e6d8b7}
+.report-list li{border:1px solid #82765d;border-radius:3px}
+.map-summary{border-left-color:#a98643;border-radius:3px;background:#f3ead6;font:11px/1.45 'Space Grotesk',sans-serif}
+.map-group h3{font-size:10px;letter-spacing:.04em}
+.map-button{border:1px solid #aa976d;border-radius:4px;background:rgba(247,240,223,.97);box-shadow:1px 1px 0 rgba(54,43,25,.18)}
+.map-button:hover:not(:disabled){color:var(--ink);background:#fff8e8}
+.map-button.current{outline:2px solid #a15b4b}
+.map-button.boss{background:#ece0c2}
+.map-status{border-radius:3px;font:9px 'IBM Plex Mono',monospace}
+.map-key{font:10px/1.4 'Space Grotesk',sans-serif}
+.map-key b{border-radius:2px}
+.map-tools{border-top:1px solid #c0b18d}
+footer{color:#d0c6ad;font:10px 'Space Grotesk',sans-serif}
+dialog{border:1px solid #a99569;border-radius:5px;box-shadow:4px 4px 0 #000}
+.dialog-head{border-bottom:1px solid #b49a62}
+.search{border:1px solid #aa976d;border-radius:3px}
+.entry{border:1px solid #b9a67b;border-radius:3px}
+.campaign-track{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin:0 0 12px;padding:5px;border:1px solid #53564b;border-radius:4px;background:#191b18;box-shadow:2px 2px 0 #10110f}
+.track-step{display:flex;align-items:center;gap:9px;min-width:0;min-height:48px;padding:7px 10px;border:1px solid transparent;border-radius:3px;color:#b8b39f;background:#292d27}
+.track-num{flex:0 0 29px;width:29px;height:29px;display:grid;place-items:center;border:1px solid #77745f;border-radius:50%;color:#d4c9aa;font:bold 10px 'IBM Plex Mono',monospace}
+.track-copy{min-width:0}
+.track-copy strong{display:block;color:#eae2d0;font-size:12px;font-weight:600;line-height:1.2}
+.track-copy small{display:block;margin-top:3px;color:#b9b29d;font:10px 'Space Grotesk',sans-serif}
+.track-step.active{border-color:#a98b4d;background:#35392f}
+.track-step.active .track-num{border-color:#d0ad59;color:#221f17;background:#d0ad59}
+.track-step.done .track-num{border-color:#728265;color:#20251c;background:#b7c5a6}
+.track-step.done .track-copy strong{color:#d8e0ce}
+@media(max-width:620px){.campaign-track{grid-template-columns:1fr;gap:3px}.track-step{min-height:39px;padding:5px 8px}.track-num{width:25px;height:25px;flex-basis:25px}.track-copy{display:flex;justify-content:space-between;align-items:center;gap:8px}.track-copy small{margin:0;text-align:right}.dialog{padding:12px}.dialog h2{font-size:19px}}
+
 </style>
 </head>
 <body>
@@ -56,12 +126,17 @@ dialog{width:min(820px,calc(100% - 24px));max-height:86vh;padding:0;border:4px r
   <div class="ledger" aria-label="Security debt retired"><div class="ledger-head"><span>Antiballaszt · C-Suite Bank</span><strong id="debtValue">0 / 1,000,000 Ag</strong></div><div class="bar"><i id="debtFill"></i></div></div>
   <div class="actions"><button class="btn dark" id="openGuide" type="button">[ Abbreviation ledger ]</button><button class="btn dark" id="resetSave" type="button">[ New character ]</button></div>
 </header>
+<nav class="campaign-track" aria-label="Campaign progress">
+  <div class="track-step active" id="trackField"><span class="track-num">01</span><span class="track-copy"><strong>Meet the contacts</strong><small id="trackFieldText">0 of 6 conversations</small></span></div>
+  <div class="track-step" id="trackDebt"><span class="track-num">02</span><span class="track-copy"><strong>Retire the guild debt</strong><small id="trackDebtText">0 / 1,000,000 Ag</small></span></div>
+  <div class="track-step" id="trackAudits"><span class="track-num">03</span><span class="track-copy"><strong>Pass the audits</strong><small id="trackAuditText">0 of 3 passed</small></span></div>
+</nav>
 <div class="layout">
 <aside class="panel" aria-labelledby="characterTitle">
-  <h2 class="panel-title" id="characterTitle">Character sheet</h2><h3 class="char-name">Junior Analyst</h3><p class="level">Probationary hire · Level <strong id="level">3</strong></p>
+  <h2 class="panel-title" id="characterTitle">Your character</h2><h3 class="char-name">Junior Analyst</h3><p class="level">Probationary hire · Level <strong id="level">3</strong></p>
   <div class="xp" role="progressbar" aria-label="Experience to next level"><i id="xpFill"></i></div><div class="xp-caption"><span id="xpText">0 / 300 XP</span><span id="pointsText">0 points</span></div>
-  <div class="purse"><span>Unbanked silver</span><strong id="wallet">142,500 Ag</strong></div><p class="small">Attributes · spend level points</p><dl class="stats" id="stats"></dl><div class="points" id="pointsNote" aria-live="polite"></div>
-  <div class="decoder"><strong id="decoderTitle">INT Decoder · Tier 3</strong><p id="decoderText">Full names are decoded. More INT reveals tactical notes.</p></div>
+  <div class="purse"><span>Your purse</span><strong id="wallet">142,500 Ag</strong></div><p class="small">Your strengths · spend points</p><dl class="stats" id="stats"></dl><div class="points" id="pointsNote" aria-live="polite"></div>
+  <div class="decoder"><strong id="decoderTitle">Security vocabulary · Tier 3</strong><p id="decoderText">Full names are decoded. More INT reveals tactical notes.</p></div>
 </aside>
 <main class="panel scene" aria-live="polite">
   <div class="scene-head"><span class="zone" id="zone">Guild Hall · Kezdő-negyed</span><span id="sceneNum" class="scene-num">Contract 001</span></div>
@@ -69,10 +144,10 @@ dialog{width:min(820px,calc(100% - 24px));max-height:86vh;padding:0;border:4px r
   <div id="opponent" class="opponent" hidden></div><section class="dialog" id="content"></section>
 </main>
 <aside class="panel map-panel" aria-labelledby="mapTitle">
-  <h2 class="panel-title" id="mapTitle">District Map &amp; Palace</h2><p class="map-summary" id="mapSummary">Start the first patrol in the conversation panel. Six contact markers will open here.</p>
+  <h2 class="panel-title" id="mapTitle">Your route</h2><p class="map-summary" id="mapSummary">Start the first patrol in the conversation panel. Six contact markers will open here.</p>
   <div class="map-content">
-    <section class="map-group"><h3>Field contacts · district route</h3><div class="map-list district-map" id="minorList" role="group" aria-label="Field contact map"></div><p class="map-key">Select an <b>OPEN</b> marker. Cleared contacts stay marked.</p></section>
-    <section class="map-group"><h3>Palace gates · audits</h3><div class="map-list palace-list" id="bossList" role="group" aria-label="Palace audit map"></div></section>
+    <section class="map-group"><h3>Your contacts</h3><div class="map-list district-map" id="minorList" role="group" aria-label="Field contact map"></div><p class="map-key">Choose an <b>OPEN</b> contact. Resolved cases stay marked.</p></section>
+    <section class="map-group"><h3>Palace audits</h3><div class="map-list palace-list" id="bossList" role="group" aria-label="Palace audit map"></div></section>
     <div class="map-tools"><button class="btn primary" id="bankButton" type="button">[ Deposit silver ]</button><button class="btn" id="restButton" type="button">[ Rest at Kocsma ]</button></div>
   </div><p class="bank-note">Deposits retire security debt and cannot be withdrawn. A full purse is a tempting target.</p>
 </aside>
@@ -213,11 +288,17 @@ function renderStats(){
 
 function renderMap(){
  const p=s.player,retired=Math.min(GOAL,p.bank),done=s.cleared.length;
+ const phase=s.complete?3:!s.fieldComplete?0:p.bank<GOAL?1:2;
+ const track=[$("trackField"),$("trackDebt"),$("trackAudits")];
+ track.forEach((step,i)=>{step.classList.toggle("done",s.complete||i<phase);step.classList.toggle("active",!s.complete&&i===phase);if(!s.complete&&i===phase)step.setAttribute("aria-current","step");else step.removeAttribute("aria-current");});
+ $("trackFieldText").textContent=done+" of 6 conversations";
+ $("trackDebtText").textContent=num(retired)+" / "+num(GOAL)+" Ag";
+ $("trackAuditText").textContent=s.bosses.length+" of 3 passed";
  $("debtValue").textContent=num(retired)+" / "+num(GOAL)+" Ag";$("debtFill").style.width=Math.round(retired/GOAL*100)+"%";
  const canHub=s.mode==="hub",canChooseMinor=canHub||(s.mode==="report"&&s.patrol),canChooseBoss=canHub||(s.mode==="report"&&!s.patrol&&s.report&&(s.report.type==="boss"||s.report.type==="retreat"));
  $("bankButton").disabled=!canHub||p.wallet<=0;$("bankButton").textContent=p.wallet?"[ Deposit "+num(p.wallet)+" Ag ]":"[ Purse empty ]";$("restButton").disabled=!canHub||p.hp>=maxHP(p);$("restButton").textContent=p.wallet>=5000?"[ Rest at Kocsma · 5,000 Ag ]":"[ Rest at Kocsma · credit bunk ]";
- $("minorList").innerHTML="";MINORS.forEach(n=>{const cleared=s.cleared.includes(n.id),inCall=s.current&&s.current.type==="minor"&&s.current.id===n.id,b=document.createElement("button");b.type="button";b.className="map-button "+(cleared?"cleared":inCall?"current":s.patrol?"open":"sealed");b.dataset.action="minor";b.dataset.value=n.id;b.disabled=!canChooseMinor||cleared||s.complete;const name=document.createElement("span");name.className="map-name";name.textContent=n.name;const status=document.createElement("span");status.className="map-status";status.textContent=inCall?"IN CALL":cleared?"CLEARED":s.patrol?"OPEN":"SEALED";b.setAttribute("aria-label",n.name+" — "+status.textContent.toLowerCase());b.append(name,status);$("minorList").appendChild(b);});
- $("bossList").innerHTML="";BOSSES.forEach((n,i)=>{const passed=s.bosses.includes(n.id),unlocked=s.fieldComplete&&p.bank>=GOAL&&i===s.bosses.length&&s.bosses.length>=n.requires,b=document.createElement("button");b.type="button";b.className="map-button boss"+(unlocked?" unlocked":"")+(passed?" cleared":"");b.dataset.action="boss";b.dataset.value=n.id;b.disabled=!unlocked||!canChooseBoss||passed||s.complete||s.patrol;const name=document.createElement("span");name.className="map-name";name.textContent=n.name;const status=document.createElement("span");status.className="map-status";status.textContent=passed?"PASSED":unlocked?"ENTER":p.bank<GOAL?"SEALED":"LOCKED";b.setAttribute("aria-label",n.name+" — "+status.textContent.toLowerCase());b.append(name,status);$("bossList").appendChild(b);});
+ $("minorList").innerHTML="";MINORS.forEach(n=>{const cleared=s.cleared.includes(n.id),inCall=s.current&&s.current.type==="minor"&&s.current.id===n.id,b=document.createElement("button");b.type="button";b.className="map-button "+(cleared?"cleared":inCall?"current":s.patrol?"open":"sealed");b.dataset.action="minor";b.dataset.value=n.id;b.disabled=!canChooseMinor||cleared||s.complete;const name=document.createElement("span");name.className="map-name";name.textContent=n.name;const status=document.createElement("span");status.className="map-status";status.textContent=inCall?"In call":cleared?"Resolved":s.patrol?"Open":"Sealed";b.setAttribute("aria-label",n.name+" — "+status.textContent.toLowerCase());b.append(name,status);$("minorList").appendChild(b);});
+ $("bossList").innerHTML="";BOSSES.forEach((n,i)=>{const passed=s.bosses.includes(n.id),unlocked=s.fieldComplete&&p.bank>=GOAL&&i===s.bosses.length&&s.bosses.length>=n.requires,b=document.createElement("button");b.type="button";b.className="map-button boss"+(unlocked?" unlocked":"")+(passed?" cleared":"");b.dataset.action="boss";b.dataset.value=n.id;b.disabled=!unlocked||!canChooseBoss||passed||s.complete||s.patrol;const name=document.createElement("span");name.className="map-name";name.textContent=n.name;const status=document.createElement("span");status.className="map-status";status.textContent=passed?"Passed":unlocked?"Enter":p.bank<GOAL?"Sealed":"Locked";b.setAttribute("aria-label",n.name+" — "+status.textContent.toLowerCase());b.append(name,status);$("bossList").appendChild(b);});
  let summary;if(s.complete)summary="Campaign complete. The CISO seal is yours.";else if(["fight","feedback"].includes(s.mode))summary="Conversation in progress. The six contacts are one-time cases; choose another after the debrief.";else if(s.patrol)summary=done+" of 6 contacts closed. Select an OPEN marker; cleared contacts stay closed.";else if(!s.started)summary="Start the one-time district sweep to open six contacts.";else if(!s.fieldComplete)summary="Return to the conversation panel to continue the district sweep.";else if(p.bank>=GOAL)summary="One-time sweep complete. Enter the next unlocked palace audit.";else summary="One-time sweep complete. Guild settlement is ready; deposit silver to unlock audits.";
  $("mapSummary").textContent=summary;
 }
