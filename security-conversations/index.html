@@ -163,7 +163,7 @@ function load(){
   const old=JSON.parse(localStorage.getItem(KEY)||"null");if(!old||![1,2].includes(old.version)||!old.player)return fresh();
   const f=fresh(),p=old.player,legacy=old.version===1;
   f.started=!!old.started;f.cleared=Array.isArray(old.cleared)?old.cleared.filter(id=>MINORS.some(x=>x.id===id)):[];
-  f.patrols=Number(old.patrols)||0;f.fieldComplete=!!old.fieldComplete||f.cleared.length>=MINORS.length||(legacy&&f.patrols>1);
+  f.patrols=Number(old.patrols)||0;f.fieldComplete=!!old.fieldComplete||f.cleared.length>=MINORS.length||(legacy&&f.patrols>1);if(f.fieldComplete)f.cleared=MINORS.map(x=>x.id);
   f.settlementPaid=!!old.settlementPaid;f.patrol=!!old.patrol&&!f.fieldComplete;
   f.bosses=Array.isArray(old.bosses)?old.bosses.filter(id=>BOSSES.some(x=>x.id===id)):[];f.points=Number(old.points)||0;f.complete=!!old.complete;
   f.mode=["hub","fight","feedback","report","ending"].includes(old.mode)?old.mode:"hub";
