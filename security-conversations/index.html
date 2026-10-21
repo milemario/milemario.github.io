@@ -305,10 +305,10 @@ function renderMap(){
  $("mapSummary").textContent=summary;
 }
 
-function registrar(){return {name:"The Guild Registrar",role:"C-Suite Bank · Kezdő-negyed",portrait:["#d5a984","#514133","#334338","#c3a352","short","book","calm"]};}
+function registrar(){return {id:"registrar",name:"The Guild Registrar",role:"C-Suite Bank · Kezdő-negyed",portrait:["#d5a984","#514133","#334338","#c3a352","short","book","calm"]};}
 function setPortrait(p,zone,count){
- const root=$("portrait"),ids=["board","regulator","kornel","klara","varga","zoli","mate","nora","bence"];
- if(p&&ids.includes(p.id)){root.innerHTML="";const img=document.createElement("img");img.src="assets/characters/"+p.id+".png";img.alt="Portrait of "+(p.name||"contact");img.decoding="async";img.onerror=()=>{root.innerHTML=portraitSvg(p);};root.appendChild(img);}else root.innerHTML=portraitSvg(p);
+ const root=$("portrait"),ids=["registrar","board","regulator","kornel","klara","varga","zoli","mate","nora","bence"];
+ if(p&&ids.includes(p.id)){root.innerHTML="";const img=document.createElement("img");img.src="assets/characters/"+p.id+(p.id==="registrar"?".jpg":".png");img.alt="Portrait of "+(p.name||"contact");img.decoding="async";img.onerror=()=>{root.innerHTML=portraitSvg(p);};root.appendChild(img);}else root.innerHTML=portraitSvg(p);
  $("speaker").textContent=p&&p.name||"The Guild Registrar";$("role").textContent=p&&p.role||"C-Suite Bank · Kezdő-negyed";$("zone").textContent=zone||"Guild Hall · Kezdő-negyed";$("sceneNum").textContent=count||"Contract 001";
 }
 
