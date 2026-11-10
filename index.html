@@ -111,6 +111,11 @@
     .launch { display: flex; align-items: center; gap: 8px; white-space: nowrap; color: var(--cyan); font-weight: 800; font-size: .88rem; }
 
     .empty { padding: 34px 26px; background: var(--panel-strong); color: var(--muted); }
+    .requirements-link { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 23px 26px; margin: -12px 0 36px; border: 1px solid rgba(109,213,208,.48); border-radius: 20px; background: linear-gradient(120deg, rgba(109,213,208,.13), rgba(11,38,59,.86)); text-decoration: none; }
+    .requirements-link:hover { border-color: var(--cyan); background: var(--panel-strong); }
+    .requirements-link strong { display: block; margin-bottom: 7px; font-size: 1.1rem; }
+    .requirements-link small { color: var(--muted); line-height: 1.6; }
+    .requirements-link:focus-visible { outline: 3px solid var(--gold); outline-offset: 5px; }
     footer { padding: 0 0 32px; color: #7894a4; font-size: .8rem; text-align: center; }
 
     @media (max-width: 650px) {
@@ -123,6 +128,7 @@
       .activity-icon { width: 44px; height: 44px; }
       .launch { grid-column: 2; }
       .activity-head { padding: 20px 18px; }
+      .requirements-link { align-items: flex-start; flex-direction: column; gap: 14px; padding: 22px 18px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -144,6 +150,11 @@
       <p class="eyebrow">Learn by investigating</p>
       <h1>Choose your course.<br>Start your task.</h1>
       <p class="intro">Select a course to see its interactive exercises, simulations and supporting activities.</p>
+
+      <a class="requirements-link" href="/akinte03-requirements/">
+        <span><strong>ÁKINTE03 · Course requirements &amp; assessment</strong><small>50% class questionnaires + 50% closing test. Attendance, absence make-up and Cyber Anki exam preparation.</small></span>
+        <span class="launch">Read requirements <span aria-hidden="true">→</span></span>
+      </a>
 
       <section aria-labelledby="course-heading">
         <h2 class="step-label" id="course-heading"><span>1</span> Select your course</h2>
@@ -300,3 +311,4 @@
   </script>
 </body>
 </html>
+
